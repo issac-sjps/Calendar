@@ -1,90 +1,1452 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>新莊國小 學校行事曆</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #f0f4f8;
-      --surface: #fff;
-      --surface2: #f8fafc;
-      --border: #e2e8f0;
-      --text: #1a202c;
-      --text2: #4a5568;
-      --text3: #a0aec0;
-      --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.05);
-      --shadow-lg: 0 8px 32px rgba(0,0,0,0.13);
-      --教務處: #3b82f6; --教務處-light: #eff6ff; --教務處-text: #1d4ed8;
-      --學務處: #10b981; --學務處-light: #f0fdf4; --學務處-text: #065f46;
-      --輔導處: #f59e0b; --輔導處-light: #fffbeb; --輔導處-text: #92400e;
-      --總務處: #8b5cf6; --總務處-light: #f5f3ff; --總務處-text: #5b21b6;
-    }
-    body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新莊國小 學校行事曆</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f0f4f8;--surface:#fff;--surface2:#f8fafc;--border:#e2e8f0;
+  --text:#1a202c;--text2:#4a5568;--text3:#a0aec0;
+  --shadow:0 1px 3px rgba(0,0,0,.07),0 4px 14px rgba(0,0,0,.05);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.13);
+  --教務處:#3b82f6;--教務處-light:#eff6ff;--教務處-text:#1d4ed8;
+  --學務處:#10b981;--學務處-light:#f0fdf4;--學務處-text:#065f46;
+  --輔導處:#f59e0b;--輔導處-light:#fffbeb;--輔導處-text:#92400e;
+  --總務處:#8b5cf6;--總務處-light:#f5f3ff;--總務處-text:#5b21b6;
+  --holiday-bg:#fff5f5;--weekend-bg:#fff8f8;
+}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
 
-    /* ── Header ── */
-    header {
-      background: var(--surface); border-bottom: 1px solid var(--border);
-      padding: 0 1.25rem; display: flex; align-items: center;
-      justify-content: space-between; height: 56px;
-      position: sticky; top: 0; z-index: 100;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.06); flex-shrink: 0;
-    }
-    .header-left { display: flex; align-items: center; gap: 0.65rem; }
-    .school-badge { background: #1a202c; color: #fff; font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 0.85rem; padding: 0.3rem 0.6rem; letter-spacing: 0.04em; }
-    .school-title { font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 1rem; }
-    .header-right { display: flex; align-items: center; gap: 0.65rem; }
-    #user-info { font-size: 0.8rem; color: var(--text2); display: none; align-items: center; gap: 0.45rem; }
-    .user-dept-pill { padding: 0.18rem 0.55rem; border-radius: 999px; font-size: 0.72rem; font-weight: 600; }
-    .btn-sm { padding: 0.38rem 0.9rem; border-radius: 6px; font-family: 'Noto Sans TC', sans-serif; font-size: 0.82rem; font-weight: 500; cursor: pointer; border: none; transition: all 0.14s; }
-    .btn-primary { background: #1a202c; color: #fff; }
-    .btn-primary:hover { background: #2d3748; }
-    .btn-ghost { background: none; border: 1px solid var(--border) !important; color: var(--text2); }
-    .btn-ghost:hover { border-color: #94a3b8 !important; color: var(--text); }
-    /* Add event button in header - only shown when logged in */
-    #btn-add-header { display: none; background: #1a202c; color: #fff; padding: 0.38rem 1rem; border-radius: 6px; font-family: 'Noto Sans TC', sans-serif; font-size: 0.82rem; font-weight: 500; cursor: pointer; border: none; transition: background 0.14s; }
-    #btn-add-header:hover { background: #2d3748; }
+/* ── Header ── */
+header{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0 1rem;display:flex;align-items:center;
+  justify-content:space-between;height:56px;
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 1px 6px rgba(0,0,0,.06);flex-shrink:0;gap:0.5rem;
+}
+.header-left{display:flex;align-items:center;gap:0.6rem;flex-shrink:0;}
+.school-badge{background:#1a202c;color:#fff;font-family:'Noto Serif TC',serif;font-weight:900;font-size:0.82rem;padding:0.28rem 0.55rem;letter-spacing:.04em;white-space:nowrap;}
+.school-title{font-family:'Noto Serif TC',serif;font-weight:700;font-size:0.95rem;white-space:nowrap;}
+.header-date{font-size:0.8rem;color:var(--text3);font-weight:500;white-space:nowrap;}
 
-    /* ── Location Filter Bar ── */
-    .location-bar {
-      background: var(--surface); border-bottom: 1px solid var(--border);
-      padding: 0.6rem 1.25rem; display: flex; align-items: center;
-      gap: 0.45rem; flex-wrap: wrap; position: sticky; top: 56px; z-index: 99; flex-shrink: 0;
-    }
-    .loc-label { font-size: 0.85rem; font-weight: 600; color: var(--text2); margin-right: 0.25rem; white-space: nowrap; }
-    .filter-btn {
-      padding: 0.32rem 0.85rem; border-radius: 999px; font-size: 0.82rem; font-weight: 500;
-      border: 1.5px solid var(--border); background: var(--surface); color: var(--text2);
-      cursor: pointer; transition: all 0.14s; white-space: nowrap;
-      font-family: 'Noto Sans TC', sans-serif;
-    }
-    .filter-btn:hover { border-color: #94a3b8; color: var(--text); }
-    .filter-btn.active { background: #1a202c; border-color: #1a202c; color: #fff; }
+/* Marquee ticker */
+.header-ticker{
+  flex:1;overflow:hidden;height:56px;display:flex;align-items:center;
+  padding:0 0.75rem;min-width:0;
+}
+.ticker-inner{
+  display:flex;align-items:center;gap:1.5rem;
+  white-space:nowrap;animation:ticker 20s linear infinite;
+}
+.ticker-inner:hover{animation-play-state:paused;}
+@keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.ticker-item{font-size:0.78rem;color:var(--text2);display:inline-flex;align-items:center;gap:0.4rem;}
+.ticker-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.ticker-empty{font-size:0.78rem;color:var(--text3);}
 
-    /* ── Body layout ── */
-    .body-wrap { display: flex; flex: 1; min-height: 0; overflow: hidden; }
+.header-right{display:flex;align-items:center;gap:0.55rem;flex-shrink:0;}
+#user-info{font-size:0.78rem;color:var(--text2);display:none;align-items:center;gap:0.4rem;}
+.btn-sm{padding:0.35rem 0.85rem;border-radius:6px;font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;font-weight:500;cursor:pointer;border:none;transition:all .14s;}
+.btn-primary{background:#1a202c;color:#fff;}.btn-primary:hover{background:#2d3748;}
+.btn-ghost{background:none;border:1px solid var(--border)!important;color:var(--text2);}
+.btn-ghost:hover{border-color:#94a3b8!important;color:var(--text);}
+#btn-add-header,#btn-batch{display:none;}
+#btn-add-header{background:#1a202c;color:#fff;padding:0.35rem 0.9rem;border-radius:6px;font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;font-weight:500;cursor:pointer;border:none;transition:background .14s;}
+#btn-add-header:hover{background:#2d3748;}
+#btn-batch{padding:0.35rem 0.9rem;border-radius:6px;font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text2);transition:all .14s;}
+#btn-batch:hover{background:var(--bg);}
 
-    /* ── Sidebar ── */
-    .sidebar {
-      width: 120px; flex-shrink: 0;
-      background: var(--surface); border-right: 1px solid var(--border);
-      padding: 1rem 0.7rem; display: flex; flex-direction: column; gap: 0.45rem;
-      overflow-y: auto;
+/* ── Location Filter Bar ── */
+.location-bar{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0.55rem 1.25rem;display:flex;align-items:center;
+  gap:0.4rem;flex-wrap:wrap;position:sticky;top:56px;z-index:99;flex-shrink:0;
+}
+.loc-label{font-size:0.82rem;font-weight:600;color:var(--text2);margin-right:0.2rem;white-space:nowrap;}
+
+/* Location dot colors */
+.loc-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:3px;flex-shrink:0;}
+.filter-btn{
+  padding:0.28rem 0.75rem;border-radius:999px;font-size:0.78rem;font-weight:500;
+  border:1.5px solid var(--border);background:var(--surface);color:var(--text2);
+  cursor:pointer;transition:all .14s;white-space:nowrap;
+  font-family:'Noto Sans TC',sans-serif;display:inline-flex;align-items:center;gap:3px;
+}
+.filter-btn:hover{border-color:#94a3b8;color:var(--text);}
+.filter-btn.active{background:#1a202c;border-color:#1a202c;color:#fff;}
+.filter-btn.active .loc-dot{opacity:0.7;}
+
+/* ── Body ── */
+.body-wrap{display:flex;flex:1;min-height:0;overflow:hidden;}
+
+/* ── Sidebar ── */
+.sidebar{
+  width:118px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);
+  padding:0.85rem 0.65rem;display:flex;flex-direction:column;gap:0.4rem;overflow-y:auto;
+}
+.sidebar-label{font-size:0.78rem;font-weight:700;color:var(--text2);letter-spacing:.04em;margin-bottom:0.15rem;padding-left:0.2rem;}
+.dept-btn{
+  width:100%;padding:0.5rem 0.6rem;border-radius:8px;
+  border:1.5px solid var(--border);background:none;
+  font-family:'Noto Sans TC',sans-serif;font-size:0.82rem;font-weight:500;
+  cursor:pointer;transition:all .14s;text-align:left;
+  display:flex;align-items:center;gap:0.4rem;color:var(--text2);
+}
+.d-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+.dept-btn:hover{border-color:#94a3b8;color:var(--text);background:var(--surface2);}
+.dept-btn.active{border-color:transparent;color:#fff;}
+.dept-btn.active .d-dot{background:rgba(255,255,255,.55)!important;}
+.dept-btn.active-all{background:#1a202c;border-color:#1a202c;}
+.dept-btn.active-教務處{background:var(--教務處);border-color:var(--教務處);}
+.dept-btn.active-學務處{background:var(--學務處);border-color:var(--學務處);}
+.dept-btn.active-輔導處{background:var(--輔導處);border-color:var(--輔導處);}
+.dept-btn.active-總務處{background:var(--總務處);border-color:var(--總務處);}
+.sidebar-divider{height:1px;background:var(--border);margin:0.15rem 0;}
+
+/* ── Calendar wrap ── */
+.cal-wrap{flex:1;padding:1.1rem;min-width:0;overflow-y:auto;display:flex;flex-direction:column;gap:0.75rem;}
+
+/* Month/year quick nav */
+.quick-nav{
+  display:flex;align-items:center;gap:0.35rem;flex-wrap:wrap;
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:0.55rem 0.85rem;
+}
+.qnav-label{font-size:0.75rem;font-weight:600;color:var(--text3);margin-right:0.15rem;}
+.qnav-btn{
+  padding:0.22rem 0.55rem;border-radius:5px;border:1px solid var(--border);
+  background:none;font-family:'Noto Sans TC',sans-serif;font-size:0.75rem;font-weight:500;
+  cursor:pointer;color:var(--text2);transition:all .13s;
+}
+.qnav-btn:hover{background:var(--bg);border-color:#94a3b8;}
+.qnav-btn.active{background:#1a202c;border-color:#1a202c;color:#fff;}
+.qnav-sep{width:1px;height:16px;background:var(--border);margin:0 0.25rem;}
+.year-select{padding:0.22rem 0.45rem;border:1px solid var(--border);border-radius:5px;font-family:'Noto Sans TC',sans-serif;font-size:0.75rem;color:var(--text);outline:none;cursor:pointer;}
+
+/* Cal nav */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;}
+.cal-nav-center{display:flex;align-items:center;gap:0.65rem;}
+.cal-month{font-family:'Noto Serif TC',serif;font-size:1.25rem;font-weight:700;min-width:140px;text-align:center;}
+.icon-btn{width:32px;height:32px;border-radius:7px;border:1px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--text2);transition:all .13s;}
+.icon-btn:hover{background:var(--bg);border-color:#94a3b8;color:var(--text);}
+.today-btn{padding:0.3rem 0.75rem;border-radius:6px;border:1px solid var(--border);background:var(--surface);font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;cursor:pointer;color:var(--text2);transition:all .13s;}
+.today-btn:hover{background:var(--bg);color:var(--text);}
+.view-toggle{display:flex;border:1px solid var(--border);border-radius:7px;overflow:hidden;}
+.view-toggle button{padding:0.28rem 0.7rem;border:none;background:var(--surface);color:var(--text2);font-family:'Noto Sans TC',sans-serif;font-size:0.75rem;font-weight:500;cursor:pointer;transition:all .13s;}
+.view-toggle button:last-child{border-left:1px solid var(--border);}
+.view-toggle button.active{background:#1a202c;color:#fff;}
+
+/* ── Calendar Grid ── */
+.cal-grid{background:var(--surface);border-radius:10px;border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden;}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border);background:var(--surface2);}
+.cal-weekday{padding:0.5rem;text-align:center;font-size:0.75rem;font-weight:600;color:var(--text3);}
+.cal-weekday:first-child{color:#ef4444;}
+.cal-weekday:last-child{color:#3b82f6;}
+.cal-days{display:grid;grid-template-columns:repeat(7,1fr);}
+
+.cal-day{
+  min-height:115px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:0.28rem;position:relative;transition:background .1s;cursor:pointer;
+}
+.cal-day:nth-child(7n){border-right:none;}
+.cal-day:nth-last-child(-n+7){border-bottom:none;}
+.cal-day.other-month{background:var(--surface2);}
+.cal-day.other-month .day-num{color:var(--text3);}
+.cal-day.today .day-num{background:#1a202c;color:#fff;border-radius:50%;}
+.cal-day.weekend{background:var(--weekend-bg);}
+.cal-day.holiday{background:var(--holiday-bg);}
+.cal-day.other-month.weekend,.cal-day.other-month.holiday{background:var(--surface2);}
+.cal-day:not(.other-month):hover{background:#f0f7ff;}
+.cal-day.today:hover .day-num{background:#2d3748;}
+
+.day-num{font-size:0.8rem;font-weight:600;width:24px;height:24px;display:flex;align-items:center;justify-content:center;margin-bottom:0.15rem;border-radius:50%;transition:background .1s;flex-shrink:0;}
+.day-num-wrap{display:flex;align-items:center;gap:0.25rem;margin-bottom:0.15rem;}
+.cal-day.sunday .day-num{color:#ef4444;}
+.cal-day.saturday .day-num{color:#3b82f6;}
+.holiday-name{font-size:0.58rem;color:#ef4444;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60px;}
+
+.day-events{display:flex;flex-direction:column;gap:2px;}
+.event-chip{
+  border-radius:3px;padding:1px 4px;font-size:0.63rem;font-weight:500;
+  cursor:pointer;transition:filter .1s;line-height:1.5;
+  display:flex;flex-direction:column;gap:0;
+}
+.event-chip:hover{filter:brightness(.88);}
+.chip-time{font-size:0.58rem;opacity:0.85;font-weight:400;}
+.chip-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.chip-loc{font-size:0.57rem;opacity:0.8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.chip-conflict{position:relative;}
+.chip-conflict::after{content:'⚠';position:absolute;top:-3px;right:-3px;font-size:0.6rem;background:#fff;border-radius:50%;line-height:1;padding:0 1px;}
+.more-chip{font-size:0.63rem;color:var(--text3);padding:1px 3px;cursor:pointer;}
+
+/* Dept / location dot colors */
+.bg-教務處{background:var(--教務處);color:#fff;}
+.bg-學務處{background:var(--學務處);color:#fff;}
+.bg-輔導處{background:var(--輔導處);color:#fff;}
+.bg-總務處{background:var(--總務處);color:#fff;}
+.soft-教務處{background:var(--教務處-light);color:var(--教務處-text);}
+.soft-學務處{background:var(--學務處-light);color:var(--學務處-text);}
+.soft-輔導處{background:var(--輔導處-light);color:var(--輔導處-text);}
+.soft-總務處{background:var(--總務處-light);color:var(--總務處-text);}
+.dot-教務處{background:var(--教務處);}
+.dot-學務處{background:var(--學務處);}
+.dot-輔導處{background:var(--輔導處);}
+.dot-總務處{background:var(--總務處);}
+
+/* Location dot colors (rainbow for variety) */
+.ldot-0{background:#ef4444;}
+.ldot-1{background:#f97316;}
+.ldot-2{background:#eab308;}
+.ldot-3{background:#22c55e;}
+.ldot-4{background:#06b6d4;}
+.ldot-5{background:#3b82f6;}
+.ldot-6{background:#8b5cf6;}
+.ldot-7{background:#ec4899;}
+.ldot-8{background:#14b8a6;}
+.ldot-9{background:#f59e0b;}
+.ldot-10{background:#10b981;}
+.ldot-11{background:#6366f1;}
+.ldot-12{background:#84cc16;}
+.ldot-13{background:#f43f5e;}
+
+/* ── Week view ── */
+.week-4col{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;}
+.week-dept-col{background:var(--surface);border-radius:10px;border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden;}
+.week-dept-header{padding:0.55rem 0.75rem;font-size:0.82rem;font-weight:700;display:flex;align-items:center;gap:0.4rem;}
+.week-dept-body{padding:0.5rem;display:flex;flex-direction:column;gap:0;}
+.week-day-row{border-bottom:1px solid var(--border);padding:0.4rem 0.25rem;cursor:pointer;transition:background .1s;}
+.week-day-row:last-child{border-bottom:none;}
+.week-day-row:hover{background:var(--surface2);}
+.week-day-row.is-today{background:#eff6ff;}
+.week-day-row.weekend-row{background:var(--weekend-bg);}
+.week-day-row.holiday-row{background:var(--holiday-bg);}
+.week-date-line{display:flex;align-items:center;gap:0.35rem;margin-bottom:0.2rem;}
+.week-day-num{font-size:0.85rem;font-weight:700;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:50%;flex-shrink:0;}
+.week-day-row.is-today .week-day-num{background:#1a202c;color:#fff;}
+.week-dow{font-size:0.68rem;color:var(--text3);}
+.week-holiday-name{font-size:0.62rem;color:#ef4444;font-weight:600;}
+.week-events{display:flex;flex-direction:column;gap:2px;padding-left:0.25rem;}
+.week-ev-pill{
+  padding:0.2rem 0.45rem;border-radius:4px;font-size:0.72rem;font-weight:500;
+  cursor:pointer;transition:filter .1s;position:relative;
+}
+.week-ev-pill:hover{filter:brightness(.88);}
+.week-ev-time{font-size:0.62rem;opacity:.85;}
+.week-ev-loc{font-size:0.62rem;opacity:.8;}
+.week-no-ev{font-size:0.7rem;color:var(--text3);padding:0.15rem 0.25rem;}
+
+/* ── Modals ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:200;padding:1rem;backdrop-filter:blur(3px);}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--surface);border-radius:14px;box-shadow:var(--shadow-lg);width:100%;max-width:480px;animation:mIn .2s cubic-bezier(.16,1,.3,1);overflow:hidden;}
+@keyframes mIn{from{opacity:0;transform:scale(.94) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-header{padding:1.1rem 1.4rem 0.9rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-header h3{font-size:0.95rem;font-weight:700;}
+.modal-close{width:26px;height:26px;border-radius:5px;border:none;background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:var(--text2);transition:background .1s;}
+.modal-close:hover{background:var(--border);}
+.modal-body{padding:1.1rem 1.4rem;max-height:68vh;overflow-y:auto;}
+.modal-footer{padding:0.9rem 1.4rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:0.45rem;}
+.form-group{margin-bottom:0.85rem;}
+.form-group label{display:block;font-size:0.78rem;font-weight:500;color:var(--text2);margin-bottom:0.3rem;}
+.req{color:#ef4444;}
+.form-group input,.form-group select,.form-group textarea{
+  width:100%;padding:0.5rem 0.7rem;border:1.5px solid var(--border);
+  border-radius:7px;font-family:'Noto Sans TC',sans-serif;font-size:0.86rem;
+  color:var(--text);background:var(--surface);outline:none;transition:border-color .14s;
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:#1a202c;}
+.form-group textarea{resize:vertical;min-height:58px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;}
+.form-msg{font-size:0.76rem;color:#ef4444;margin-top:0.4rem;display:none;line-height:1.5;}
+.form-msg.ok{color:#059669;}
+.btn-md{padding:0.5rem 1.1rem;border-radius:7px;font-family:'Noto Sans TC',sans-serif;font-size:0.83rem;font-weight:500;cursor:pointer;border:none;transition:all .14s;}
+.btn-md.p{background:#1a202c;color:#fff;}.btn-md.p:hover{background:#2d3748;}
+.btn-md.c{background:var(--bg);color:var(--text2);}.btn-md.c:hover{background:var(--border);}
+.btn-md.d{background:#fee2e2;color:#dc2626;}.btn-md.d:hover{background:#fecaca;}
+.btn-md:disabled{opacity:.5;cursor:not-allowed;}
+
+/* Day detail modal */
+.day-modal .modal{max-width:700px;}
+.day-modal-hdr{padding:1.1rem 1.4rem 0.9rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.day-modal-hdr h3{font-family:'Noto Serif TC',serif;font-size:1.05rem;font-weight:700;}
+.dept-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.6rem;padding:1rem 1.2rem;min-height:220px;}
+.dept-col{border:1.5px solid var(--border);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;}
+.dept-col-header{display:flex;align-items:center;gap:0.4rem;padding:0.55rem 0.7rem;font-size:0.82rem;font-weight:700;flex-shrink:0;}
+.dept-col-body{padding:0.45rem 0.55rem;flex:1;overflow-y:auto;max-height:280px;}
+.dept-ev-item{padding:0.4rem 0.5rem;border-radius:6px;margin-bottom:0.3rem;background:var(--surface2);border:1px solid var(--border);position:relative;}
+.dept-ev-item.conflict-item{border-color:#f59e0b;background:#fffbeb;}
+.dept-ev-title{font-size:0.82rem;font-weight:600;margin-bottom:0.18rem;}
+.dept-ev-meta{font-size:0.7rem;color:var(--text2);display:flex;flex-wrap:wrap;gap:0.35rem;}
+.dept-ev-actions{display:flex;gap:0.3rem;margin-top:0.35rem;}
+.conflict-badge{font-size:0.65rem;background:#f59e0b;color:#fff;padding:0.1rem 0.35rem;border-radius:999px;display:inline-flex;align-items:center;gap:2px;margin-bottom:0.2rem;}
+.btn-xs{padding:0.2rem 0.5rem;border-radius:4px;font-size:0.68rem;font-weight:500;cursor:pointer;border:none;font-family:'Noto Sans TC',sans-serif;transition:all .12s;}
+.btn-xs.e{background:#f1f5f9;color:var(--text2);}.btn-xs.e:hover{background:var(--border);}
+.btn-xs.d{background:#fee2e2;color:#dc2626;}.btn-xs.d:hover{background:#fecaca;}
+.dept-empty{font-size:0.73rem;color:var(--text3);text-align:center;padding:0.75rem 0;}
+.day-modal-footer{padding:0.85rem 1.4rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:flex-end;gap:0.45rem;}
+.add-day-btn{padding:0.48rem 1rem;border-radius:7px;background:#1a202c;color:#fff;border:none;font-family:'Noto Sans TC',sans-serif;font-size:0.8rem;font-weight:500;cursor:pointer;display:none;transition:background .13s;}
+.add-day-btn:hover{background:#2d3748;}
+
+/* Batch modal */
+.batch-tab{padding:0.25rem 0.7rem;border-radius:5px;font-size:0.76rem;font-weight:500;border:1px solid var(--border);background:none;color:var(--text2);cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:all .13s;}
+.batch-tab:hover{background:var(--surface2);}
+.batch-tab.active{background:#1a202c;border-color:#1a202c;color:#fff;}
+.batch-input{width:100%;padding:0.26rem 0.42rem;border:1.5px solid transparent;border-radius:5px;font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;color:var(--text);background:transparent;outline:none;transition:border-color .12s;}
+.batch-input:focus{border-color:#1a202c;background:#fff;}
+.batch-input.dirty{background:#fffbeb;border-color:#f59e0b;}
+.batch-select{width:100%;padding:0.26rem 0.32rem;border:1.5px solid transparent;border-radius:5px;font-family:'Noto Sans TC',sans-serif;font-size:0.76rem;color:var(--text);background:transparent;outline:none;transition:border-color .12s;cursor:pointer;}
+.batch-select:focus{border-color:#1a202c;background:#fff;}
+.batch-select.dirty{background:#fffbeb;border-color:#f59e0b;}
+.batch-row-new{background:#f0fdf4!important;}
+.batch-tbody-row{border-bottom:1px solid var(--border);}
+.batch-tbody-row:hover{background:#fafbfc;}
+.batch-cell{padding:0.3rem 0.38rem;}
+
+/* Login modal */
+.login-modal .modal{max-width:360px;}
+
+/* Loading */
+.loading-overlay{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:300;flex-direction:column;gap:0.85rem;}
+.spinner{width:30px;height:30px;border:3px solid var(--border);border-top-color:var(--text);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:0.82rem;color:var(--text3);}
+
+@media(max-width:900px){.week-4col{grid-template-columns:1fr 1fr;}.dept-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:640px){.sidebar{display:none;}.cal-day{min-height:72px;}.school-title{display:none;}.week-4col{grid-template-columns:1fr;}.dept-grid{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading"><div class="spinner"></div><div class="loading-text">載入中…</div></div>
+
+<!-- Header -->
+<header>
+  <div class="header-left">
+    <div class="school-badge">新莊國小</div>
+    <span class="school-title">學校行事曆</span>
+    <span class="header-date" id="header-date"></span>
+  </div>
+  <div class="header-ticker" id="header-ticker">
+    <div class="ticker-empty">載入今日活動中…</div>
+  </div>
+  <div class="header-right">
+    <div id="user-info">
+      <span id="user-email-show" style="font-size:0.72rem;color:var(--text3)"></span>
+    </div>
+    <button id="btn-batch" onclick="openBatchModal()">📋 批次管理</button>
+    <button id="btn-add-header" onclick="openAddModal(null)">＋ 新增活動</button>
+    <button class="btn-sm btn-ghost" id="btn-logout" style="display:none" onclick="handleLogout()">登出</button>
+    <button class="btn-sm btn-primary" id="btn-login-open" onclick="openLoginModal()">教職員登入</button>
+  </div>
+</header>
+
+<!-- Location Filter Bar -->
+<div class="location-bar" id="location-bar">
+  <span class="loc-label">地點：</span>
+</div>
+
+<!-- Body -->
+<div class="body-wrap">
+  <div class="sidebar">
+    <div class="sidebar-label">處室篩選</div>
+    <button class="dept-btn active active-all" id="dbtn-all" onclick="setDeptFilter('all')"><span class="d-dot" style="background:#94a3b8"></span>全部</button>
+    <button class="dept-btn" id="dbtn-教務處" onclick="setDeptFilter('教務處')"><span class="d-dot dot-教務處"></span>教務處</button>
+    <button class="dept-btn" id="dbtn-學務處" onclick="setDeptFilter('學務處')"><span class="d-dot dot-學務處"></span>學務處</button>
+    <button class="dept-btn" id="dbtn-輔導處" onclick="setDeptFilter('輔導處')"><span class="d-dot dot-輔導處"></span>輔導處</button>
+    <button class="dept-btn" id="dbtn-總務處" onclick="setDeptFilter('總務處')"><span class="d-dot dot-總務處"></span>總務處</button>
+    <div class="sidebar-divider"></div>
+    <button class="add-btn-side" id="add-btn-side" onclick="openAddModal(null)" style="display:none;width:100%;padding:0.5rem 0.6rem;border-radius:8px;background:#1a202c;color:#fff;border:none;font-family:'Noto Sans TC',sans-serif;font-size:0.8rem;font-weight:500;cursor:pointer;transition:background .14s;">＋ 新增</button>
+  </div>
+
+  <div class="cal-wrap">
+    <!-- Quick month/year nav -->
+    <div class="quick-nav" id="quick-nav">
+      <span class="qnav-label">年份：</span>
+      <select class="year-select" id="year-select" onchange="setYear(this.value)"></select>
+      <div class="qnav-sep"></div>
+      <span class="qnav-label">月份：</span>
+      <span id="month-btns"></span>
+    </div>
+
+    <!-- Cal nav -->
+    <div class="cal-nav">
+      <div class="cal-nav-center">
+        <button class="icon-btn" id="nav-prev" onclick="navPrev()">‹</button>
+        <div class="cal-month" id="cal-month-label"></div>
+        <button class="icon-btn" id="nav-next" onclick="navNext()">›</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.45rem;">
+        <div class="view-toggle">
+          <button id="view-btn-month" class="active" onclick="setView('month')">月曆</button>
+          <button id="view-btn-week" onclick="setView('week')">週列表</button>
+        </div>
+        <button class="today-btn" onclick="goToday()">今天</button>
+      </div>
+    </div>
+
+    <!-- Month view -->
+    <div id="view-month">
+      <div class="cal-grid">
+        <div class="cal-weekdays">
+          <div class="cal-weekday">日</div><div class="cal-weekday">一</div>
+          <div class="cal-weekday">二</div><div class="cal-weekday">三</div>
+          <div class="cal-weekday">四</div><div class="cal-weekday">五</div>
+          <div class="cal-weekday">六</div>
+        </div>
+        <div class="cal-days" id="cal-days"></div>
+      </div>
+    </div>
+
+    <!-- Week view -->
+    <div id="view-week" style="display:none;">
+      <div class="week-4col" id="week-4col"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Day detail modal -->
+<div class="modal-overlay day-modal" id="modal-day">
+  <div class="modal" style="max-width:780px;">
+    <div class="day-modal-hdr">
+      <h3 id="day-hdr-title"></h3>
+      <button class="modal-close" onclick="closeDayModal()">✕</button>
+    </div>
+    <div class="dept-grid" id="dept-grid"></div>
+    <div class="day-modal-footer">
+      <button class="add-day-btn" id="add-day-btn" onclick="addFromDay()">＋ 新增這天的活動</button>
+      <button class="btn-md c" onclick="closeDayModal()">關閉</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit modal -->
+<div class="modal-overlay" id="modal-add">
+  <div class="modal">
+    <div class="modal-header"><h3 id="add-modal-title">新增活動</h3><button class="modal-close" onclick="closeAddModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label>活動名稱 <span class="req">*</span></label><input type="text" id="ev-title" placeholder="例：期中考、班親會…"></div>
+      <div class="form-row">
+        <div class="form-group"><label>開始日期 <span class="req">*</span></label><input type="date" id="ev-start"></div>
+        <div class="form-group"><label>結束日期 <span class="req">*</span></label><input type="date" id="ev-end"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>開始時間</label><input type="time" id="ev-stime"></div>
+        <div class="form-group"><label>結束時間</label><input type="time" id="ev-etime"></div>
+      </div>
+      <div class="form-group">
+        <label>地點 / 教室 <span class="req">*</span></label>
+        <select id="ev-location">
+          <option value="">請選擇地點</option>
+          <option>1F大穿堂</option><option>1F小玄關</option><option>1F靜思書軒</option>
+          <option>2F校長室旁會議室</option><option>3F視聽教室</option><option>4F圖書館</option>
+          <option>4F樂活教室</option><option>5F活動中心</option>
+          <option>球場南一（二.五.六年級）</option><option>球場南二（二.五.六年級）</option>
+          <option>球場北一（一.三.四年級）</option><option>球場北二（一.三.四年級）</option>
+          <option>桌球教室</option><option>指定班級教室</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>所屬處室 <span class="req">*</span></label>
+        <select id="ev-dept"><option value="教務處">教務處</option><option value="學務處">學務處</option><option value="輔導處">輔導處</option><option value="總務處">總務處</option></select>
+      </div>
+      <div class="form-group"><label>備註說明</label><textarea id="ev-note" placeholder="選填，可填地點代碼、聯絡人、注意事項…"></textarea></div>
+      <div class="form-msg" id="add-msg"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-md d" id="btn-del-ev" style="display:none" onclick="handleDeleteEvent()">刪除</button>
+      <div style="flex:1"></div>
+      <button class="btn-md c" onclick="closeAddModal()">取消</button>
+      <button class="btn-md p" id="btn-save-ev" onclick="handleSaveEvent()">儲存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Batch modal -->
+<div class="modal-overlay" id="modal-batch" style="align-items:flex-start;padding:0;">
+  <div class="modal" style="max-width:100%;width:100%;height:100vh;border-radius:0;display:flex;flex-direction:column;max-height:100vh;">
+    <div class="modal-header" style="flex-shrink:0;">
+      <div style="display:flex;align-items:center;gap:0.65rem;flex-wrap:wrap;">
+        <h3>📋 批次管理</h3>
+        <div style="display:flex;gap:0.3rem;">
+          <button class="batch-tab active" id="btab-table" onclick="switchBatchTab('table')">📊 表格編輯</button>
+          <button class="batch-tab" id="btab-paste" onclick="switchBatchTab('paste')">📝 貼上文字</button>
+          <button class="batch-tab" id="btab-csv" onclick="switchBatchTab('csv')">📁 匯入CSV</button>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeBatchModal()">✕</button>
+    </div>
+    <!-- Table tab -->
+    <div id="batch-panel-table" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+      <div style="padding:0.6rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.65rem;flex-wrap:wrap;flex-shrink:0;">
+        <span style="font-size:0.8rem;color:var(--text2);">處室：</span>
+        <select id="table-filter-dept" onchange="renderBatchTable()" style="padding:0.28rem 0.55rem;border:1.5px solid var(--border);border-radius:6px;font-family:'Noto Sans TC',sans-serif;font-size:0.8rem;outline:none;">
+          <option value="all">全部</option><option value="教務處">教務處</option><option value="學務處">學務處</option><option value="輔導處">輔導處</option><option value="總務處">總務處</option>
+        </select>
+        <button onclick="addBatchRow()" style="padding:0.28rem 0.8rem;border-radius:6px;background:#1a202c;color:#fff;border:none;font-family:'Noto Sans TC',sans-serif;font-size:0.8rem;cursor:pointer;">＋ 新增列</button>
+        <button onclick="saveBatchTable()" id="btn-save-batch-table" style="padding:0.28rem 0.8rem;border-radius:6px;background:#059669;color:#fff;border:none;font-family:'Noto Sans TC',sans-serif;font-size:0.8rem;cursor:pointer;">💾 全部儲存</button>
+        <span id="batch-table-msg" style="font-size:0.76rem;color:#059669;display:none;"></span>
+        <button onclick="downloadCSVTemplate()" style="padding:0.28rem 0.8rem;border-radius:6px;background:var(--surface2);color:var(--text2);border:1px solid var(--border);font-family:'Noto Sans TC',sans-serif;font-size:0.76rem;cursor:pointer;margin-left:auto;">⬇ 下載CSV範本</button>
+      </div>
+      <div style="flex:1;overflow:auto;">
+        <table id="batch-table" style="width:100%;border-collapse:collapse;font-size:0.8rem;">
+          <thead><tr style="background:var(--surface2);position:sticky;top:0;z-index:1;">
+            <th style="padding:0.5rem 0.65rem;text-align:left;border-bottom:2px solid var(--border);font-weight:600;color:var(--text2);width:32px;">#</th>
+            <th style="padding:0.5rem 0.65rem;text-align:left;border-bottom:2px solid var(--border);font-weight:600;color:var(--text2);">活動名稱 *</th>
+            <th style="padding:0.5rem 0.65rem;text-align:left;border-bottom:2px solid var(--border);font-weight:600;color:var(--text2);white-space:nowrap;">開始日期 *</th>
+            <th style="padding:0.5rem 0.65rem;text-align:left;border-bottom:2px solid var(--border);font-weight:600;color:var(--text2);white-space:nowrap;">結束日期</th>
+            <th style="padding:0.5rem 0.65rem;text-align:left;border-bottom:2px solid var(--border);font-weight:600;color:var(--text2);white-space:nowrap;">開始時間</th>
+            <th style="padding:0.5rem 0.65rem;text-align:left;border-bottom:2px solid var(--border);font-weight:600;color:var(--text2);white-space:nowrap;">結束時間</th>
+            <th style="padding:0.5rem 0.65rem;text-align:left;border-bottom:2px solid var(--border);font-weight:600;color:var(--text2);">地點 *</th>
+            <th style="padding:0.5rem 0.65rem;text-align:left;border-bottom:2px solid var(--border);font-weight:600;color:var(--text2);">處室 *</th>
+            <th style="padding:0.5rem 0.65rem;text-align:left;border-bottom:2px solid var(--border);font-weight:600;color:var(--text2);">備註</th>
+            <th style="padding:0.5rem 0.65rem;text-align:center;border-bottom:2px solid var(--border);font-weight:600;color:var(--text2);width:55px;">操作</th>
+          </tr></thead>
+          <tbody id="batch-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Paste tab -->
+    <div id="batch-panel-paste" style="display:none;flex:1;flex-direction:column;min-height:0;padding:1.1rem 1.25rem;overflow-y:auto;">
+      <p style="font-size:0.83rem;color:var(--text2);margin-bottom:0.9rem;line-height:1.7;">支援格式：<code style="background:var(--surface2);padding:0.1rem 0.35rem;border-radius:4px;font-size:0.78rem;">3/12活動名稱</code> <code style="background:var(--surface2);padding:0.1rem 0.35rem;border-radius:4px;font-size:0.78rem;">3/26~3/28跨天活動</code></p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.85rem;margin-bottom:0.85rem;">
+        <div><label style="font-size:0.78rem;font-weight:500;color:var(--text2);display:block;margin-bottom:0.3rem;">預設處室</label>
+        <select id="paste-dept" style="width:100%;padding:0.48rem 0.65rem;border:1.5px solid var(--border);border-radius:7px;font-family:'Noto Sans TC',sans-serif;font-size:0.86rem;outline:none;"><option value="教務處">教務處</option><option value="學務處">學務處</option><option value="輔導處">輔導處</option><option value="總務處">總務處</option></select></div>
+        <div><label style="font-size:0.78rem;font-weight:500;color:var(--text2);display:block;margin-bottom:0.3rem;">預設地點</label>
+        <select id="paste-loc" style="width:100%;padding:0.48rem 0.65rem;border:1.5px solid var(--border);border-radius:7px;font-family:'Noto Sans TC',sans-serif;font-size:0.86rem;outline:none;"><option value="">（之後再填）</option><option>1F大穿堂</option><option>1F小玄關</option><option>1F靜思書軒</option><option>2F校長室旁會議室</option><option>3F視聽教室</option><option>4F圖書館</option><option>4F樂活教室</option><option>5F活動中心</option><option>球場南一（二.五.六年級）</option><option>球場南二（二.五.六年級）</option><option>球場北一（一.三.四年級）</option><option>球場北二（一.三.四年級）</option><option>桌球教室</option><option>指定班級教室</option></select></div>
+      </div>
+      <label style="font-size:0.78rem;font-weight:500;color:var(--text2);display:block;margin-bottom:0.3rem;">貼上文字（每行一筆）</label>
+      <textarea id="paste-text" rows="10" placeholder="3/12五年級英語歌唱比賽&#10;3/26~3/28新生報到&#10;6/12畢業典禮" style="width:100%;padding:0.55rem 0.7rem;border:1.5px solid var(--border);border-radius:8px;font-family:'Noto Sans TC',sans-serif;font-size:0.86rem;color:var(--text);outline:none;resize:vertical;line-height:1.7;"></textarea>
+      <div style="margin-top:0.65rem;display:flex;gap:0.45rem;align-items:center;">
+        <button onclick="parsePasteText()" style="padding:0.48rem 1.1rem;border-radius:7px;background:#1a202c;color:#fff;border:none;font-family:'Noto Sans TC',sans-serif;font-size:0.83rem;font-weight:500;cursor:pointer;">解析預覽</button>
+        <span id="paste-msg" style="font-size:0.76rem;color:var(--text2);display:none;"></span>
+      </div>
+      <div id="paste-preview" style="display:none;margin-top:0.85rem;">
+        <div style="font-size:0.8rem;font-weight:600;color:var(--text2);margin-bottom:0.4rem;">預覽結果（可修改後再匯入）：</div>
+        <div style="overflow-x:auto;border:1px solid var(--border);border-radius:8px;">
+          <table id="paste-preview-table" style="width:100%;border-collapse:collapse;font-size:0.8rem;">
+            <thead><tr style="background:var(--surface2);">
+              <th style="padding:0.4rem 0.6rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;color:var(--text2);">活動名稱</th>
+              <th style="padding:0.4rem 0.6rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;color:var(--text2);">開始日期</th>
+              <th style="padding:0.4rem 0.6rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;color:var(--text2);">結束日期</th>
+              <th style="padding:0.4rem 0.6rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;color:var(--text2);">處室</th>
+              <th style="padding:0.4rem 0.6rem;text-align:left;border-bottom:1px solid var(--border);font-weight:600;color:var(--text2);">地點</th>
+              <th style="padding:0.4rem 0.6rem;text-align:center;border-bottom:1px solid var(--border);width:36px;"></th>
+            </tr></thead>
+            <tbody id="paste-preview-tbody"></tbody>
+          </table>
+        </div>
+        <div style="margin-top:0.75rem;display:flex;gap:0.45rem;align-items:center;">
+          <button onclick="importParsed()" id="btn-import-parsed" style="padding:0.48rem 1.1rem;border-radius:7px;background:#059669;color:#fff;border:none;font-family:'Noto Sans TC',sans-serif;font-size:0.83rem;font-weight:500;cursor:pointer;">✅ 確認匯入</button>
+          <span id="import-msg" style="font-size:0.76rem;color:var(--text2);display:none;"></span>
+        </div>
+      </div>
+    </div>
+    <!-- CSV tab -->
+    <div id="batch-panel-csv" style="display:none;flex:1;flex-direction:column;padding:1.1rem 1.25rem;overflow-y:auto;">
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;margin-bottom:1.1rem;">
+        <div style="font-size:0.86rem;font-weight:600;margin-bottom:0.45rem;">📋 CSV 格式說明</div>
+        <div style="font-size:0.78rem;color:var(--text2);line-height:1.8;">欄位：<code style="background:var(--surface);padding:0.1rem 0.32rem;border-radius:4px;font-size:0.76rem;">活動名稱,開始日期,結束日期,開始時間,結束時間,地點,處室,備註</code><br>日期：<code style="background:var(--surface);padding:0.1rem 0.32rem;border-radius:4px;font-size:0.76rem;">2026-03-12</code>　時間：<code style="background:var(--surface);padding:0.1rem 0.32rem;border-radius:4px;font-size:0.76rem;">09:00</code>（選填）</div>
+        <button onclick="downloadCSVTemplate()" style="margin-top:0.65rem;padding:0.35rem 0.9rem;border-radius:6px;background:var(--surface);border:1.5px solid var(--border);font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;cursor:pointer;color:var(--text2);">⬇ 下載 CSV 範本</button>
+      </div>
+      <div style="border:2px dashed var(--border);border-radius:10px;padding:1.75rem;text-align:center;cursor:pointer;transition:all .15s;" id="csv-drop-zone" onclick="document.getElementById('csv-file-input').click()" ondragover="event.preventDefault();this.style.borderColor='#1a202c'" ondragleave="this.style.borderColor='var(--border)'" ondrop="handleCSVDrop(event)">
+        <div style="font-size:1.6rem;margin-bottom:0.4rem;">📁</div>
+        <div style="font-size:0.86rem;font-weight:500;color:var(--text2);">點擊選擇 CSV 檔案，或拖曳到這裡</div>
+        <input type="file" id="csv-file-input" accept=".csv" style="display:none" onchange="handleCSVFile(this)">
+      </div>
+      <div id="csv-preview" style="display:none;margin-top:1.1rem;">
+        <div style="font-size:0.8rem;font-weight:600;color:var(--text2);margin-bottom:0.4rem;" id="csv-preview-label"></div>
+        <div style="overflow-x:auto;border:1px solid var(--border);border-radius:8px;">
+          <table id="csv-preview-table" style="width:100%;border-collapse:collapse;font-size:0.78rem;">
+            <thead id="csv-preview-thead" style="background:var(--surface2);"></thead>
+            <tbody id="csv-preview-tbody"></tbody>
+          </table>
+        </div>
+        <div style="margin-top:0.75rem;display:flex;gap:0.45rem;align-items:center;">
+          <button onclick="importCSV()" id="btn-import-csv" style="padding:0.48rem 1.1rem;border-radius:7px;background:#059669;color:#fff;border:none;font-family:'Noto Sans TC',sans-serif;font-size:0.83rem;font-weight:500;cursor:pointer;">✅ 確認匯入</button>
+          <span id="csv-import-msg" style="font-size:0.76rem;color:var(--text2);display:none;"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Login modal -->
+<div class="modal-overlay login-modal" id="modal-login">
+  <div class="modal" style="max-width:360px;">
+    <div class="modal-header"><h3>教職員登入</h3><button class="modal-close" onclick="closeLoginModal()">✕</button></div>
+    <div class="modal-body">
+      <p style="font-size:0.8rem;color:var(--text3);margin-bottom:1rem;line-height:1.7;">僅限 <strong style="color:var(--text)">@sjps.kh.edu.tw</strong> 信箱登入<br>訪客可直接瀏覽行事曆</p>
+      <div class="form-msg" id="login-msg" style="margin-bottom:0.75rem;"></div>
+    </div>
+    <div class="modal-footer" style="flex-direction:column;align-items:stretch;gap:0.45rem;">
+      <button onclick="handleGoogleLogin()" style="width:100%;padding:0.62rem;background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;gap:0.5rem;cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.85rem;font-weight:500;transition:background .13s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='var(--surface2)'">
+        <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        使用 Google 帳號登入
+      </button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey:"AIzaSyAhAduO-twiIX8kPUcXcwJDyuRCZT_GOZI",
+  authDomain:"myproject-c52cb.firebaseapp.com",
+  projectId:"myproject-c52cb",
+  storageBucket:"myproject-c52cb.firebasestorage.app",
+  messagingSenderId:"494432013878",
+  appId:"1:494432013878:web:3c631ca98030600f915297"
+});
+const auth = getAuth(app);
+const db = getFirestore(app);
+const gProvider = new GoogleAuthProvider();
+const DOMAIN = 'sjps.kh.edu.tw';
+const COL = 'calendar_events';
+const DEPTS = ['教務處','學務處','輔導處','總務處'];
+const LOCATIONS = ['1F大穿堂','1F小玄關','1F靜思書軒','2F校長室旁會議室','3F視聽教室','4F圖書館','4F樂活教室','5F活動中心','球場南一（二.五.六年級）','球場南二（二.五.六年級）','球場北一（一.三.四年級）','球場北二（一.三.四年級）','桌球教室','指定班級教室'];
+const BATCH_LOCS = ['', ...LOCATIONS];
+
+// Taiwan public holidays (fixed annual + key ones for 2025/2026)
+const TW_HOLIDAYS = {
+  '01-01':'元旦','02-28':'和平紀念日','04-04':'兒童節','04-05':'清明節',
+  '05-01':'勞動節','06-10':'端午節','09-28':'教師節','10-10':'國慶日',
+  '12-25':'行憲紀念日',
+  // 2025 lunar
+  '2025-01-29':'除夕','2025-01-30':'春節','2025-01-31':'春節','2025-02-01':'春節',
+  '2025-05-31':'端午節','2025-09-06':'中秋節',
+  // 2026 lunar
+  '2026-02-16':'除夕','2026-02-17':'春節','2026-02-18':'春節','2026-02-19':'春節',
+  '2026-06-19':'端午節','2026-09-25':'中秋節',
+};
+
+function getHolidayName(dateStr){
+  if(TW_HOLIDAYS[dateStr]) return TW_HOLIDAYS[dateStr];
+  const mmdd = dateStr.slice(5);
+  return TW_HOLIDAYS[mmdd]||null;
+}
+
+let currentUser = null;
+let curYear = new Date().getFullYear();
+let curMonth = new Date().getMonth();
+let events = [];
+let deptFilter = 'all';
+let locFilter = 'all';
+let editingId = null;
+let dayModalDate = null;
+let currentView = 'month';
+let weekStartDate = null;
+
+// ── Header date ──
+function initHeaderDate(){
+  const d = new Date();
+  const dow = ['日','一','二','三','四','五','六'][d.getDay()];
+  document.getElementById('header-date').textContent =
+    `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（${dow}）`;
+}
+initHeaderDate();
+
+// ── Quick nav (months + year) ──
+function initQuickNav(){
+  const yr = document.getElementById('year-select');
+  const base = new Date().getFullYear();
+  for(let y=base-2;y<=base+3;y++){
+    const opt=document.createElement('option');
+    opt.value=y; opt.textContent=y+'年';
+    if(y===base) opt.selected=true;
+    yr.appendChild(opt);
+  }
+  const mb = document.getElementById('month-btns');
+  for(let m=1;m<=12;m++){
+    const btn=document.createElement('button');
+    btn.className='qnav-btn';
+    btn.id='mbtn-'+m;
+    btn.textContent=m+'月';
+    btn.onclick=()=>{ curMonth=m-1; renderView(); };
+    mb.appendChild(btn);
+  }
+  updateQuickNav();
+}
+function updateQuickNav(){
+  document.getElementById('year-select').value = curYear;
+  for(let m=1;m<=12;m++){
+    const b=document.getElementById('mbtn-'+m);
+    if(b) b.className='qnav-btn'+(curMonth===m-1?' active':'');
+  }
+}
+window.setYear = (y) => { curYear=parseInt(y); renderView(); };
+initQuickNav();
+
+// ── Location bar ──
+(function initLocBar(){
+  const bar = document.getElementById('location-bar');
+  const allBtn = document.createElement('button');
+  allBtn.className='filter-btn active'; allBtn.id='locbtn-all';
+  allBtn.innerHTML='全部'; allBtn.onclick=()=>setLocFilter('all');
+  bar.appendChild(allBtn);
+  LOCATIONS.forEach((loc,i)=>{
+    const btn=document.createElement('button');
+    btn.className='filter-btn'; btn.id='locbtn-'+loc;
+    btn.innerHTML=`<span class="loc-dot ldot-${i%14}"></span>${loc}`;
+    btn.onclick=()=>setLocFilter(loc);
+    bar.appendChild(btn);
+  });
+})();
+
+// ── Filters ──
+window.setDeptFilter=(dept)=>{
+  deptFilter=dept;
+  ['all','教務處','學務處','輔導處','總務處'].forEach(d=>{
+    const btn=document.getElementById('dbtn-'+d);
+    if(!btn) return;
+    btn.className='dept-btn';
+    if(d===dept) btn.className+=` active active-${d}`;
+  });
+  renderView();
+  if(dayModalDate) renderDeptGrid(dayModalDate);
+};
+
+window.setLocFilter=(loc)=>{
+  locFilter=loc;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById(loc==='all'?'locbtn-all':'locbtn-'+loc);
+  if(el) el.classList.add('active');
+  renderView();
+  if(dayModalDate) renderDeptGrid(dayModalDate);
+};
+
+function passesFilter(ev){
+  if(deptFilter!=='all'&&ev.dept!==deptFilter) return false;
+  if(locFilter!=='all'&&ev.location!==locFilter) return false;
+  return true;
+}
+
+// ── Conflict detection ──
+function getConflicts(){
+  const conflicts = new Set();
+  for(let i=0;i<events.length;i++){
+    for(let j=i+1;j<events.length;j++){
+      const a=events[i], b=events[j];
+      if(!a.location||!b.location||a.location!==b.location) continue;
+      if(a.location==='指定班級教室') continue;
+      const aEnd=a.end||a.start, bEnd=b.end||b.start;
+      if(a.start>bEnd||b.start>aEnd) continue;
+      // Same date range overlap — check time if both have times
+      if(a.stime&&b.stime&&a.etime&&b.etime){
+        const sameDay = !(a.start>bEnd||b.start>aEnd);
+        if(sameDay){
+          if(a.stime>=b.etime||b.stime>=a.etime) continue;
+        }
+      }
+      conflicts.add(a.id); conflicts.add(b.id);
     }
-    .sidebar-label { font-size: 0.8rem; font-weight: 700; color: var(--text2); letter-spacing: 0.04em; margin-bottom: 0.2rem; padding-left: 0.25rem; }
-    .dept-btn {
-      width: 100%; padding: 0.55rem 0.65rem; border-radius: 8px;
-      border: 1.5px solid var(--border); background: none;
-      font-family: 'Noto Sans TC', sans-serif; font-size: 0.85rem; font-weight: 500;
-      cursor: pointer; transition: all 0.14s; text-align: left;
-      display: flex; align-items: center; gap: 0.45rem; color: var(--text2);
+  }
+  return conflicts;
+}
+
+// ── Auth ──
+onAuthStateChanged(auth,user=>{
+  if(user){
+    const domain=(user.email||'').split('@')[1];
+    if(domain!==DOMAIN){ signOut(auth); showFMsg('login-msg','','僅限 @'+DOMAIN+' 信箱'); return; }
+    currentUser=user;
+    document.getElementById('user-info').style.display='flex';
+    document.getElementById('user-email-show').textContent=user.email.split('@')[0];
+    document.getElementById('btn-logout').style.display='';
+    document.getElementById('btn-login-open').style.display='none';
+    document.getElementById('btn-add-header').style.display='';
+    document.getElementById('btn-batch').style.display='';
+    document.getElementById('add-btn-side').style.display='block';
+    closeLoginModal();
+  } else {
+    currentUser=null;
+    document.getElementById('user-info').style.display='none';
+    document.getElementById('btn-logout').style.display='none';
+    document.getElementById('btn-login-open').style.display='';
+    document.getElementById('btn-add-header').style.display='none';
+    document.getElementById('btn-batch').style.display='none';
+    document.getElementById('add-btn-side').style.display='none';
+  }
+  document.getElementById('loading').style.display='none';
+  if(!weekStartDate) weekStartDate=getWeekStart(new Date());
+  renderView();
+  if(dayModalDate) renderDeptGrid(dayModalDate);
+  updateTicker();
+});
+
+// ── Firestore ──
+onSnapshot(query(collection(db,COL),orderBy('start')),snap=>{
+  events=snap.docs.map(d=>({id:d.id,...d.data()}));
+  renderView();
+  if(dayModalDate) renderDeptGrid(dayModalDate);
+  updateTicker();
+},err=>{
+  console.error(err);
+  document.getElementById('loading').style.display='none';
+});
+
+// ── Helpers ──
+function pad(n){return String(n).padStart(2,'0');}
+function toDS(date){return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`;}
+function dowCh(n){return ['日','一','二','三','四','五','六'][n];}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
+function fmtMonthLabel(d){return `${d.getFullYear()} 年 ${d.getMonth()+1} 月`;}
+function getWeekStart(date){const d=new Date(date);d.setHours(0,0,0,0);d.setDate(d.getDate()-d.getDay());return d;}
+
+// ── Ticker (today's events) ──
+function updateTicker(){
+  const todayStr = toDS(new Date());
+  const todayEvs = events.filter(ev=>{
+    const end=ev.end||ev.start;
+    return todayStr>=ev.start&&todayStr<=end;
+  });
+  const ticker = document.getElementById('header-ticker');
+  if(!todayEvs.length){ ticker.innerHTML='<span class="ticker-empty">今日無活動</span>'; return; }
+  if(todayEvs.length===1){
+    const ev=todayEvs[0];
+    ticker.innerHTML=`<span class="ticker-item"><span class="ticker-dot dot-${ev.dept}" style="background:var(--${ev.dept})"></span>${ev.stime?ev.stime+' ':''}<strong>${ev.title}</strong>${ev.location?' @ '+ev.location:''}</span>`;
+    return;
+  }
+  // Marquee for multiple
+  const items=todayEvs.map(ev=>`<span class="ticker-item"><span class="ticker-dot" style="background:var(--${ev.dept});width:7px;height:7px;border-radius:50%;display:inline-block;"></span>${ev.stime?ev.stime+' ':''}<strong>${ev.title}</strong>${ev.location?' @ '+ev.location:''}</span>`).join('<span style="margin:0 1rem;color:var(--text3);">·</span>');
+  ticker.innerHTML=`<div class="ticker-inner">${items}</div>`;
+}
+
+// ── View control ──
+function renderView(){
+  updateQuickNav();
+  if(currentView==='month') renderCalendar();
+  else renderWeekView();
+}
+
+window.setView=(view)=>{
+  currentView=view;
+  document.getElementById('view-month').style.display=view==='month'?'':'none';
+  document.getElementById('view-week').style.display=view==='week'?'':'none';
+  document.getElementById('view-btn-month').className=view==='month'?'active':'';
+  document.getElementById('view-btn-week').className=view==='week'?'active':'';
+  renderView();
+};
+
+window.navPrev=()=>{
+  if(currentView==='month'){curMonth--;if(curMonth<0){curMonth=11;curYear--;}}
+  else{weekStartDate.setDate(weekStartDate.getDate()-7);}
+  renderView();
+};
+window.navNext=()=>{
+  if(currentView==='month'){curMonth++;if(curMonth>11){curMonth=0;curYear++;}}
+  else{weekStartDate.setDate(weekStartDate.getDate()+7);}
+  renderView();
+};
+window.goToday=()=>{
+  curYear=new Date().getFullYear();curMonth=new Date().getMonth();
+  weekStartDate=getWeekStart(new Date());
+  renderView();
+};
+
+// ── Month calendar ──
+function renderCalendar(){
+  const label=`${curYear} 年 ${curMonth+1} 月`;
+  document.getElementById('cal-month-label').textContent=label;
+  const firstDow=new Date(curYear,curMonth,1).getDay();
+  const daysInMonth=new Date(curYear,curMonth+1,0).getDate();
+  const prevTotal=new Date(curYear,curMonth,0).getDate();
+  const today=new Date(); const todayStr=toDS(today);
+  const conflicts=getConflicts();
+  const container=document.getElementById('cal-days');
+  container.innerHTML='';
+
+  for(let i=firstDow-1;i>=0;i--)
+    container.appendChild(makeCell(new Date(curYear,curMonth-1,prevTotal-i),true,conflicts));
+  for(let d=1;d<=daysInMonth;d++)
+    container.appendChild(makeCell(new Date(curYear,curMonth,d),false,conflicts));
+  const total=firstDow+daysInMonth;
+  const rem=total%7===0?0:7-(total%7);
+  for(let d=1;d<=rem;d++)
+    container.appendChild(makeCell(new Date(curYear,curMonth+1,d),true,conflicts));
+}
+
+function makeCell(date,otherMonth,conflicts){
+  const ds=toDS(date); const dow=date.getDay();
+  const isToday=ds===toDS(new Date());
+  const holiday=!otherMonth?getHolidayName(ds):null;
+  const isWeekend=dow===0||dow===6;
+
+  const cell=document.createElement('div');
+  cell.className='cal-day'
+    +(otherMonth?' other-month':'')
+    +(isToday?' today':'')
+    +(!otherMonth&&isWeekend&&!holiday?' weekend':'')
+    +(!otherMonth&&holiday?' holiday':'')
+    +(dow===0&&!otherMonth?' sunday':'')
+    +(dow===6&&!otherMonth?' saturday':'');
+  cell.onclick=()=>openDayModal(ds);
+
+  // Day number row
+  const numWrap=document.createElement('div');
+  numWrap.className='day-num-wrap';
+  const numEl=document.createElement('div');
+  numEl.className='day-num';
+  numEl.textContent=date.getDate();
+  numWrap.appendChild(numEl);
+  if(holiday&&!otherMonth){
+    const hn=document.createElement('span');
+    hn.className='holiday-name';
+    hn.textContent=holiday;
+    numWrap.appendChild(hn);
+  }
+  cell.appendChild(numWrap);
+
+  // Events
+  const dayEvs=events.filter(ev=>{
+    if(!passesFilter(ev)) return false;
+    const end=ev.end||ev.start;
+    return ds>=ev.start&&ds<=end;
+  });
+  const evWrap=document.createElement('div');
+  evWrap.className='day-events';
+  const MAX=3;
+  dayEvs.slice(0,MAX).forEach(ev=>{
+    const chip=document.createElement('div');
+    const hasConflict=conflicts.has(ev.id);
+    chip.className=`event-chip bg-${ev.dept}`+(hasConflict?' chip-conflict':'');
+    chip.onclick=e=>{e.stopPropagation();openDayModal(ds);};
+    // Time on top
+    if(ev.stime){
+      const t=document.createElement('div');
+      t.className='chip-time';
+      t.textContent=ev.stime+(ev.etime?'–'+ev.etime:'');
+      chip.appendChild(t);
     }
-    .d-dot { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
-    .dept-btn:hover { border-color: #94a3b8; color: var(--text); background: var(--surface2); }
-    .dept-btn.active { border-color: transparent; color: #fff; }
-    .dept-btn.active .d-dot { background: rgba(255,255,255,0.55) !important; }
+    // Title
+    const ti=document.createElement('div');
+    ti.className='chip-title';
+    ti.textContent=ev.title;
+    chip.appendChild(ti);
+    // Location at bottom
+    if(ev.location){
+      const lo=document.createElement('div');
+      lo.className='chip-loc';
+      lo.textContent='📍'+ev.location;
+      chip.appendChild(lo);
+    }
+    evWrap.appendChild(chip);
+  });
+  if(dayEvs.length>MAX){
+    const more=document.createElement('div');
+    more.className='more-chip';
+    more.textContent=`還有 ${dayEvs.length-MAX} 個`;
+    more.onclick=e=>{e.stopPropagation();openDayModal(ds);};
+    evWrap.appendChild(more);
+  }
+  cell.appendChild(evWrap);
+  return cell;
+}
+
+// ── Week view (4-column, one per dept) ──
+function renderWeekView(){
+  if(!weekStartDate) weekStartDate=getWeekStart(new Date());
+  const endDate=new Date(weekStartDate); endDate.setDate(endDate.getDate()+27);
+  const sl=fmtMonthLabel(weekStartDate); const el=fmtMonthLabel(endDate);
+  document.getElementById('cal-month-label').textContent=sl===el?sl:sl+' – '+el;
+
+  const container=document.getElementById('week-4col');
+  container.innerHTML='';
+  const todayStr=toDS(new Date());
+  const conflicts=getConflicts();
+
+  DEPTS.forEach(dept=>{
+    const col=document.createElement('div');
+    col.className='week-dept-col';
+
+    const hdr=document.createElement('div');
+    hdr.className=`week-dept-header soft-${dept}`;
+    hdr.innerHTML=`<span class="d-dot dot-${dept}"></span>${dept}`;
+    col.appendChild(hdr);
+
+    const body=document.createElement('div');
+    body.className='week-dept-body';
+
+    for(let w=0;w<4;w++){
+      // Week separator
+      const wStart=new Date(weekStartDate); wStart.setDate(wStart.getDate()+w*7);
+      const wEnd=new Date(wStart); wEnd.setDate(wEnd.getDate()+6);
+      const wLabel=document.createElement('div');
+      wLabel.style.cssText='font-size:0.65rem;color:var(--text3);padding:0.3rem 0.25rem 0.15rem;letter-spacing:.04em;font-weight:600;border-top:1px solid var(--border);margin-top:2px;';
+      if(w===0) wLabel.style.borderTop='none';
+      wLabel.textContent=`${wStart.getMonth()+1}/${wStart.getDate()}–${wEnd.getMonth()+1}/${wEnd.getDate()}`;
+      body.appendChild(wLabel);
+
+      for(let d=0;d<7;d++){
+        const date=new Date(wStart); date.setDate(date.getDate()+d);
+        const ds=toDS(date); const dow=date.getDay();
+        const isToday=ds===todayStr;
+        const holiday=getHolidayName(ds);
+        const isWeekend=dow===0||dow===6;
+
+        const dayRow=document.createElement('div');
+        dayRow.className='week-day-row'
+          +(isToday?' is-today':'')
+          +(isWeekend&&!holiday?' weekend-row':'')
+          +(holiday?' holiday-row':'');
+        dayRow.onclick=()=>openDayModal(ds);
+
+        const dateLine=document.createElement('div');
+        dateLine.className='week-date-line';
+        const numEl=document.createElement('div');
+        numEl.className='week-day-num'+(dow===0?' '+(isToday?'':''):'');
+        numEl.style.color=dow===0?'#ef4444':dow===6?'#3b82f6':'';
+        numEl.textContent=date.getDate();
+        const dowEl=document.createElement('div');
+        dowEl.className='week-dow';
+        dowEl.textContent=dowCh(dow);
+        dateLine.appendChild(numEl);
+        dateLine.appendChild(dowEl);
+        if(holiday){
+          const hl=document.createElement('div');
+          hl.className='week-holiday-name';
+          hl.textContent=holiday;
+          dateLine.appendChild(hl);
+        }
+        dayRow.appendChild(dateLine);
+
+        const evs=events.filter(ev=>{
+          if(ev.dept!==dept) return false;
+          if(locFilter!=='all'&&ev.location!==locFilter) return false;
+          const end=ev.end||ev.start;
+          return ds>=ev.start&&ds<=end;
+        });
+
+        if(evs.length>0){
+          const evDiv=document.createElement('div');
+          evDiv.className='week-events';
+          evs.forEach(ev=>{
+            const pill=document.createElement('div');
+            const hasConflict=conflicts.has(ev.id);
+            pill.className=`week-ev-pill bg-${ev.dept}`;
+            pill.style.position='relative';
+            let html='';
+            if(ev.stime) html+=`<div class="week-ev-time">${ev.stime}${ev.etime?'–'+ev.etime:''}</div>`;
+            html+=`<div style="font-weight:600;font-size:0.74rem;">${esc(ev.title)}</div>`;
+            if(ev.location) html+=`<div class="week-ev-loc">📍${esc(ev.location)}</div>`;
+            if(hasConflict) html+=`<span style="position:absolute;top:-4px;right:-4px;font-size:0.65rem;background:#f59e0b;color:#fff;border-radius:50%;width:14px;height:14px;display:flex;align-items:center;justify-content:center;">⚠</span>`;
+            pill.innerHTML=html;
+            pill.onclick=e=>{e.stopPropagation();openDayModal(ds);};
+            evDiv.appendChild(pill);
+          });
+          dayRow.appendChild(evDiv);
+        }
+        body.appendChild(dayRow);
+      }
+    }
+    col.appendChild(body);
+    container.appendChild(col);
+  });
+}
+
+// ── Day Modal ──
+window.openDayModal=(ds)=>{
+  dayModalDate=ds;
+  const d=new Date(ds);
+  const holiday=getHolidayName(ds);
+  document.getElementById('day-hdr-title').textContent=
+    `${d.getFullYear()} 年 ${d.getMonth()+1} 月 ${d.getDate()} 日（${dowCh(d.getDay())}）`
+    +(holiday?` ─ ${holiday}`:'');
+  renderDeptGrid(ds);
+  document.getElementById('add-day-btn').style.display=currentUser?'inline-flex':'none';
+  document.getElementById('modal-day').classList.add('open');
+};
+
+function renderDeptGrid(ds){
+  const grid=document.getElementById('dept-grid');
+  grid.innerHTML='';
+  const dayEvs=events.filter(ev=>{const end=ev.end||ev.start;return ds>=ev.start&&ds<=end;});
+  const conflicts=getConflicts();
+
+  DEPTS.forEach(dept=>{
+    const col=document.createElement('div');
+    col.className='dept-col';
+    const hdr=document.createElement('div');
+    hdr.className=`dept-col-header soft-${dept}`;
+    hdr.innerHTML=`<span class="d-dot dot-${dept}"></span>${dept}`;
+    col.appendChild(hdr);
+    const body=document.createElement('div');
+    body.className='dept-col-body';
+    const dEvs=dayEvs.filter(e=>e.dept===dept);
+    if(!dEvs.length){
+      body.innerHTML='<div class="dept-empty">—</div>';
+    } else {
+      dEvs.forEach(ev=>{
+        const hasConflict=conflicts.has(ev.id);
+        const item=document.createElement('div');
+        item.className='dept-ev-item'+(hasConflict?' conflict-item':'');
+        const dateRange=ev.end&&ev.end!==ev.start?`${ev.start}～${ev.end}`:ev.start;
+        const timeStr=(ev.stime||ev.etime)?`🕐 ${ev.stime||''}${ev.etime?' – '+ev.etime:''}`:'';
+        item.innerHTML=`
+          ${hasConflict?`<div class="conflict-badge">⚠ 地點衝突</div>`:''}
+          <div class="dept-ev-title">${esc(ev.title)}</div>
+          <div class="dept-ev-meta">
+            <span>📅 ${dateRange}</span>
+            ${timeStr?`<span>${timeStr}</span>`:''}
+            ${ev.location?`<span>📍 ${esc(ev.location)}</span>`:''}
+          </div>
+          ${ev.note?`<div style="font-size:0.7rem;color:var(--text3);margin-top:0.2rem;">📝 ${esc(ev.note)}</div>`:''}
+          ${currentUser?`<div class="dept-ev-actions">
+            <button class="btn-xs e" onclick="openEditEvent('${ev.id}')">編輯</button>
+            <button class="btn-xs d" onclick="confirmDelete('${ev.id}')">刪除</button>
+          </div>`:''}
+        `;
+        body.appendChild(item);
+      });
+    }
+    col.appendChild(body);
+    grid.appendChild(col);
+  });
+}
+
+window.closeDayModal=()=>{document.getElementById('modal-day').classList.remove('open');dayModalDate=null;};
+window.addFromDay=()=>{const d=dayModalDate;closeDayModal();openAddModal(d);};
+
+// ── Add/Edit ──
+window.openAddModal=(ds)=>{
+  if(!currentUser) return;
+  editingId=null;
+  document.getElementById('add-modal-title').textContent='新增活動';
+  document.getElementById('ev-title').value='';
+  document.getElementById('ev-start').value=ds||'';
+  document.getElementById('ev-end').value=ds||'';
+  document.getElementById('ev-stime').value='';
+  document.getElementById('ev-etime').value='';
+  document.getElementById('ev-location').value='';
+  document.getElementById('ev-dept').value='教務處';
+  document.getElementById('ev-note').value='';
+  document.getElementById('btn-del-ev').style.display='none';
+  clearFMsg('add-msg');
+  document.getElementById('modal-add').classList.add('open');
+};
+
+window.openEditEvent=(id)=>{
+  const ev=events.find(e=>e.id===id);
+  if(!ev||!currentUser) return;
+  editingId=id;
+  document.getElementById('add-modal-title').textContent='編輯活動';
+  document.getElementById('ev-title').value=ev.title||'';
+  document.getElementById('ev-start').value=ev.start||'';
+  document.getElementById('ev-end').value=ev.end||ev.start||'';
+  document.getElementById('ev-stime').value=ev.stime||'';
+  document.getElementById('ev-etime').value=ev.etime||'';
+  document.getElementById('ev-location').value=ev.location||'';
+  document.getElementById('ev-dept').value=ev.dept||'教務處';
+  document.getElementById('ev-note').value=ev.note||'';
+  document.getElementById('btn-del-ev').style.display='';
+  clearFMsg('add-msg');
+  document.getElementById('modal-add').classList.add('open');
+};
+
+window.closeAddModal=()=>{document.getElementById('modal-add').classList.remove('open');editingId=null;};
+
+window.handleSaveEvent=async()=>{
+  const title=document.getElementById('ev-title').value.trim();
+  const start=document.getElementById('ev-start').value;
+  const end=document.getElementById('ev-end').value||start;
+  const stime=document.getElementById('ev-stime').value;
+  const etime=document.getElementById('ev-etime').value;
+  const location=document.getElementById('ev-location').value;
+  const dept=document.getElementById('ev-dept').value;
+  const note=document.getElementById('ev-note').value.trim();
+  if(!title) return showFMsg('add-msg','','請填寫活動名稱');
+  if(!start) return showFMsg('add-msg','','請選擇開始日期');
+  if(!end) return showFMsg('add-msg','','請選擇結束日期');
+  if(!location) return showFMsg('add-msg','','請選擇地點或教室');
+  if(end<start) return showFMsg('add-msg','','結束日期不能早於開始日期');
+  const btn=document.getElementById('btn-save-ev');
+  btn.disabled=true;btn.textContent='儲存中…';
+  try{
+    const payload={title,start,end,stime,etime,location,dept,note,createdBy:currentUser.email,updatedAt:serverTimestamp()};
+    if(editingId){ await updateDoc(doc(db,COL,editingId),payload); }
+    else{ payload.createdAt=serverTimestamp(); await addDoc(collection(db,COL),payload); }
+    closeAddModal();
+  }catch(e){showFMsg('add-msg','','儲存失敗：'+e.message);}
+  btn.disabled=false;btn.textContent='儲存';
+};
+
+window.handleDeleteEvent=async()=>{
+  if(!editingId||!confirm('確定刪除？')) return;
+  await deleteDoc(doc(db,COL,editingId));
+  closeAddModal();
+};
+
+window.confirmDelete=async(id)=>{
+  if(!confirm('確定要刪除這個活動嗎？')) return;
+  await deleteDoc(doc(db,COL,id));
+};
+
+// ── Login (Google only) ──
+function showFMsg(id,cls,text){const el=document.getElementById(id);el.className='form-msg '+cls;el.textContent=text;el.style.display='block';}
+function clearFMsg(id){const el=document.getElementById(id);el.style.display='none';el.textContent='';}
+
+window.openLoginModal=()=>{clearFMsg('login-msg');document.getElementById('modal-login').classList.add('open');};
+window.closeLoginModal=()=>document.getElementById('modal-login').classList.remove('open');
+
+window.handleGoogleLogin=async()=>{
+  try{
+    const r=await signInWithPopup(auth,gProvider);
+    if(!r.user.email.endsWith('@'+DOMAIN)){await signOut(auth);showFMsg('login-msg','','僅限 @'+DOMAIN+' 信箱');}
+  }catch(e){if(e.code!=='auth/popup-closed-by-user') showFMsg('login-msg','','Google 登入失敗');}
+};
+
+window.handleLogout=()=>signOut(auth);
+
+// ── Batch Manager ──
+let batchRows=[], parsedRows=[], csvRows=[];
+
+window.openBatchModal=()=>{
+  batchRows=events.map(e=>({...e,dirty:false,isNew:false}));
+  batchRows.sort((a,b)=>(a.start||'').localeCompare(b.start||''));
+  renderBatchTable();
+  document.getElementById('modal-batch').classList.add('open');
+  switchBatchTab('table');
+};
+window.closeBatchModal=()=>document.getElementById('modal-batch').classList.remove('open');
+
+window.switchBatchTab=(tab)=>{
+  ['table','paste','csv'].forEach(t=>{
+    document.getElementById('btab-'+t).className='batch-tab'+(t===tab?' active':'');
+    document.getElementById('batch-panel-'+t).style.display=t===tab?'flex':'none';
+  });
+};
+
+window.renderBatchTable=()=>{
+  const fd=document.getElementById('table-filter-dept').value;
+  const tbody=document.getElementById('batch-tbody');
+  tbody.innerHTML='';
+  const visible=fd==='all'?batchRows:batchRows.filter(r=>r.dept===fd);
+  visible.forEach((row,i)=>{
+    const tr=document.createElement('tr');
+    tr.className='batch-tbody-row'+(row.isNew?' batch-row-new':'');
+    const deptOpts=DEPTS.map(d=>`<option value="${d}" ${row.dept===d?'selected':''}>${d}</option>`).join('');
+    const locOpts=BATCH_LOCS.map(l=>`<option value="${l}" ${row.location===l?'selected':''}>${l||'（未填）'}</option>`).join('');
+    const dc=row.dirty?' dirty':'';
+    tr.innerHTML=`
+      <td class="batch-cell" style="color:var(--text3);font-size:0.73rem;text-align:center;">${i+1}</td>
+      <td class="batch-cell" style="min-width:150px;"><input class="batch-input${dc}" value="${esc(row.title||'')}" placeholder="活動名稱" onchange="markDirty('${row.id}',this,'title')" oninput="markDirty('${row.id}',this,'title')"></td>
+      <td class="batch-cell" style="min-width:115px;"><input class="batch-input${dc}" type="date" value="${row.start||''}" onchange="markDirty('${row.id}',this,'start')"></td>
+      <td class="batch-cell" style="min-width:115px;"><input class="batch-input${dc}" type="date" value="${row.end||row.start||''}" onchange="markDirty('${row.id}',this,'end')"></td>
+      <td class="batch-cell" style="min-width:85px;"><input class="batch-input${dc}" type="time" value="${row.stime||''}" onchange="markDirty('${row.id}',this,'stime')"></td>
+      <td class="batch-cell" style="min-width:85px;"><input class="batch-input${dc}" type="time" value="${row.etime||''}" onchange="markDirty('${row.id}',this,'etime')"></td>
+      <td class="batch-cell" style="min-width:155px;"><select class="batch-select${dc}" onchange="markDirty('${row.id}',this,'location')">${locOpts}</select></td>
+      <td class="batch-cell" style="min-width:85px;"><select class="batch-select${dc}" onchange="markDirty('${row.id}',this,'dept')">${deptOpts}</select></td>
+      <td class="batch-cell" style="min-width:135px;"><input class="batch-input${dc}" value="${esc(row.note||'')}" placeholder="備註" onchange="markDirty('${row.id}',this,'note')" oninput="markDirty('${row.id}',this,'note')"></td>
+      <td class="batch-cell" style="text-align:center;">
+        <button onclick="deleteBatchRow('${row.id}')" style="background:#fee2e2;color:#dc2626;border:none;border-radius:4px;padding:0.2rem 0.45rem;cursor:pointer;font-size:0.72rem;">刪除</button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+};
+
+window.markDirty=(id,el,field)=>{
+  const row=batchRows.find(r=>r.id===id);
+  if(!row) return;
+  row[field]=el.value; row.dirty=true; el.classList.add('dirty');
+};
+
+window.addBatchRow=()=>{
+  const fd=document.getElementById('table-filter-dept').value;
+  const tmpId='new-'+Date.now();
+  batchRows.push({id:tmpId,title:'',start:'',end:'',stime:'',etime:'',location:'',dept:fd==='all'?'教務處':fd,note:'',dirty:true,isNew:true});
+  renderBatchTable();
+  const t=document.querySelector('#batch-panel-table > div:last-child');
+  if(t) t.scrollTop=t.scrollHeight;
+};
+
+window.deleteBatchRow=async(id)=>{
+  const row=batchRows.find(r=>r.id===id);
+  if(!row) return;
+  if(row.isNew){batchRows=batchRows.filter(r=>r.id!==id);renderBatchTable();return;}
+  if(!confirm('確定刪除「'+row.title+'」？')) return;
+  await deleteDoc(doc(db,COL,id));
+  batchRows=batchRows.filter(r=>r.id!==id);
+  renderBatchTable();
+};
+
+window.saveBatchTable=async()=>{
+  const dirty=batchRows.filter(r=>r.dirty);
+  if(!dirty.length){showBatchMsg('table','沒有需要儲存的變更');return;}
+  const btn=document.getElementById('btn-save-batch-table');
+  btn.disabled=true;btn.textContent='儲存中…';
+  let saved=0,failed=0;
+  for(const row of dirty){
+    if(!row.title||!row.start){failed++;continue;}
+    const payload={title:row.title,start:row.start,end:row.end||row.start,stime:row.stime||'',etime:row.etime||'',location:row.location||'',dept:row.dept||'教務處',note:row.note||'',createdBy:currentUser.email,updatedAt:serverTimestamp()};
+    try{
+      if(row.isNew){payload.createdAt=serverTimestamp();const ref=await addDoc(collection(db,COL),payload);row.id=ref.id;row.isNew=false;}
+      else{await updateDoc(doc(db,COL,row.id),payload);}
+      row.dirty=false;saved++;
+    }catch(e){failed++;}
+  }
+  btn.disabled=false;btn.textContent='💾 全部儲存';
+  showBatchMsg('table',`✅ 已儲存 ${saved} 筆${failed?`，${failed} 筆失敗`:''}`);
+  renderBatchTable();
+};
+
+function showBatchMsg(tab,msg){
+  const el=document.getElementById('batch-'+tab+'-msg');
+  if(!el) return;
+  el.textContent=msg;el.style.display='';
+  setTimeout(()=>el.style.display='none',3500);
+}
+
+window.downloadCSVTemplate=()=>{
+  const header='活動名稱,開始日期,結束日期,開始時間,結束時間,地點,處室,備註';
+  const sample=['期中考,2026-04-15,2026-04-17,08:00,16:00,4F圖書館,教務處,請各班配合','運動會,2026-05-10,2026-05-10,08:30,17:00,球場南一（二.五.六年級）,學務處,','畢業典禮,2026-06-12,2026-06-12,09:00,12:00,5F活動中心,教務處,'].join('\n');
+  const blob=new Blob(['\uFEFF'+header+'\n'+sample],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='行事曆範本.csv';a.click();
+};
+
+window.handleCSVDrop=(e)=>{e.preventDefault();document.getElementById('csv-drop-zone').style.borderColor='var(--border)';const f=e.dataTransfer.files[0];if(f) processCSVFile(f);};
+window.handleCSVFile=(input)=>{if(input.files[0]) processCSVFile(input.files[0]);};
+
+function processCSVFile(file){
+  const reader=new FileReader();
+  reader.onload=e=>{
+    let text=e.target.result;
+    if(text.charCodeAt(0)===0xFEFF) text=text.slice(1);
+    const lines=text.split(/\r?\n/).filter(l=>l.trim());
+    if(lines.length<2){alert('CSV 內容不足');return;}
+    csvRows=lines.slice(1).map(line=>{
+      const cols=parseCSVLine(line);
+      return{title:cols[0]||'',start:cols[1]||'',end:cols[2]||cols[1]||'',stime:cols[3]||'',etime:cols[4]||'',location:cols[5]||'',dept:cols[6]||'教務處',note:cols[7]||''};
+    }).filter(r=>r.title&&r.start);
+    renderCSVPreview();
+  };
+  reader.readAsText(file,'UTF-8');
+}
+
+function parseCSVLine(line){
+  const result=[];let cur='';let inQ=false;
+  for(let i=0;i<line.length;i++){
+    const c=line[i];
+    if(c==='"'){inQ=!inQ;}
+    else if(c===','&&!inQ){result.push(cur.trim());cur='';}
+    else{cur+=c;}
+  }
+  result.push(cur.trim());return result;
+}
+
+function renderCSVPreview(){
+  if(!csvRows.length){alert('沒有可匯入的資料');return;}
+  document.getElementById('csv-preview-label').textContent=`預覽 ${csvRows.length} 筆資料（前10筆）：`;
+  const thead=document.getElementById('csv-preview-thead');
+  const tbody=document.getElementById('csv-preview-tbody');
+  thead.innerHTML='<tr>'+['活動名稱','開始日期','結束日期','地點','處室','備註'].map(h=>`<th style="padding:0.4rem 0.6rem;text-align:left;border-bottom:1px solid var(--border);font-size:0.76rem;font-weight:600;color:var(--text2);">${h}</th>`).join('')+'</tr>';
+  tbody.innerHTML=csvRows.slice(0,10).map(r=>`<tr style="border-bottom:1px solid var(--border);">${[r.title,r.start,r.end,r.location,r.dept,r.note].map(v=>`<td style="padding:0.38rem 0.6rem;font-size:0.76rem;">${v||'—'}</td>`).join('')}</tr>`).join('');
+  document.getElementById('csv-preview').style.display='';
+}
+
+window.importCSV=async()=>{
+  if(!csvRows.length) return;
+  const btn=document.getElementById('btn-import-csv');
+  const msg=document.getElementById('csv-import-msg');
+  btn.disabled=true;btn.textContent='匯入中…';
+  msg.textContent='';msg.style.display='';
+  let ok=0,fail=0;
+  for(const row of csvRows){
+    try{await addDoc(collection(db,COL),{...row,end:row.end||row.start,createdBy:currentUser.email,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});ok++;}
+    catch(e){fail++;}
+  }
+  btn.disabled=false;btn.textContent='✅ 確認匯入';
+  msg.textContent=`✅ 成功匯入 ${ok} 筆${fail?`，${fail} 筆失敗`:''}`;
+  csvRows=[];
+  document.getElementById('csv-preview').style.display='none';
+  document.getElementById('csv-file-input').value='';
+};
+
+window.parsePasteText=()=>{
+  const text=document.getElementById('paste-text').value.trim();
+  const dept=document.getElementById('paste-dept').value;
+  const loc=document.getElementById('paste-loc').value;
+  const msg=document.getElementById('paste-msg');
+  if(!text){msg.textContent='請先輸入文字';msg.style.display='';return;}
+  const curYr=new Date().getFullYear();
+  const lines=text.split(/\n/).map(l=>l.trim()).filter(Boolean);
+  parsedRows=[];
+  lines.forEach(line=>{
+    const parts=line.split('、');
+    parts.forEach((part,pi)=>{
+      part=part.trim();
+      const rangeMatch=part.match(/^(\d{1,2})\/(\d{1,2})[~\-～](\d{1,2})\/(\d{1,2})\s*(.*)$/);
+      if(rangeMatch){
+        let title=rangeMatch[5].trim()||parts[parts.length-1].replace(/^\d+\/\d+[~\-～\d\/]*/,'').trim()||'（待填）';
+        parsedRows.push({title,start:`${curYr}-${pad(rangeMatch[1])}-${pad(rangeMatch[2])}`,end:`${curYr}-${pad(rangeMatch[3])}-${pad(rangeMatch[4])}`,dept,location:loc,stime:'',etime:'',note:''});
+        return;
+      }
+      const singleMatch=part.match(/^(\d{1,2})\/(\d{1,2})\s*(.*)$/);
+      if(singleMatch){
+        let title=singleMatch[3].trim();
+        if(!title&&pi<parts.length-1) title=parts[parts.length-1].replace(/^\d+\/\d+\s*/,'').trim();
+        if(!title) title='（待填）';
+        parsedRows.push({title,start:`${curYr}-${pad(singleMatch[1])}-${pad(singleMatch[2])}`,end:`${curYr}-${pad(singleMatch[1])}-${pad(singleMatch[2])}`,dept,location:loc,stime:'',etime:'',note:''});
+      }
+    });
+  });
+  if(!parsedRows.length){msg.textContent='無法解析，請確認格式';msg.style.display='';return;}
+  msg.textContent=`解析到 ${parsedRows.length} 筆活動`;msg.style.display='';
+  renderPastePreview();
+};
+
+function renderPastePreview(){
+  const tbody=document.getElementById('paste-preview-tbody');
+  tbody.innerHTML='';
+  parsedRows.forEach((row,i)=>{
+    const deptOpts=DEPTS.map(d=>`<option value="${d}" ${row.dept===d?'selected':''}>${d}</option>`).join('');
+    const locOpts=BATCH_LOCS.map(l=>`<option value="${l}" ${row.location===l?'selected':''}>${l||'（未填）'}</option>`).join('');
+    const tr=document.createElement('tr');
+    tr.style.borderBottom='1px solid var(--border)';
+    tr.innerHTML=`
+      <td style="padding:0.32rem 0.48rem;"><input style="width:100%;padding:0.24rem 0.38rem;border:1.5px solid var(--border);border-radius:5px;font-size:0.78rem;font-family:'Noto Sans TC',sans-serif;" value="${esc(row.title)}" onchange="parsedRows[${i}].title=this.value"></td>
+      <td style="padding:0.32rem 0.48rem;"><input type="date" style="padding:0.24rem 0.38rem;border:1.5px solid var(--border);border-radius:5px;font-size:0.76rem;" value="${row.start}" onchange="parsedRows[${i}].start=this.value"></td>
+      <td style="padding:0.32rem 0.48rem;"><input type="date" style="padding:0.24rem 0.38rem;border:1.5px solid var(--border);border-radius:5px;font-size:0.76rem;" value="${row.end}" onchange="parsedRows[${i}].end=this.value"></td>
+      <td style="padding:0.32rem 0.48rem;"><select style="padding:0.24rem 0.32rem;border:1.5px solid var(--border);border-radius:5px;font-size:0.76rem;font-family:'Noto Sans TC',sans-serif;" onchange="parsedRows[${i}].dept=this.value">${deptOpts}</select></td>
+      <td style="padding:0.32rem 0.48rem;"><select style="padding:0.24rem 0.32rem;border:1.5px solid var(--border);border-radius:5px;font-size:0.76rem;font-family:'Noto Sans TC',sans-serif;" onchange="parsedRows[${i}].location=this.value">${locOpts}</select></td>
+      <td style="padding:0.32rem 0.48rem;text-align:center;"><button onclick="parsedRows.splice(${i},1);renderPastePreview()" style="background:#fee2e2;color:#dc2626;border:none;border-radius:4px;padding:0.18rem 0.42rem;cursor:pointer;font-size:0.7rem;">✕</button></td>`;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('paste-preview').style.display='';
+}
+
+window.importParsed=async()=>{
+  if(!parsedRows.length) return;
+  const btn=document.getElementById('btn-import-parsed');
+  const msg=document.getElementById('import-msg');
+  btn.disabled=true;btn.textContent='匯入中…';
+  msg.textContent='';msg.style.display='';
+  let ok=0,fail=0;
+  for(const row of parsedRows){
+    if(!row.title||!row.start){fail++;continue;}
+    try{await addDoc(collection(db,COL),{...row,end:row.end||row.start,createdBy:currentUser.email,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});ok++;}
+    catch(e){fail++;}
+  }
+  btn.disabled=false;btn.textContent='✅ 確認匯入';
+  msg.textContent=`✅ 匯入 ${ok} 筆成功${fail?`，${fail} 筆失敗`:''}`;
+  parsedRows=[];
+  document.getElementById('paste-preview').style.display='none';
+  document.getElementById('paste-text').value='';
+  document.getElementById('paste-msg').style.display='none';
+};
+
+// Close on overlay click
+document.querySelectorAll('.modal-overlay').forEach(o=>{
+  o.addEventListener('click',e=>{if(e.target===o) o.classList.remove('open');});
+});
+</script>
+</body>
+</html>    .dept-btn.active .d-dot { background: rgba(255,255,255,0.55) !important; }
     .dept-btn.active-all { background: #1a202c; border-color: #1a202c; }
     .dept-btn.active-教務處 { background: var(--教務處); border-color: var(--教務處); }
     .dept-btn.active-學務處 { background: var(--學務處); border-color: var(--學務處); }
