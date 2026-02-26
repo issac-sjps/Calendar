@@ -410,13 +410,39 @@ header{
   .mob-fab-filter{background:var(--surface);color:var(--text);border:1px solid var(--border)!important;}
   .mob-fab-label{font-size:0.62rem;font-weight:600;margin-top:2px;color:var(--text3);text-align:center;}
 
-  /* Calendar adjustments */
-  .cal-wrap{padding:0.65rem 0.5rem;}
-  .cal-day{min-height:68px;padding:0.2rem;}
-  .day-num{width:22px;height:22px;font-size:0.75rem;}
+  /* Calendar adjustments — fixed size, uniform cells */
+  .cal-wrap{padding:0.5rem 0.35rem;}
+  .cal-day{
+    height:62px !important;
+    min-height:unset !important;
+    max-height:62px !important;
+    padding:0.18rem 0.15rem;
+    overflow:hidden;
+  }
+  .day-num-wrap{margin-bottom:0.1rem;}
+  .day-num{width:20px;height:20px;font-size:0.7rem;}
   .holiday-name{display:none;}
-  .event-chip{font-size:0.6rem;padding:1px 3px;}
+  /* Each chip: single line, fixed height, 2-char title */
+  .event-chip{
+    font-size:0.65rem;
+    padding:1px 3px;
+    display:block !important;
+    line-height:1.4;
+    height:16px;
+    overflow:hidden;
+  }
+  .chip-time{display:none;}
   .chip-loc{display:none;}
+  .chip-title{
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:clip;
+    display:block;
+    max-width:100%;
+  }
+  /* Max 2 chips visible per day */
+  .day-events{gap:1px;overflow:hidden;max-height:34px;}
+  .more-chip{font-size:0.55rem;line-height:1.3;}
 
   /* Quick nav mobile: horizontal scroll */
   .quick-nav{flex-wrap:nowrap;overflow-x:auto;padding:0.45rem 0.75rem;gap:0.3rem;-webkit-overflow-scrolling:touch;}
@@ -1194,26 +1220,29 @@ function makeCell(date,otherMonth,conflicts){
   });
   const evWrap=document.createElement('div');
   evWrap.className='day-events';
-  const MAX=3;
+  const mob=isMobile();
+  const MAX=mob?2:3;
   dayEvs.slice(0,MAX).forEach(ev=>{
     const chip=document.createElement('div');
     const hasConflict=conflicts.has(ev.id);
     chip.className=`event-chip bg-${ev.dept}`+(hasConflict?' chip-conflict':'');
     chip.onclick=e=>{e.stopPropagation();openDayModal(ds);};
-    // Time on top
-    if(ev.stime){
+    // Time on top (desktop only)
+    if(ev.stime&&!mob){
       const t=document.createElement('div');
       t.className='chip-time';
       t.textContent=ev.stime+(ev.etime?'–'+ev.etime:'');
       chip.appendChild(t);
     }
-    // Title
+    // Title — mobile: 2 chars + ellipsis
     const ti=document.createElement('div');
     ti.className='chip-title';
-    ti.textContent=ev.title;
+    ti.textContent=mob
+      ? (ev.title.length>2 ? ev.title.slice(0,2)+'…' : ev.title)
+      : ev.title;
     chip.appendChild(ti);
-    // Location at bottom
-    if(ev.location){
+    // Location at bottom (desktop only)
+    if(ev.location&&!mob){
       const lo=document.createElement('div');
       lo.className='chip-loc';
       lo.textContent='📍'+ev.location;
@@ -1224,7 +1253,7 @@ function makeCell(date,otherMonth,conflicts){
   if(dayEvs.length>MAX){
     const more=document.createElement('div');
     more.className='more-chip';
-    more.textContent=`還有 ${dayEvs.length-MAX} 個`;
+    more.textContent=mob?`+${dayEvs.length-MAX}`:`還有 ${dayEvs.length-MAX} 個`;
     more.onclick=e=>{e.stopPropagation();openDayModal(ds);};
     evWrap.appendChild(more);
   }
