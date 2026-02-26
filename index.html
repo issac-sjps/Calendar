@@ -9,199 +9,134 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --bg: #f0f4f8;
-      --surface: #ffffff;
+      --surface: #fff;
       --surface2: #f8fafc;
       --border: #e2e8f0;
       --text: #1a202c;
       --text2: #4a5568;
       --text3: #a0aec0;
-      --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
-      --shadow-lg: 0 8px 32px rgba(0,0,0,0.14);
+      --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.05);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.13);
       --教務處: #3b82f6; --教務處-light: #eff6ff; --教務處-text: #1d4ed8;
       --學務處: #10b981; --學務處-light: #f0fdf4; --學務處-text: #065f46;
       --輔導處: #f59e0b; --輔導處-light: #fffbeb; --輔導處-text: #92400e;
       --總務處: #8b5cf6; --總務處-light: #f5f3ff; --總務處-text: #5b21b6;
-      --green: #2d7a4f;
     }
-    body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
-    /* Header */
+    /* ── Header ── */
     header {
       background: var(--surface); border-bottom: 1px solid var(--border);
-      padding: 0 1.5rem; display: flex; align-items: center;
-      justify-content: space-between; height: 60px;
+      padding: 0 1.25rem; display: flex; align-items: center;
+      justify-content: space-between; height: 56px;
       position: sticky; top: 0; z-index: 100;
-      box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
     }
-    .header-left { display: flex; align-items: center; gap: 0.75rem; }
-    .school-badge {
-      background: #1a202c; color: #fff;
-      font-family: 'Noto Serif TC', serif; font-weight: 900;
-      font-size: 0.85rem; padding: 0.3rem 0.6rem; letter-spacing: 0.05em;
-    }
-    .school-title { font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 1rem; color: var(--text); }
-    .header-right { display: flex; align-items: center; gap: 0.75rem; }
-    #user-info { font-size: 0.8rem; color: var(--text2); display: none; align-items: center; gap: 0.5rem; }
-    .user-dept { padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.72rem; font-weight: 500; }
-    .btn-sm { padding: 0.4rem 1rem; border-radius: 6px; font-family: 'Noto Sans TC', sans-serif; font-size: 0.8rem; font-weight: 500; cursor: pointer; border: none; transition: all 0.15s; }
+    .header-left { display: flex; align-items: center; gap: 0.65rem; }
+    .school-badge { background: #1a202c; color: #fff; font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 0.82rem; padding: 0.28rem 0.55rem; letter-spacing: 0.04em; }
+    .school-title { font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 0.95rem; }
+    .header-right { display: flex; align-items: center; gap: 0.65rem; }
+    #user-info { font-size: 0.78rem; color: var(--text2); display: none; align-items: center; gap: 0.45rem; }
+    .user-dept-pill { padding: 0.18rem 0.55rem; border-radius: 999px; font-size: 0.7rem; font-weight: 600; }
+    .btn-sm { padding: 0.38rem 0.9rem; border-radius: 6px; font-family: 'Noto Sans TC', sans-serif; font-size: 0.78rem; font-weight: 500; cursor: pointer; border: none; transition: all 0.14s; }
     .btn-primary { background: #1a202c; color: #fff; }
     .btn-primary:hover { background: #2d3748; }
-    .btn-outline { background: none; border: 1px solid var(--border) !important; color: var(--text2); }
-    .btn-outline:hover { border-color: #a0aec0 !important; color: var(--text); }
+    .btn-ghost { background: none; border: 1px solid var(--border) !important; color: var(--text2); }
+    .btn-ghost:hover { border-color: #94a3b8 !important; color: var(--text); }
 
-    /* Legend */
-    .legend-bar {
+    /* ── Location Filter Bar (top) ── */
+    .location-bar {
       background: var(--surface); border-bottom: 1px solid var(--border);
-      padding: 0.6rem 1.5rem; display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;
+      padding: 0.55rem 1.25rem; display: flex; align-items: center;
+      gap: 0.4rem; flex-wrap: wrap; position: sticky; top: 56px; z-index: 99;
     }
-    .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; color: var(--text2); cursor: pointer; transition: opacity 0.15s; user-select: none; }
-    .legend-item.dimmed { opacity: 0.35; }
-    .legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+    .loc-label { font-size: 0.72rem; color: var(--text3); margin-right: 0.25rem; white-space: nowrap; }
+    .filter-btn {
+      padding: 0.28rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 500;
+      border: 1.5px solid var(--border); background: var(--surface); color: var(--text2);
+      cursor: pointer; transition: all 0.14s; white-space: nowrap; font-family: 'Noto Sans TC', sans-serif;
+    }
+    .filter-btn:hover { border-color: #94a3b8; color: var(--text); }
+    .filter-btn.active { background: #1a202c; border-color: #1a202c; color: #fff; }
 
-    /* Main */
-    .main { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+    /* ── Body layout ── */
+    .body-wrap { display: flex; flex: 1; min-height: 0; }
 
-    /* Cal Nav */
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 108px; flex-shrink: 0;
+      background: var(--surface); border-right: 1px solid var(--border);
+      padding: 1rem 0.65rem; display: flex; flex-direction: column; gap: 0.4rem;
+      position: sticky; top: 112px; /* header + loc bar */ align-self: flex-start;
+      height: calc(100vh - 112px); overflow-y: auto;
+    }
+    .sidebar-label { font-size: 0.68rem; color: var(--text3); letter-spacing: 0.06em; margin-bottom: 0.2rem; padding-left: 0.25rem; }
+    .dept-btn {
+      width: 100%; padding: 0.5rem 0.6rem; border-radius: 8px;
+      border: 1.5px solid var(--border); background: none;
+      font-family: 'Noto Sans TC', sans-serif; font-size: 0.78rem; font-weight: 500;
+      cursor: pointer; transition: all 0.14s; text-align: left;
+      display: flex; align-items: center; gap: 0.45rem; color: var(--text2);
+    }
+    .dept-btn .d-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+    .dept-btn:hover { border-color: #94a3b8; color: var(--text); background: var(--surface2); }
+    .dept-btn.active { border-color: transparent; color: #fff; }
+    .dept-btn.active-教務處 { background: var(--教務處); border-color: var(--教務處); }
+    .dept-btn.active-學務處 { background: var(--學務處); border-color: var(--學務處); }
+    .dept-btn.active-輔導處 { background: var(--輔導處); border-color: var(--輔導處); }
+    .dept-btn.active-總務處 { background: var(--總務處); border-color: var(--總務處); }
+    .dept-btn.active .d-dot { background: rgba(255,255,255,0.6) !important; }
+    .sidebar-divider { height: 1px; background: var(--border); margin: 0.35rem 0; }
+    .add-btn-side {
+      width: 100%; padding: 0.5rem 0.6rem; border-radius: 8px;
+      background: #1a202c; color: #fff; border: none;
+      font-family: 'Noto Sans TC', sans-serif; font-size: 0.78rem; font-weight: 500;
+      cursor: pointer; transition: background 0.14s; display: none;
+    }
+    .add-btn-side:hover { background: #2d3748; }
+
+    /* ── Calendar area ── */
+    .cal-wrap { flex: 1; padding: 1.25rem; min-width: 0; }
     .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-    .cal-nav-center { display: flex; align-items: center; gap: 1rem; }
-    .cal-month { font-family: 'Noto Serif TC', serif; font-size: 1.4rem; font-weight: 700; min-width: 160px; text-align: center; }
-    .icon-btn { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: all 0.15s; color: var(--text2); }
-    .icon-btn:hover { background: var(--bg); border-color: #a0aec0; color: var(--text); }
-    .today-btn { padding: 0.4rem 0.9rem; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); font-family: 'Noto Sans TC', sans-serif; font-size: 0.8rem; cursor: pointer; color: var(--text2); transition: all 0.15s; }
+    .cal-nav-center { display: flex; align-items: center; gap: 0.75rem; }
+    .cal-month { font-family: 'Noto Serif TC', serif; font-size: 1.3rem; font-weight: 700; min-width: 148px; text-align: center; }
+    .icon-btn { width: 34px; height: 34px; border-radius: 7px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--text2); transition: all 0.13s; }
+    .icon-btn:hover { background: var(--bg); border-color: #94a3b8; color: var(--text); }
+    .today-btn { padding: 0.35rem 0.8rem; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); font-family: 'Noto Sans TC', sans-serif; font-size: 0.78rem; cursor: pointer; color: var(--text2); transition: all 0.13s; }
     .today-btn:hover { background: var(--bg); color: var(--text); }
 
-    /* Calendar Grid */
-    .cal-grid { background: var(--surface); border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--shadow); overflow: hidden; }
+    .cal-grid { background: var(--surface); border-radius: 10px; border: 1px solid var(--border); box-shadow: var(--shadow); overflow: hidden; }
     .cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); border-bottom: 1px solid var(--border); background: var(--surface2); }
-    .cal-weekday { padding: 0.6rem; text-align: center; font-size: 0.75rem; font-weight: 500; color: var(--text3); letter-spacing: 0.05em; }
-    .cal-weekday:first-child { color: #e53e3e; }
-    .cal-weekday:last-child { color: #3182ce; }
+    .cal-weekday { padding: 0.5rem; text-align: center; font-size: 0.73rem; font-weight: 500; color: var(--text3); }
+    .cal-weekday:first-child { color: #ef4444; }
+    .cal-weekday:last-child { color: #3b82f6; }
     .cal-days { display: grid; grid-template-columns: repeat(7, 1fr); }
 
     .cal-day {
-      min-height: 115px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
-      padding: 0.35rem 0.35rem 0.35rem 0.35rem; position: relative; transition: background 0.12s;
+      min-height: 112px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      padding: 0.3rem; position: relative; transition: background 0.1s;
     }
     .cal-day:nth-child(7n) { border-right: none; }
     .cal-day:nth-last-child(-n+7) { border-bottom: none; }
     .cal-day.other-month { background: var(--surface2); }
     .cal-day.other-month .day-num { color: var(--text3); }
     .cal-day.today .day-num { background: #1a202c; color: #fff; border-radius: 50%; }
-    .cal-day.sunday .day-num { color: #e53e3e; }
-    .cal-day.saturday .day-num { color: #3182ce; }
-
-    /* Clickable day hint when logged in */
-    .cal-day.clickable:not(.other-month):hover {
-      background: #f0f7ff;
-      cursor: pointer;
-    }
-    .cal-day.clickable:not(.other-month):hover .day-num {
-      background: #e2eeff;
-      border-radius: 50%;
-    }
-    .cal-day.clickable.today:hover .day-num {
-      background: #2d3748;
-    }
-
-    /* Plus hint on hover */
-    .cal-day.clickable:not(.other-month)::after {
-      content: '＋';
-      position: absolute;
-      top: 4px; right: 6px;
-      font-size: 0.75rem;
-      color: var(--text3);
-      opacity: 0;
-      transition: opacity 0.15s;
-      pointer-events: none;
-    }
+    .cal-day.sunday .day-num { color: #ef4444; }
+    .cal-day.saturday .day-num { color: #3b82f6; }
+    .cal-day.clickable:not(.other-month):hover { background: #f0f7ff; cursor: pointer; }
+    .cal-day.clickable:not(.other-month)::after { content: '＋'; position: absolute; top: 3px; right: 5px; font-size: 0.7rem; color: var(--text3); opacity: 0; transition: opacity 0.13s; pointer-events: none; }
     .cal-day.clickable:not(.other-month):hover::after { opacity: 1; }
 
-    .day-num { font-size: 0.82rem; font-weight: 500; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.2rem; border-radius: 50%; transition: background 0.12s; }
+    .day-num { font-size: 0.8rem; font-weight: 500; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.2rem; border-radius: 50%; transition: background 0.1s; cursor: pointer; }
+    .day-num:hover { background: #e2eeff; }
+    .cal-day.today .day-num:hover { background: #2d3748; }
+
     .day-events { display: flex; flex-direction: column; gap: 2px; }
-    .event-chip { border-radius: 4px; padding: 1px 5px; font-size: 0.67rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; transition: filter 0.1s; line-height: 1.5; }
-    .event-chip:hover { filter: brightness(0.9); }
-    .more-events { font-size: 0.65rem; color: var(--text3); padding: 1px 4px; cursor: pointer; }
+    .event-chip { border-radius: 3px; padding: 1px 4px; font-size: 0.65rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; transition: filter 0.1s; line-height: 1.55; }
+    .event-chip:hover { filter: brightness(0.88); }
+    .more-chip { font-size: 0.63rem; color: var(--text3); padding: 1px 3px; cursor: pointer; }
 
-    /* Modal */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: none; align-items: center; justify-content: center; z-index: 200; padding: 1rem; backdrop-filter: blur(3px); }
-    .modal-overlay.open { display: flex; }
-    .modal { background: var(--surface); border-radius: 16px; box-shadow: var(--shadow-lg); width: 100%; max-width: 480px; animation: modalIn 0.22s cubic-bezier(0.16,1,0.3,1); overflow: hidden; }
-    @keyframes modalIn { from { opacity:0; transform:scale(0.94) translateY(10px); } to { opacity:1; transform:scale(1) translateY(0); } }
-    .modal-header { padding: 1.25rem 1.5rem 1rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-    .modal-header h3 { font-size: 1rem; font-weight: 700; }
-    .modal-close { width: 28px; height: 28px; border-radius: 6px; border: none; background: var(--bg); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--text2); transition: background 0.1s; }
-    .modal-close:hover { background: var(--border); }
-    .modal-body { padding: 1.25rem 1.5rem; max-height: 70vh; overflow-y: auto; }
-    .form-group { margin-bottom: 1rem; }
-    .form-group label { display: block; font-size: 0.78rem; font-weight: 500; color: var(--text2); margin-bottom: 0.35rem; }
-    .form-group input, .form-group select, .form-group textarea {
-      width: 100%; padding: 0.55rem 0.75rem; border: 1.5px solid var(--border);
-      border-radius: 8px; font-family: 'Noto Sans TC', sans-serif; font-size: 0.88rem;
-      color: var(--text); background: var(--surface); outline: none; transition: border-color 0.15s;
-    }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #1a202c; }
-    .form-group textarea { resize: vertical; min-height: 64px; }
-    .required { color: #e53e3e; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-    .modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 0.5rem; }
-    .btn-md { padding: 0.55rem 1.25rem; border-radius: 8px; font-family: 'Noto Sans TC', sans-serif; font-size: 0.85rem; font-weight: 500; cursor: pointer; border: none; transition: all 0.15s; }
-    .btn-md.btn-primary { background: #1a202c; color: #fff; }
-    .btn-md.btn-primary:hover { background: #2d3748; }
-    .btn-md.btn-cancel { background: var(--bg); color: var(--text2); }
-    .btn-md.btn-cancel:hover { background: var(--border); }
-    .btn-md.btn-delete { background: #fee2e2; color: #dc2626; }
-    .btn-md.btn-delete:hover { background: #fecaca; }
-    .btn-md:disabled { opacity: 0.5; cursor: not-allowed; }
-    .form-msg { font-size: 0.78rem; color: #e53e3e; margin-top: 0.5rem; display: none; }
-    .form-msg.success { color: var(--green); }
-
-    /* Day Detail Modal */
-    .day-detail-modal .modal { max-width: 520px; }
-    .day-detail-date {
-      font-family: 'Noto Serif TC', serif;
-      font-size: 1.1rem; font-weight: 700;
-      padding: 1.25rem 1.5rem 0.75rem;
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .dept-section { margin-bottom: 1rem; }
-    .dept-section-header {
-      display: flex; align-items: center; gap: 0.5rem;
-      font-size: 0.8rem; font-weight: 700;
-      padding: 0.4rem 0.6rem; border-radius: 6px;
-      margin-bottom: 0.5rem;
-    }
-    .dept-dot { width: 8px; height: 8px; border-radius: 2px; }
-    .event-card {
-      border: 1px solid var(--border); border-radius: 10px;
-      padding: 0.75rem 1rem; margin-bottom: 0.5rem;
-      transition: box-shadow 0.15s; background: var(--surface);
-      cursor: default;
-    }
-    .event-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-    .event-card-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.35rem; }
-    .event-card-meta { font-size: 0.75rem; color: var(--text2); display: flex; flex-wrap: wrap; gap: 0.75rem; }
-    .event-card-meta span { display: flex; align-items: center; gap: 0.3rem; }
-    .event-card-actions { display: flex; gap: 0.4rem; margin-top: 0.6rem; }
-    .btn-xs { padding: 0.25rem 0.65rem; border-radius: 5px; font-size: 0.72rem; font-weight: 500; cursor: pointer; border: none; transition: all 0.12s; font-family: 'Noto Sans TC', sans-serif; }
-    .btn-xs.edit { background: var(--bg); color: var(--text2); }
-    .btn-xs.edit:hover { background: var(--border); color: var(--text); }
-    .btn-xs.del { background: #fee2e2; color: #dc2626; }
-    .btn-xs.del:hover { background: #fecaca; }
-    .no-events { font-size: 0.82rem; color: var(--text3); text-align: center; padding: 1.5rem 0; }
-    .add-from-day { width: 100%; margin-top: 0.5rem; padding: 0.6rem; border-radius: 8px; border: 1.5px dashed var(--border); background: none; font-family: 'Noto Sans TC', sans-serif; font-size: 0.82rem; color: var(--text3); cursor: pointer; transition: all 0.15s; display: none; }
-    .add-from-day:hover { border-color: #a0aec0; color: var(--text2); background: var(--surface2); }
-
-    /* Login Modal */
-    .login-modal .modal { max-width: 380px; }
-
-    /* Loading */
-    .loading-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 300; flex-direction: column; gap: 1rem; }
-    .loading-text { font-size: 0.85rem; color: var(--text3); }
-    .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--text); border-radius: 50%; animation: spin 0.7s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* Dept color utils */
+    /* Dept colors */
     .bg-教務處 { background: var(--教務處); color: #fff; }
     .bg-學務處 { background: var(--學務處); color: #fff; }
     .bg-輔導處 { background: var(--輔導處); color: #fff; }
@@ -215,23 +150,76 @@
     .dot-輔導處 { background: var(--輔導處); }
     .dot-總務處 { background: var(--總務處); }
 
-    @media (max-width: 640px) {
-      .cal-day { min-height: 72px; padding: 0.25rem; }
+    /* ── Modals ── */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.42); display: none; align-items: center; justify-content: center; z-index: 200; padding: 1rem; backdrop-filter: blur(3px); }
+    .modal-overlay.open { display: flex; }
+    .modal { background: var(--surface); border-radius: 14px; box-shadow: var(--shadow-lg); width: 100%; max-width: 480px; animation: mIn 0.2s cubic-bezier(0.16,1,0.3,1); overflow: hidden; }
+    @keyframes mIn { from { opacity:0; transform:scale(0.94) translateY(10px); } to { opacity:1; transform:scale(1) translateY(0); } }
+    .modal-header { padding: 1.1rem 1.4rem 0.9rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .modal-header h3 { font-size: 0.95rem; font-weight: 700; }
+    .modal-close { width: 26px; height: 26px; border-radius: 5px; border: none; background: var(--bg); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; color: var(--text2); transition: background 0.1s; }
+    .modal-close:hover { background: var(--border); }
+    .modal-body { padding: 1.1rem 1.4rem; max-height: 68vh; overflow-y: auto; }
+    .modal-footer { padding: 0.9rem 1.4rem; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 0.45rem; }
+    .form-group { margin-bottom: 0.9rem; }
+    .form-group label { display: block; font-size: 0.75rem; font-weight: 500; color: var(--text2); margin-bottom: 0.3rem; }
+    .req { color: #ef4444; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 0.5rem 0.7rem; border: 1.5px solid var(--border);
+      border-radius: 7px; font-family: 'Noto Sans TC', sans-serif; font-size: 0.85rem;
+      color: var(--text); background: var(--surface); outline: none; transition: border-color 0.14s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #1a202c; }
+    .form-group textarea { resize: vertical; min-height: 60px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; }
+    .form-msg { font-size: 0.75rem; color: #ef4444; margin-top: 0.4rem; display: none; }
+    .form-msg.ok { color: #059669; }
+    .btn-md { padding: 0.5rem 1.1rem; border-radius: 7px; font-family: 'Noto Sans TC', sans-serif; font-size: 0.82rem; font-weight: 500; cursor: pointer; border: none; transition: all 0.14s; }
+    .btn-md.p { background: #1a202c; color: #fff; } .btn-md.p:hover { background: #2d3748; }
+    .btn-md.c { background: var(--bg); color: var(--text2); } .btn-md.c:hover { background: var(--border); }
+    .btn-md.d { background: #fee2e2; color: #dc2626; } .btn-md.d:hover { background: #fecaca; }
+    .btn-md:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Day detail */
+    .day-modal .modal { max-width: 520px; }
+    .day-modal-hdr { padding: 1.1rem 1.4rem 0.9rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .day-modal-hdr h3 { font-family: 'Noto Serif TC', serif; font-size: 1rem; font-weight: 700; }
+    .dept-section { margin-bottom: 1rem; }
+    .dept-sec-hdr { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; font-weight: 700; padding: 0.35rem 0.55rem; border-radius: 5px; margin-bottom: 0.4rem; }
+    .sec-dot { width: 7px; height: 7px; border-radius: 2px; }
+    .ev-card { border: 1px solid var(--border); border-radius: 8px; padding: 0.65rem 0.85rem; margin-bottom: 0.4rem; }
+    .ev-card-title { font-size: 0.87rem; font-weight: 600; margin-bottom: 0.28rem; }
+    .ev-card-meta { font-size: 0.72rem; color: var(--text2); display: flex; flex-wrap: wrap; gap: 0.55rem; }
+    .ev-card-actions { display: flex; gap: 0.35rem; margin-top: 0.5rem; }
+    .btn-xs { padding: 0.22rem 0.6rem; border-radius: 4px; font-size: 0.7rem; font-weight: 500; cursor: pointer; border: none; font-family: 'Noto Sans TC', sans-serif; transition: all 0.12s; }
+    .btn-xs.e { background: var(--bg); color: var(--text2); } .btn-xs.e:hover { background: var(--border); }
+    .btn-xs.d { background: #fee2e2; color: #dc2626; } .btn-xs.d:hover { background: #fecaca; }
+    .no-ev { font-size: 0.8rem; color: var(--text3); text-align: center; padding: 1.25rem 0; }
+    .add-day-btn { width: 100%; padding: 0.55rem; border-radius: 7px; border: 1.5px dashed var(--border); background: none; font-family: 'Noto Sans TC', sans-serif; font-size: 0.8rem; color: var(--text3); cursor: pointer; transition: all 0.14s; display: none; }
+    .add-day-btn:hover { border-color: #94a3b8; color: var(--text2); background: var(--surface2); }
+
+    /* Login */
+    .login-modal .modal { max-width: 370px; }
+
+    /* Loading */
+    .loading-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 300; flex-direction: column; gap: 0.85rem; }
+    .spinner { width: 30px; height: 30px; border: 3px solid var(--border); border-top-color: var(--text); border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 0.82rem; color: var(--text3); }
+
+    @media (max-width: 700px) {
+      .sidebar { display: none; }
+      .cal-day { min-height: 72px; }
       .school-title { display: none; }
-      .legend-bar { gap: 0.75rem; }
-      .main { padding: 1rem; }
-      .cal-month { font-size: 1.1rem; min-width: 120px; }
-      .form-row { grid-template-columns: 1fr; }
-      header { padding: 0 1rem; }
+      .location-bar { top: 56px; }
     }
   </style>
 </head>
 <body>
 
-<!-- Loading -->
 <div class="loading-overlay" id="loading">
   <div class="spinner"></div>
-  <div class="loading-text">載入中...</div>
+  <div class="loading-text">載入中…</div>
 </div>
 
 <!-- Header -->
@@ -242,109 +230,133 @@
   </div>
   <div class="header-right">
     <div id="user-info">
-      <span id="user-dept-badge" class="user-dept"></span>
-      <span id="user-email-text" style="font-size:0.75rem;color:var(--text3);"></span>
+      <span id="user-dept-pill" class="user-dept-pill"></span>
+      <span id="user-email-show" style="font-size:0.72rem;color:var(--text3)"></span>
     </div>
-    <button class="btn-sm btn-outline" id="btn-logout" style="display:none" onclick="handleLogout()">登出</button>
+    <button class="btn-sm btn-ghost" id="btn-logout" style="display:none" onclick="handleLogout()">登出</button>
     <button class="btn-sm btn-primary" id="btn-login-open" onclick="openLoginModal()">教職員登入</button>
   </div>
 </header>
 
-<!-- Legend -->
-<div class="legend-bar">
-  <span style="font-size:0.75rem;color:var(--text3);">顯示：</span>
-  <div class="legend-item" onclick="toggleDept('教務處')" id="legend-教務處">
-    <div class="legend-dot dot-教務處"></div><span>教務處</span>
-  </div>
-  <div class="legend-item" onclick="toggleDept('學務處')" id="legend-學務處">
-    <div class="legend-dot dot-學務處"></div><span>學務處</span>
-  </div>
-  <div class="legend-item" onclick="toggleDept('輔導處')" id="legend-輔導處">
-    <div class="legend-dot dot-輔導處"></div><span>輔導處</span>
-  </div>
-  <div class="legend-item" onclick="toggleDept('總務處')" id="legend-總務處">
-    <div class="legend-dot dot-總務處"></div><span>總務處</span>
-  </div>
-  <div style="margin-left:auto">
-    <button class="btn-sm btn-primary" id="btn-add-event" style="display:none" onclick="openAddModal(null)">＋ 新增活動</button>
-  </div>
+<!-- Location Filter Bar -->
+<div class="location-bar" id="location-bar">
+  <span class="loc-label">地點篩選：</span>
+  <!-- buttons injected by JS -->
 </div>
 
-<!-- Calendar -->
-<div class="main">
-  <div class="cal-nav">
-    <div class="cal-nav-center">
-      <button class="icon-btn" onclick="changeMonth(-1)">‹</button>
-      <div class="cal-month" id="cal-month-label"></div>
-      <button class="icon-btn" onclick="changeMonth(1)">›</button>
-    </div>
-    <button class="today-btn" onclick="goToday()">今天</button>
+<!-- Body -->
+<div class="body-wrap">
+
+  <!-- Sidebar: dept filter -->
+  <div class="sidebar">
+    <div class="sidebar-label">處室篩選</div>
+    <button class="dept-btn" id="dbtn-all" onclick="setDeptFilter('all')">
+      <span class="d-dot" style="background:#94a3b8"></span>全部
+    </button>
+    <button class="dept-btn" id="dbtn-教務處" onclick="setDeptFilter('教務處')">
+      <span class="d-dot dot-教務處"></span>教務處
+    </button>
+    <button class="dept-btn" id="dbtn-學務處" onclick="setDeptFilter('學務處')">
+      <span class="d-dot dot-學務處"></span>學務處
+    </button>
+    <button class="dept-btn" id="dbtn-輔導處" onclick="setDeptFilter('輔導處')">
+      <span class="d-dot dot-輔導處"></span>輔導處
+    </button>
+    <button class="dept-btn" id="dbtn-總務處" onclick="setDeptFilter('總務處')">
+      <span class="d-dot dot-總務處"></span>總務處
+    </button>
+    <div class="sidebar-divider"></div>
+    <button class="add-btn-side" id="add-btn-side" onclick="openAddModal(null)">＋ 新增活動</button>
   </div>
-  <div class="cal-grid">
-    <div class="cal-weekdays">
-      <div class="cal-weekday">日</div><div class="cal-weekday">一</div>
-      <div class="cal-weekday">二</div><div class="cal-weekday">三</div>
-      <div class="cal-weekday">四</div><div class="cal-weekday">五</div>
-      <div class="cal-weekday">六</div>
+
+  <!-- Calendar -->
+  <div class="cal-wrap">
+    <div class="cal-nav">
+      <div class="cal-nav-center">
+        <button class="icon-btn" onclick="changeMonth(-1)">‹</button>
+        <div class="cal-month" id="cal-month-label"></div>
+        <button class="icon-btn" onclick="changeMonth(1)">›</button>
+      </div>
+      <button class="today-btn" onclick="goToday()">今天</button>
     </div>
-    <div class="cal-days" id="cal-days"></div>
+    <div class="cal-grid">
+      <div class="cal-weekdays">
+        <div class="cal-weekday">日</div><div class="cal-weekday">一</div>
+        <div class="cal-weekday">二</div><div class="cal-weekday">三</div>
+        <div class="cal-weekday">四</div><div class="cal-weekday">五</div>
+        <div class="cal-weekday">六</div>
+      </div>
+      <div class="cal-days" id="cal-days"></div>
+    </div>
   </div>
 </div>
 
 <!-- ── Day Detail Modal ── -->
-<div class="modal-overlay day-detail-modal" id="modal-day">
+<div class="modal-overlay day-modal" id="modal-day">
   <div class="modal" style="max-width:520px">
-    <div class="day-detail-date">
-      <span id="day-detail-title"></span>
+    <div class="day-modal-hdr">
+      <h3 id="day-hdr-title"></h3>
       <button class="modal-close" onclick="closeDayModal()">✕</button>
     </div>
-    <div class="modal-body" id="day-detail-body" style="padding:1.25rem 1.5rem;"></div>
-    <div class="modal-footer" style="border-top:1px solid var(--border)">
-      <button class="add-from-day" id="add-from-day-btn" onclick="addFromDayModal()">＋ 新增這天的活動</button>
+    <div class="modal-body" id="day-body"></div>
+    <div class="modal-footer">
+      <button class="add-day-btn" id="add-day-btn" onclick="addFromDay()">＋ 新增這天的活動</button>
       <div style="flex:1"></div>
-      <button class="btn-md btn-cancel" onclick="closeDayModal()">關閉</button>
+      <button class="btn-md c" onclick="closeDayModal()">關閉</button>
     </div>
   </div>
 </div>
 
-<!-- ── Add / Edit Event Modal ── -->
+<!-- ── Add/Edit Modal ── -->
 <div class="modal-overlay" id="modal-add">
   <div class="modal">
     <div class="modal-header">
-      <h3 id="modal-add-title">新增活動</h3>
+      <h3 id="add-modal-title">新增活動</h3>
       <button class="modal-close" onclick="closeAddModal()">✕</button>
     </div>
     <div class="modal-body">
       <div class="form-group">
-        <label>活動名稱 <span class="required">*</span></label>
-        <input type="text" id="ev-title" placeholder="例：期中考、運動會…">
+        <label>活動名稱 <span class="req">*</span></label>
+        <input type="text" id="ev-title" placeholder="例：期中考、班親會…">
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label>開始日期 <span class="required">*</span></label>
+          <label>開始日期 <span class="req">*</span></label>
           <input type="date" id="ev-start">
         </div>
         <div class="form-group">
-          <label>結束日期 <span class="required">*</span></label>
+          <label>結束日期 <span class="req">*</span></label>
           <input type="date" id="ev-end">
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
           <label>開始時間</label>
-          <input type="time" id="ev-start-time">
+          <input type="time" id="ev-stime">
         </div>
         <div class="form-group">
           <label>結束時間</label>
-          <input type="time" id="ev-end-time">
+          <input type="time" id="ev-etime">
         </div>
       </div>
       <div class="form-group">
-        <label>地點 / 教室 <span class="required">*</span></label>
-        <input type="text" id="ev-location" placeholder="例：活動中心、電腦教室…">
+        <label>地點 / 教室 <span class="req">*</span></label>
+        <select id="ev-location">
+          <option value="">請選擇地點</option>
+          <option>圖書館</option>
+          <option>球場南一（二.五.六年級）</option>
+          <option>球場南二（二.五.六年級）</option>
+          <option>球場北一（一.三.四年級）</option>
+          <option>球場北二（一.三.四年級）</option>
+          <option>桌球教室</option>
+          <option>樂活教室</option>
+          <option>活動中心</option>
+          <option>靜思書軒</option>
+          <option>二樓會議室</option>
+        </select>
       </div>
       <div class="form-group">
-        <label>所屬處室 <span class="required">*</span></label>
+        <label>所屬處室 <span class="req">*</span></label>
         <select id="ev-dept">
           <option value="教務處">教務處</option>
           <option value="學務處">學務處</option>
@@ -354,28 +366,28 @@
       </div>
       <div class="form-group">
         <label>備註說明</label>
-        <textarea id="ev-note" placeholder="選填…"></textarea>
+        <textarea id="ev-note" placeholder="選填，可填聯絡人、注意事項…"></textarea>
       </div>
       <div class="form-msg" id="add-msg"></div>
     </div>
     <div class="modal-footer">
-      <button class="btn-md btn-delete" id="btn-delete-ev" style="display:none" onclick="handleDeleteEvent()">刪除</button>
+      <button class="btn-md d" id="btn-del-ev" style="display:none" onclick="handleDeleteEvent()">刪除</button>
       <div style="flex:1"></div>
-      <button class="btn-md btn-cancel" onclick="closeAddModal()">取消</button>
-      <button class="btn-md btn-primary" id="btn-save-ev" onclick="handleSaveEvent()">儲存</button>
+      <button class="btn-md c" onclick="closeAddModal()">取消</button>
+      <button class="btn-md p" id="btn-save-ev" onclick="handleSaveEvent()">儲存</button>
     </div>
   </div>
 </div>
 
 <!-- ── Login Modal ── -->
 <div class="modal-overlay login-modal" id="modal-login">
-  <div class="modal" style="max-width:380px">
+  <div class="modal" style="max-width:370px">
     <div class="modal-header">
       <h3>教職員登入</h3>
       <button class="modal-close" onclick="closeLoginModal()">✕</button>
     </div>
     <div class="modal-body">
-      <p style="font-size:0.8rem;color:var(--text3);margin-bottom:1rem;line-height:1.7;">
+      <p style="font-size:0.78rem;color:var(--text3);margin-bottom:0.9rem;line-height:1.7;">
         僅限 <strong style="color:var(--text)">@sjps.kh.edu.tw</strong> 信箱登入<br>
         訪客可直接瀏覽行事曆，無需登入
       </p>
@@ -385,23 +397,18 @@
       </div>
       <div class="form-group">
         <label>密碼</label>
-        <input type="password" id="login-password" placeholder="••••••••">
+        <input type="password" id="login-pw" placeholder="••••••••">
       </div>
       <div class="form-msg" id="login-msg"></div>
     </div>
-    <div class="modal-footer" style="flex-direction:column;align-items:stretch;gap:0.5rem;">
-      <button class="btn-md btn-primary" onclick="handleEmailLogin()" style="width:100%;padding:0.65rem;justify-content:center;">登入</button>
-      <button class="btn-md" onclick="handleGoogleLogin()" style="width:100%;padding:0.65rem;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:0.5rem;">
-        <svg width="16" height="16" viewBox="0 0 48 48">
-          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-        </svg>
+    <div class="modal-footer" style="flex-direction:column;align-items:stretch;gap:0.45rem;">
+      <button class="btn-md p" onclick="handleEmailLogin()" style="width:100%;padding:0.6rem;justify-content:center;">登入</button>
+      <button onclick="handleGoogleLogin()" style="width:100%;padding:0.6rem;background:var(--surface2);border:1px solid var(--border);border-radius:7px;display:flex;align-items:center;justify-content:center;gap:0.5rem;cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.82rem;transition:background 0.13s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='var(--surface2)'">
+        <svg width="15" height="15" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
         使用 Google 帳號登入
       </button>
-      <div style="text-align:center;font-size:0.72rem;color:var(--text3);margin-top:0.25rem;">
-        <a onclick="handleForgotPassword()" style="color:var(--text3);cursor:pointer;text-decoration:underline;">忘記密碼？</a>
+      <div style="text-align:center;font-size:0.7rem;color:var(--text3);margin-top:0.2rem;">
+        <a onclick="handleForgotPassword()" style="cursor:pointer;text-decoration:underline;color:var(--text3);">忘記密碼？</a>
       </div>
     </div>
   </div>
@@ -410,392 +417,389 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
 import {
-  getAuth, signInWithEmailAndPassword, signInWithPopup,
-  GoogleAuthProvider, sendPasswordResetEmail, signOut, onAuthStateChanged
+  getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider,
+  sendPasswordResetEmail, signOut, onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
 import {
   getFirestore, collection, addDoc, updateDoc, deleteDoc,
   doc, query, orderBy, onSnapshot, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
-const firebaseConfig = {
+const app = initializeApp({
   apiKey: "AIzaSyAhAduO-twiIX8kPUcXcwJDyuRCZT_GOZI",
   authDomain: "myproject-c52cb.firebaseapp.com",
   projectId: "myproject-c52cb",
   storageBucket: "myproject-c52cb.firebasestorage.app",
   messagingSenderId: "494432013878",
-  appId: "1:494432013878:web:3c631ca98030600f915297",
-  measurementId: "G-T8CQ3288ZM"
-};
-
-const app = initializeApp(firebaseConfig);
+  appId: "1:494432013878:web:3c631ca98030600f915297"
+});
 const auth = getAuth(app);
 const db = getFirestore(app);
 const gProvider = new GoogleAuthProvider();
 const DOMAIN = 'sjps.kh.edu.tw';
 const COL = 'calendar_events';
 const DEPTS = ['教務處','學務處','輔導處','總務處'];
+const LOCATIONS = ['圖書館','球場南一（二.五.六年級）','球場南二（二.五.六年級）','球場北一（一.三.四年級）','球場北二（一.三.四年級）','桌球教室','樂活教室','活動中心','靜思書軒','二樓會議室'];
 
 let currentUser = null;
 let curYear = new Date().getFullYear();
 let curMonth = new Date().getMonth();
 let events = [];
-let hiddenDepts = new Set();
+let deptFilter = 'all';   // 'all' or dept name
+let locFilter = 'all';    // 'all' or location name
 let editingId = null;
-let dayModalDate = null; // currently open day modal date string
+let dayModalDateStr = null;
+
+// ── Location bar init ──
+function initLocationBar(){
+  const bar = document.getElementById('location-bar');
+  // "全部" button
+  const allBtn = document.createElement('button');
+  allBtn.className = 'filter-btn active';
+  allBtn.id = 'locbtn-all';
+  allBtn.textContent = '全部';
+  allBtn.onclick = () => setLocFilter('all');
+  bar.appendChild(allBtn);
+  // location buttons
+  LOCATIONS.forEach(loc => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.id = `locbtn-${loc}`;
+    btn.textContent = loc.length > 6 ? loc.slice(0,3)+'…' : loc;
+    btn.title = loc;
+    btn.onclick = () => setLocFilter(loc);
+    bar.appendChild(btn);
+  });
+}
+initLocationBar();
+
+// ── Filters ──
+window.setDeptFilter = (dept) => {
+  deptFilter = dept;
+  // update sidebar buttons
+  ['all','教務處','學務處','輔導處','總務處'].forEach(d => {
+    const btn = document.getElementById(`dbtn-${d}`);
+    if(!btn) return;
+    btn.className = 'dept-btn';
+    if(d === dept){
+      if(d === 'all') btn.className += ' active';
+      else { btn.className += ` active active-${d}`; }
+    }
+  });
+  renderCalendar();
+};
+
+window.setLocFilter = (loc) => {
+  locFilter = loc;
+  // update location bar buttons
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  const id = loc === 'all' ? 'locbtn-all' : `locbtn-${loc}`;
+  const el = document.getElementById(id);
+  if(el) el.classList.add('active');
+  renderCalendar();
+};
+
+function passesFilter(ev){
+  if(deptFilter !== 'all' && ev.dept !== deptFilter) return false;
+  if(locFilter !== 'all' && ev.location !== locFilter) return false;
+  return true;
+}
+
+// Init sidebar: 'all' active
+setDeptFilter('all');
 
 // ── Auth ──
 onAuthStateChanged(auth, user => {
-  if (user) {
+  if(user){
     const domain = (user.email||'').split('@')[1];
-    if (domain !== DOMAIN) { signOut(auth); showMsg('login-msg','error',`僅限 @${DOMAIN} 信箱`); return; }
+    if(domain !== DOMAIN){ signOut(auth); showMsg('login-msg','','僅限 @'+DOMAIN+' 信箱'); return; }
     currentUser = user;
     document.getElementById('user-info').style.display = 'flex';
-    document.getElementById('user-email-text').textContent = user.email.split('@')[0];
+    document.getElementById('user-email-show').textContent = user.email.split('@')[0];
     document.getElementById('btn-logout').style.display = '';
     document.getElementById('btn-login-open').style.display = 'none';
-    document.getElementById('btn-add-event').style.display = '';
+    document.getElementById('add-btn-side').style.display = 'block';
     closeLoginModal();
   } else {
     currentUser = null;
     document.getElementById('user-info').style.display = 'none';
     document.getElementById('btn-logout').style.display = 'none';
     document.getElementById('btn-login-open').style.display = '';
-    document.getElementById('btn-add-event').style.display = 'none';
+    document.getElementById('add-btn-side').style.display = 'none';
   }
   document.getElementById('loading').style.display = 'none';
   renderCalendar();
 });
 
-// ── Firestore realtime ──
+// ── Firestore ──
 onSnapshot(query(collection(db, COL), orderBy('start')), snap => {
-  events = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  events = snap.docs.map(d => ({id: d.id, ...d.data()}));
   renderCalendar();
-  if (dayModalDate) renderDayModal(dayModalDate); // refresh open day modal
+  if(dayModalDateStr) renderDayBody(dayModalDateStr);
 }, err => {
   console.error(err);
   document.getElementById('loading').style.display = 'none';
 });
 
-// ── Helpers ──
+// ── Calendar ──
 function pad(n){ return String(n).padStart(2,'0'); }
-function toDateStr(y, m, d){
-  let adjY = y, adjM = m;
-  if(m < 0){ adjY--; adjM = 11; } else if(m > 11){ adjY++; adjM = 0; }
-  // handle further overflow if needed
-  const dt = new Date(y, m, d);
-  return `${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())}`;
-}
-function formatDateLabel(str){
-  const [y,m,d] = str.split('-');
-  const dow = ['日','一','二','三','四','五','六'][new Date(str).getDay()];
-  return `${y} 年 ${parseInt(m)} 月 ${parseInt(d)} 日（${dow}）`;
-}
-function eventsOnDate(dateStr){
-  return events.filter(e => {
-    const end = e.end || e.start;
-    return dateStr >= e.start && dateStr <= end;
-  });
-}
-function showMsg(id, type, text){
-  const el = document.getElementById(id);
-  el.textContent = text;
-  el.className = `form-msg ${type === 'success' ? 'success' : ''}`;
-  el.style.display = 'block';
-}
-function clearMsg(id){ const el = document.getElementById(id); el.style.display='none'; el.textContent=''; }
+function dateStr(date){ return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`; }
+function dowName(n){ return ['日','一','二','三','四','五','六'][n]; }
 
-// ── Calendar Render ──
 function renderCalendar(){
   document.getElementById('cal-month-label').textContent = `${curYear} 年 ${curMonth+1} 月`;
-  const firstDow = new Date(curYear, curMonth, 1).getDay();
+  const first = new Date(curYear, curMonth, 1);
+  const firstDow = first.getDay();
   const daysInMonth = new Date(curYear, curMonth+1, 0).getDate();
+  const prevTotal = new Date(curYear, curMonth, 0).getDate();
   const today = new Date();
   const container = document.getElementById('cal-days');
   container.innerHTML = '';
 
-  const prevTotal = new Date(curYear, curMonth, 0).getDate();
-  for(let i = firstDow-1; i >= 0; i--){
+  for(let i = firstDow-1; i >= 0; i--)
     container.appendChild(makeCell(new Date(curYear, curMonth-1, prevTotal-i), true));
-  }
   for(let d = 1; d <= daysInMonth; d++){
     const isToday = today.getFullYear()===curYear && today.getMonth()===curMonth && today.getDate()===d;
     container.appendChild(makeCell(new Date(curYear, curMonth, d), false, isToday));
   }
   const total = firstDow + daysInMonth;
-  const rem = total % 7 === 0 ? 0 : 7 - (total % 7);
-  for(let d = 1; d <= rem; d++){
+  const rem = total%7===0 ? 0 : 7-(total%7);
+  for(let d = 1; d <= rem; d++)
     container.appendChild(makeCell(new Date(curYear, curMonth+1, d), true));
-  }
 }
 
 function makeCell(date, otherMonth, isToday=false){
-  const dateStr = `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`;
+  const ds = dateStr(date);
   const dow = date.getDay();
-
   const cell = document.createElement('div');
-  cell.className = 'cal-day' +
-    (otherMonth ? ' other-month' : '') +
-    (isToday ? ' today' : '') +
-    (!otherMonth && dow===0 ? ' sunday' : '') +
-    (!otherMonth && dow===6 ? ' saturday' : '') +
-    (!otherMonth && currentUser ? ' clickable' : '');
+  cell.className = 'cal-day'
+    +(otherMonth?' other-month':'')
+    +(isToday?' today':'')
+    +(!otherMonth&&dow===0?' sunday':'')
+    +(!otherMonth&&dow===6?' saturday':'')
+    +(!otherMonth&&currentUser?' clickable':'');
 
-  // Day number — click to open day detail
+  // Day number — open day detail
   const numEl = document.createElement('div');
   numEl.className = 'day-num';
   numEl.textContent = date.getDate();
-  numEl.onclick = (e) => {
-    e.stopPropagation();
-    openDayModal(dateStr);
-  };
+  numEl.onclick = e => { e.stopPropagation(); openDayModal(ds); };
   cell.appendChild(numEl);
 
-  // Events
-  const dayEvs = events.filter(e => {
-    if(hiddenDepts.has(e.dept)) return false;
-    const end = e.end || e.start;
-    return dateStr >= e.start && dateStr <= end;
+  // Events (filtered)
+  const dayEvs = events.filter(ev => {
+    if(!passesFilter(ev)) return false;
+    const end = ev.end||ev.start;
+    return ds >= ev.start && ds <= end;
   });
 
-  const evEl = document.createElement('div');
-  evEl.className = 'day-events';
+  const evWrap = document.createElement('div');
+  evWrap.className = 'day-events';
   const MAX = 3;
-  dayEvs.slice(0, MAX).forEach(ev => {
+  dayEvs.slice(0,MAX).forEach(ev => {
     const chip = document.createElement('div');
     chip.className = `event-chip bg-${ev.dept}`;
     chip.textContent = ev.title;
-    chip.title = ev.title;
-    chip.onclick = (e) => { e.stopPropagation(); openDayModal(dateStr); };
-    evEl.appendChild(chip);
+    chip.title = ev.title + (ev.location ? ' @ '+ev.location : '');
+    chip.onclick = e => { e.stopPropagation(); openDayModal(ds); };
+    evWrap.appendChild(chip);
   });
   if(dayEvs.length > MAX){
     const more = document.createElement('div');
-    more.className = 'more-events';
-    more.textContent = `還有 ${dayEvs.length - MAX} 個`;
-    more.onclick = (e) => { e.stopPropagation(); openDayModal(dateStr); };
-    evEl.appendChild(more);
+    more.className = 'more-chip';
+    more.textContent = `還有 ${dayEvs.length-MAX} 個`;
+    more.onclick = e => { e.stopPropagation(); openDayModal(ds); };
+    evWrap.appendChild(more);
   }
-  cell.appendChild(evEl);
+  cell.appendChild(evWrap);
 
-  // Click on cell background → add event (only logged in, non-other-month)
-  if(!otherMonth && currentUser){
-    cell.onclick = () => openAddModal(dateStr);
-  }
+  // Click cell bg → add event
+  if(!otherMonth && currentUser)
+    cell.onclick = () => openAddModal(ds);
 
   return cell;
 }
 
-window.changeMonth = (d) => {
-  curMonth += d;
-  if(curMonth < 0){ curMonth=11; curYear--; }
-  if(curMonth > 11){ curMonth=0; curYear++; }
-  renderCalendar();
-};
+window.changeMonth = d => { curMonth+=d; if(curMonth<0){curMonth=11;curYear--;} if(curMonth>11){curMonth=0;curYear++;} renderCalendar(); };
 window.goToday = () => { curYear=new Date().getFullYear(); curMonth=new Date().getMonth(); renderCalendar(); };
-window.toggleDept = (dept) => {
-  hiddenDepts.has(dept) ? hiddenDepts.delete(dept) : hiddenDepts.add(dept);
-  document.getElementById(`legend-${dept}`).classList.toggle('dimmed', hiddenDepts.has(dept));
-  renderCalendar();
-};
 
 // ── Day Modal ──
-window.openDayModal = (dateStr) => {
-  dayModalDate = dateStr;
-  document.getElementById('day-detail-title').textContent = formatDateLabel(dateStr);
-  renderDayModal(dateStr);
-  // Show "add" button only if logged in
-  const addBtn = document.getElementById('add-from-day-btn');
-  addBtn.style.display = currentUser ? 'block' : 'none';
+window.openDayModal = (ds) => {
+  dayModalDateStr = ds;
+  const d = new Date(ds);
+  document.getElementById('day-hdr-title').textContent =
+    `${d.getFullYear()} 年 ${d.getMonth()+1} 月 ${d.getDate()} 日（${dowName(d.getDay())}）`;
+  renderDayBody(ds);
+  document.getElementById('add-day-btn').style.display = currentUser ? 'block' : 'none';
   document.getElementById('modal-day').classList.add('open');
 };
 
-function renderDayModal(dateStr){
-  const body = document.getElementById('day-detail-body');
+function renderDayBody(ds){
+  const body = document.getElementById('day-body');
   body.innerHTML = '';
-  const dayEvs = eventsOnDate(dateStr);
+  const dayEvs = events.filter(ev => {
+    const end = ev.end||ev.start;
+    return ds >= ev.start && ds <= end;
+  });
+  // Filter by active filters
+  const filtered = dayEvs.filter(passesFilter);
 
   let hasAny = false;
   DEPTS.forEach(dept => {
-    const dEvs = dayEvs.filter(e => e.dept === dept);
-    if(dEvs.length === 0) return;
+    const dEvs = filtered.filter(e => e.dept===dept);
+    if(!dEvs.length) return;
     hasAny = true;
-
-    const section = document.createElement('div');
-    section.className = 'dept-section';
-
+    const sec = document.createElement('div');
+    sec.className = 'dept-section';
     const hdr = document.createElement('div');
-    hdr.className = `dept-section-header soft-${dept}`;
-    hdr.innerHTML = `<div class="dept-dot dot-${dept}"></div><span>${dept}</span>`;
-    section.appendChild(hdr);
-
+    hdr.className = `dept-sec-hdr soft-${dept}`;
+    hdr.innerHTML = `<span class="sec-dot dot-${dept}"></span>${dept}`;
+    sec.appendChild(hdr);
     dEvs.forEach(ev => {
       const card = document.createElement('div');
-      card.className = 'event-card';
-
-      let timeLine = '';
-      if(ev.startTime || ev.endTime){
-        timeLine = `<span>🕐 ${ev.startTime||''}${ev.endTime ? ' – '+ev.endTime : ''}</span>`;
-      }
-      const locLine = ev.location ? `<span>📍 ${ev.location}</span>` : '';
-      const dateLine = ev.end && ev.end !== ev.start
-        ? `<span>📅 ${ev.start} ～ ${ev.end}</span>`
-        : `<span>📅 ${ev.start}</span>`;
-
+      card.className = 'ev-card';
+      const dateRange = ev.end&&ev.end!==ev.start ? `${ev.start} ～ ${ev.end}` : ev.start;
+      const timePart = (ev.stime||ev.etime) ? `🕐 ${ev.stime||''}${ev.etime?' – '+ev.etime:''}` : '';
       card.innerHTML = `
-        <div class="event-card-title">${ev.title}</div>
-        <div class="event-card-meta">${dateLine}${timeLine}${locLine}</div>
-        ${ev.note ? `<div style="font-size:0.75rem;color:var(--text3);margin-top:0.35rem;">📝 ${ev.note}</div>` : ''}
-        ${currentUser ? `<div class="event-card-actions">
-          <button class="btn-xs edit" onclick="openEditEvent('${ev.id}')">編輯</button>
-          <button class="btn-xs del" onclick="confirmDelete('${ev.id}')">刪除</button>
-        </div>` : ''}
+        <div class="ev-card-title">${ev.title}</div>
+        <div class="ev-card-meta">
+          <span>📅 ${dateRange}</span>
+          ${timePart?`<span>${timePart}</span>`:''}
+          ${ev.location?`<span>📍 ${ev.location}</span>`:''}
+        </div>
+        ${ev.note?`<div style="font-size:0.72rem;color:var(--text3);margin-top:0.28rem;">📝 ${ev.note}</div>`:''}
+        ${currentUser?`<div class="ev-card-actions">
+          <button class="btn-xs e" onclick="openEditEvent('${ev.id}')">編輯</button>
+          <button class="btn-xs d" onclick="confirmDelete('${ev.id}')">刪除</button>
+        </div>`:''}
       `;
-      section.appendChild(card);
+      sec.appendChild(card);
     });
-
-    body.appendChild(section);
+    body.appendChild(sec);
   });
 
   if(!hasAny){
-    body.innerHTML = '<div class="no-events">這天還沒有任何活動</div>';
+    const msg = deptFilter!=='all'||locFilter!=='all'
+      ? `目前篩選條件下這天沒有活動`
+      : '這天還沒有任何活動';
+    body.innerHTML = `<div class="no-ev">${msg}</div>`;
   }
 }
 
-window.closeDayModal = () => {
-  document.getElementById('modal-day').classList.remove('open');
-  dayModalDate = null;
-};
+window.closeDayModal = () => { document.getElementById('modal-day').classList.remove('open'); dayModalDateStr=null; };
+window.addFromDay = () => { const d=dayModalDateStr; closeDayModal(); openAddModal(d); };
 
-window.addFromDayModal = () => {
-  const d = dayModalDate;
-  closeDayModal();
-  openAddModal(d);
-};
-
-// ── Add/Edit Modal ──
-window.openAddModal = (dateStr) => {
+// ── Add/Edit ──
+window.openAddModal = (ds) => {
   if(!currentUser) return;
   editingId = null;
-  document.getElementById('modal-add-title').textContent = '新增活動';
+  document.getElementById('add-modal-title').textContent = '新增活動';
   document.getElementById('ev-title').value = '';
-  document.getElementById('ev-start').value = dateStr || '';
-  document.getElementById('ev-end').value = dateStr || '';
-  document.getElementById('ev-start-time').value = '';
-  document.getElementById('ev-end-time').value = '';
+  document.getElementById('ev-start').value = ds||'';
+  document.getElementById('ev-end').value = ds||'';
+  document.getElementById('ev-stime').value = '';
+  document.getElementById('ev-etime').value = '';
   document.getElementById('ev-location').value = '';
+  document.getElementById('ev-dept').value = '教務處';
   document.getElementById('ev-note').value = '';
-  document.getElementById('btn-delete-ev').style.display = 'none';
+  document.getElementById('btn-del-ev').style.display = 'none';
   clearMsg('add-msg');
   document.getElementById('modal-add').classList.add('open');
 };
 
 window.openEditEvent = (id) => {
-  const ev = events.find(e => e.id === id);
+  const ev = events.find(e=>e.id===id);
   if(!ev) return;
   editingId = id;
-  document.getElementById('modal-add-title').textContent = '編輯活動';
-  document.getElementById('ev-title').value = ev.title || '';
-  document.getElementById('ev-start').value = ev.start || '';
-  document.getElementById('ev-end').value = ev.end || ev.start || '';
-  document.getElementById('ev-start-time').value = ev.startTime || '';
-  document.getElementById('ev-end-time').value = ev.endTime || '';
-  document.getElementById('ev-location').value = ev.location || '';
-  document.getElementById('ev-dept').value = ev.dept || '教務處';
-  document.getElementById('ev-note').value = ev.note || '';
-  document.getElementById('btn-delete-ev').style.display = '';
+  document.getElementById('add-modal-title').textContent = '編輯活動';
+  document.getElementById('ev-title').value = ev.title||'';
+  document.getElementById('ev-start').value = ev.start||'';
+  document.getElementById('ev-end').value = ev.end||ev.start||'';
+  document.getElementById('ev-stime').value = ev.stime||'';
+  document.getElementById('ev-etime').value = ev.etime||'';
+  document.getElementById('ev-location').value = ev.location||'';
+  document.getElementById('ev-dept').value = ev.dept||'教務處';
+  document.getElementById('ev-note').value = ev.note||'';
+  document.getElementById('btn-del-ev').style.display = '';
   clearMsg('add-msg');
   document.getElementById('modal-add').classList.add('open');
 };
 
-window.closeAddModal = () => { document.getElementById('modal-add').classList.remove('open'); editingId = null; };
+window.closeAddModal = () => { document.getElementById('modal-add').classList.remove('open'); editingId=null; };
 
 window.handleSaveEvent = async () => {
   const title = document.getElementById('ev-title').value.trim();
   const start = document.getElementById('ev-start').value;
-  const end = document.getElementById('ev-end').value || start;
-  const startTime = document.getElementById('ev-start-time').value;
-  const endTime = document.getElementById('ev-end-time').value;
-  const location = document.getElementById('ev-location').value.trim();
+  const end = document.getElementById('ev-end').value||start;
+  const stime = document.getElementById('ev-stime').value;
+  const etime = document.getElementById('ev-etime').value;
+  const location = document.getElementById('ev-location').value;
   const dept = document.getElementById('ev-dept').value;
   const note = document.getElementById('ev-note').value.trim();
 
-  if(!title) return showMsg('add-msg','error','請填寫活動名稱');
-  if(!start) return showMsg('add-msg','error','請選擇開始日期');
-  if(!end) return showMsg('add-msg','error','請選擇結束日期');
-  if(!location) return showMsg('add-msg','error','請填寫地點或教室');
-  if(end < start) return showMsg('add-msg','error','結束日期不能早於開始日期');
+  if(!title) return showMsg('add-msg','','請填寫活動名稱');
+  if(!start) return showMsg('add-msg','','請選擇開始日期');
+  if(!end) return showMsg('add-msg','','請選擇結束日期');
+  if(!location) return showMsg('add-msg','','請選擇地點或教室');
+  if(end < start) return showMsg('add-msg','','結束日期不能早於開始日期');
 
   const btn = document.getElementById('btn-save-ev');
-  btn.disabled = true; btn.textContent = '儲存中…';
-
+  btn.disabled=true; btn.textContent='儲存中…';
   try {
-    const payload = { title, start, end, startTime, endTime, location, dept, note, createdBy: currentUser.email, updatedAt: serverTimestamp() };
-    if(editingId){
-      await updateDoc(doc(db, COL, editingId), payload);
-    } else {
-      payload.createdAt = serverTimestamp();
-      await addDoc(collection(db, COL), payload);
-    }
+    const payload = {title,start,end,stime,etime,location,dept,note,createdBy:currentUser.email,updatedAt:serverTimestamp()};
+    if(editingId){ await updateDoc(doc(db,COL,editingId),payload); }
+    else { payload.createdAt=serverTimestamp(); await addDoc(collection(db,COL),payload); }
     closeAddModal();
-  } catch(e) {
-    showMsg('add-msg','error',`儲存失敗：${e.message}`);
-  }
-  btn.disabled = false; btn.textContent = '儲存';
+  } catch(e){ showMsg('add-msg','','儲存失敗：'+e.message); }
+  btn.disabled=false; btn.textContent='儲存';
 };
 
 window.handleDeleteEvent = async () => {
-  if(!editingId || !confirm('確定要刪除這個活動嗎？')) return;
-  await deleteDoc(doc(db, COL, editingId));
+  if(!editingId||!confirm('確定刪除？')) return;
+  await deleteDoc(doc(db,COL,editingId));
   closeAddModal();
 };
 
 window.confirmDelete = async (id) => {
   if(!confirm('確定要刪除這個活動嗎？')) return;
-  await deleteDoc(doc(db, COL, id));
+  await deleteDoc(doc(db,COL,id));
 };
 
 // ── Login ──
+function showMsg(id, cls, text){ const el=document.getElementById(id); el.className='form-msg '+cls; el.textContent=text; el.style.display='block'; }
+function clearMsg(id){ const el=document.getElementById(id); el.style.display='none'; }
+
 window.openLoginModal = () => { clearMsg('login-msg'); document.getElementById('modal-login').classList.add('open'); };
 window.closeLoginModal = () => document.getElementById('modal-login').classList.remove('open');
 
 window.handleEmailLogin = async () => {
-  const email = document.getElementById('login-email').value.trim();
-  const pw = document.getElementById('login-password').value;
-  if(!email||!pw) return showMsg('login-msg','error','請填寫帳號和密碼');
-  if(!email.endsWith('@'+DOMAIN)) return showMsg('login-msg','error',`僅限 @${DOMAIN} 信箱`);
-  try {
-    await signInWithEmailAndPassword(auth, email, pw);
-  } catch(e) {
-    const m = {'auth/invalid-credential':'帳號或密碼錯誤','auth/too-many-requests':'嘗試太多次，請稍後再試','auth/user-not-found':'找不到此帳號'};
-    showMsg('login-msg','error', m[e.code]||`錯誤：${e.code}`);
+  const email=document.getElementById('login-email').value.trim();
+  const pw=document.getElementById('login-pw').value;
+  if(!email||!pw) return showMsg('login-msg','','請填寫帳號和密碼');
+  if(!email.endsWith('@'+DOMAIN)) return showMsg('login-msg','','僅限 @'+DOMAIN+' 信箱');
+  try { await signInWithEmailAndPassword(auth,email,pw); }
+  catch(e){
+    const m={'auth/invalid-credential':'帳號或密碼錯誤','auth/too-many-requests':'嘗試太多次，請稍後再試','auth/user-not-found':'找不到此帳號'};
+    showMsg('login-msg','',m[e.code]||'錯誤：'+e.code);
   }
 };
 
 window.handleGoogleLogin = async () => {
   try {
-    const r = await signInWithPopup(auth, gProvider);
-    if(!r.user.email.endsWith('@'+DOMAIN)){
-      await signOut(auth);
-      showMsg('login-msg','error',`僅限 @${DOMAIN} 信箱`);
-    }
-  } catch(e) {
-    if(e.code!=='auth/popup-closed-by-user') showMsg('login-msg','error','Google 登入失敗');
-  }
+    const r=await signInWithPopup(auth,gProvider);
+    if(!r.user.email.endsWith('@'+DOMAIN)){ await signOut(auth); showMsg('login-msg','','僅限 @'+DOMAIN+' 信箱'); }
+  } catch(e){ if(e.code!=='auth/popup-closed-by-user') showMsg('login-msg','','Google 登入失敗'); }
 };
 
 window.handleForgotPassword = async () => {
-  const email = document.getElementById('login-email').value.trim();
-  if(!email) return showMsg('login-msg','error','請先輸入電子郵件');
-  try {
-    await sendPasswordResetEmail(auth, email);
-    showMsg('login-msg','success', `✓ 重設密碼信已寄出`);
-  } catch(e) { showMsg('login-msg','error','寄送失敗，請確認信箱'); }
+  const email=document.getElementById('login-email').value.trim();
+  if(!email) return showMsg('login-msg','','請先輸入電子郵件');
+  try { await sendPasswordResetEmail(auth,email); showMsg('login-msg','ok','✓ 重設密碼信已寄出'); }
+  catch(e){ showMsg('login-msg','','寄送失敗，請確認信箱'); }
 };
 
 window.handleLogout = () => signOut(auth);
 
-// Close on overlay click
 document.querySelectorAll('.modal-overlay').forEach(o => {
   o.addEventListener('click', e => { if(e.target===o) o.classList.remove('open'); });
 });
