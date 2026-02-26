@@ -121,10 +121,10 @@
     .cal-day.sunday .day-num { color: #ef4444; }
     .cal-day.saturday .day-num { color: #3b82f6; }
 
-    /* Logged-in: clicking cell BG opens add modal */
-    .cal-day.can-add:not(.other-month):hover { background: #f0f7ff; cursor: pointer; }
-    .cal-day.can-add:not(.other-month)::after { content: '＋'; position: absolute; top: 3px; right: 5px; font-size: 0.72rem; color: var(--text3); opacity: 0; transition: opacity 0.13s; pointer-events: none; }
-    .cal-day.can-add:not(.other-month):hover::after { opacity: 1; }
+    /* Clicking cell opens day detail */
+    .cal-day.clickable:not(.other-month):hover { background: #f0f7ff; cursor: pointer; }
+    .cal-day.clickable:not(.other-month)::after { content: '●'; position: absolute; top: 3px; right: 5px; font-size: 0.5rem; color: var(--text3); opacity: 0; transition: opacity 0.13s; pointer-events: none; }
+    .cal-day.clickable:not(.other-month):hover::after { opacity: 1; }
 
     /* Day number: always clickable to open day-detail */
     .day-num {
@@ -386,7 +386,7 @@
           <option>球場北一（一.三.四年級）</option>
           <option>球場北二（一.三.四年級）</option>
           <option>桌球教室</option>
-          <option>樂活教室</option>
+          <option>4F樂活教室</option>
         </select>
       </div>
       <div class="form-group">
@@ -478,7 +478,7 @@ const LOCATIONS = [
   '3F視聽教室','4F圖書館','5F活動中心',
   '球場南一（二.五.六年級）','球場南二（二.五.六年級）',
   '球場北一（一.三.四年級）','球場北二（一.三.四年級）',
-  '桌球教室','樂活教室'
+  '桌球教室','4F樂活教室'
 ];
 
 let currentUser = null;
@@ -606,7 +606,7 @@ function makeCell(date, otherMonth, isToday=false){
     +(isToday?' today':'')
     +(!otherMonth&&dow===0?' sunday':'')
     +(!otherMonth&&dow===6?' saturday':'')
-    +(!otherMonth&&currentUser?' can-add':'');
+    +(!otherMonth?' clickable':'');
 
   // Day number → open day detail modal
   const numEl = document.createElement('div');
@@ -641,9 +641,9 @@ function makeCell(date, otherMonth, isToday=false){
   }
   cell.appendChild(evWrap);
 
-  // Click cell BG → add event (only when logged in, not other-month)
-  if(!otherMonth && currentUser)
-    cell.onclick = () => openAddModal(dateStr);
+  // Click cell BG → open day detail modal (everyone)
+  if(!otherMonth)
+    cell.onclick = () => openDayModal(dateStr);
 
   return cell;
 }
