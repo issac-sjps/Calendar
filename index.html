@@ -30,84 +30,81 @@
       padding: 0 1.25rem; display: flex; align-items: center;
       justify-content: space-between; height: 56px;
       position: sticky; top: 0; z-index: 100;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06); flex-shrink: 0;
     }
     .header-left { display: flex; align-items: center; gap: 0.65rem; }
-    .school-badge { background: #1a202c; color: #fff; font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 0.82rem; padding: 0.28rem 0.55rem; letter-spacing: 0.04em; }
-    .school-title { font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 0.95rem; }
+    .school-badge { background: #1a202c; color: #fff; font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 0.85rem; padding: 0.3rem 0.6rem; letter-spacing: 0.04em; }
+    .school-title { font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 1rem; }
     .header-right { display: flex; align-items: center; gap: 0.65rem; }
-    #user-info { font-size: 0.78rem; color: var(--text2); display: none; align-items: center; gap: 0.45rem; }
-    .user-dept-pill { padding: 0.18rem 0.55rem; border-radius: 999px; font-size: 0.7rem; font-weight: 600; }
-    .btn-sm { padding: 0.38rem 0.9rem; border-radius: 6px; font-family: 'Noto Sans TC', sans-serif; font-size: 0.78rem; font-weight: 500; cursor: pointer; border: none; transition: all 0.14s; }
+    #user-info { font-size: 0.8rem; color: var(--text2); display: none; align-items: center; gap: 0.45rem; }
+    .user-dept-pill { padding: 0.18rem 0.55rem; border-radius: 999px; font-size: 0.72rem; font-weight: 600; }
+    .btn-sm { padding: 0.38rem 0.9rem; border-radius: 6px; font-family: 'Noto Sans TC', sans-serif; font-size: 0.82rem; font-weight: 500; cursor: pointer; border: none; transition: all 0.14s; }
     .btn-primary { background: #1a202c; color: #fff; }
     .btn-primary:hover { background: #2d3748; }
     .btn-ghost { background: none; border: 1px solid var(--border) !important; color: var(--text2); }
     .btn-ghost:hover { border-color: #94a3b8 !important; color: var(--text); }
+    /* Add event button in header - only shown when logged in */
+    #btn-add-header { display: none; background: #1a202c; color: #fff; padding: 0.38rem 1rem; border-radius: 6px; font-family: 'Noto Sans TC', sans-serif; font-size: 0.82rem; font-weight: 500; cursor: pointer; border: none; transition: background 0.14s; }
+    #btn-add-header:hover { background: #2d3748; }
 
-    /* ── Location Filter Bar (top) ── */
+    /* ── Location Filter Bar ── */
     .location-bar {
       background: var(--surface); border-bottom: 1px solid var(--border);
-      padding: 0.55rem 1.25rem; display: flex; align-items: center;
-      gap: 0.4rem; flex-wrap: wrap; position: sticky; top: 56px; z-index: 99;
+      padding: 0.6rem 1.25rem; display: flex; align-items: center;
+      gap: 0.45rem; flex-wrap: wrap; position: sticky; top: 56px; z-index: 99; flex-shrink: 0;
     }
-    .loc-label { font-size: 0.72rem; color: var(--text3); margin-right: 0.25rem; white-space: nowrap; }
+    .loc-label { font-size: 0.85rem; font-weight: 600; color: var(--text2); margin-right: 0.25rem; white-space: nowrap; }
     .filter-btn {
-      padding: 0.28rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 500;
+      padding: 0.32rem 0.85rem; border-radius: 999px; font-size: 0.82rem; font-weight: 500;
       border: 1.5px solid var(--border); background: var(--surface); color: var(--text2);
-      cursor: pointer; transition: all 0.14s; white-space: nowrap; font-family: 'Noto Sans TC', sans-serif;
+      cursor: pointer; transition: all 0.14s; white-space: nowrap;
+      font-family: 'Noto Sans TC', sans-serif;
     }
     .filter-btn:hover { border-color: #94a3b8; color: var(--text); }
     .filter-btn.active { background: #1a202c; border-color: #1a202c; color: #fff; }
 
     /* ── Body layout ── */
-    .body-wrap { display: flex; flex: 1; min-height: 0; }
+    .body-wrap { display: flex; flex: 1; min-height: 0; overflow: hidden; }
 
     /* ── Sidebar ── */
     .sidebar {
-      width: 108px; flex-shrink: 0;
+      width: 120px; flex-shrink: 0;
       background: var(--surface); border-right: 1px solid var(--border);
-      padding: 1rem 0.65rem; display: flex; flex-direction: column; gap: 0.4rem;
-      position: sticky; top: 112px; /* header + loc bar */ align-self: flex-start;
-      height: calc(100vh - 112px); overflow-y: auto;
+      padding: 1rem 0.7rem; display: flex; flex-direction: column; gap: 0.45rem;
+      overflow-y: auto;
     }
-    .sidebar-label { font-size: 0.68rem; color: var(--text3); letter-spacing: 0.06em; margin-bottom: 0.2rem; padding-left: 0.25rem; }
+    .sidebar-label { font-size: 0.8rem; font-weight: 700; color: var(--text2); letter-spacing: 0.04em; margin-bottom: 0.2rem; padding-left: 0.25rem; }
     .dept-btn {
-      width: 100%; padding: 0.5rem 0.6rem; border-radius: 8px;
+      width: 100%; padding: 0.55rem 0.65rem; border-radius: 8px;
       border: 1.5px solid var(--border); background: none;
-      font-family: 'Noto Sans TC', sans-serif; font-size: 0.78rem; font-weight: 500;
+      font-family: 'Noto Sans TC', sans-serif; font-size: 0.85rem; font-weight: 500;
       cursor: pointer; transition: all 0.14s; text-align: left;
       display: flex; align-items: center; gap: 0.45rem; color: var(--text2);
     }
-    .dept-btn .d-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+    .d-dot { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
     .dept-btn:hover { border-color: #94a3b8; color: var(--text); background: var(--surface2); }
     .dept-btn.active { border-color: transparent; color: #fff; }
+    .dept-btn.active .d-dot { background: rgba(255,255,255,0.55) !important; }
+    .dept-btn.active-all { background: #1a202c; border-color: #1a202c; }
     .dept-btn.active-教務處 { background: var(--教務處); border-color: var(--教務處); }
     .dept-btn.active-學務處 { background: var(--學務處); border-color: var(--學務處); }
     .dept-btn.active-輔導處 { background: var(--輔導處); border-color: var(--輔導處); }
     .dept-btn.active-總務處 { background: var(--總務處); border-color: var(--總務處); }
-    .dept-btn.active .d-dot { background: rgba(255,255,255,0.6) !important; }
-    .sidebar-divider { height: 1px; background: var(--border); margin: 0.35rem 0; }
-    .add-btn-side {
-      width: 100%; padding: 0.5rem 0.6rem; border-radius: 8px;
-      background: #1a202c; color: #fff; border: none;
-      font-family: 'Noto Sans TC', sans-serif; font-size: 0.78rem; font-weight: 500;
-      cursor: pointer; transition: background 0.14s; display: none;
-    }
-    .add-btn-side:hover { background: #2d3748; }
+    .sidebar-divider { height: 1px; background: var(--border); margin: 0.2rem 0; }
 
     /* ── Calendar area ── */
-    .cal-wrap { flex: 1; padding: 1.25rem; min-width: 0; }
+    .cal-wrap { flex: 1; padding: 1.25rem; min-width: 0; overflow-y: auto; }
     .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
     .cal-nav-center { display: flex; align-items: center; gap: 0.75rem; }
     .cal-month { font-family: 'Noto Serif TC', serif; font-size: 1.3rem; font-weight: 700; min-width: 148px; text-align: center; }
     .icon-btn { width: 34px; height: 34px; border-radius: 7px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--text2); transition: all 0.13s; }
     .icon-btn:hover { background: var(--bg); border-color: #94a3b8; color: var(--text); }
-    .today-btn { padding: 0.35rem 0.8rem; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); font-family: 'Noto Sans TC', sans-serif; font-size: 0.78rem; cursor: pointer; color: var(--text2); transition: all 0.13s; }
+    .today-btn { padding: 0.35rem 0.8rem; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); font-family: 'Noto Sans TC', sans-serif; font-size: 0.8rem; cursor: pointer; color: var(--text2); transition: all 0.13s; }
     .today-btn:hover { background: var(--bg); color: var(--text); }
 
     .cal-grid { background: var(--surface); border-radius: 10px; border: 1px solid var(--border); box-shadow: var(--shadow); overflow: hidden; }
     .cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); border-bottom: 1px solid var(--border); background: var(--surface2); }
-    .cal-weekday { padding: 0.5rem; text-align: center; font-size: 0.73rem; font-weight: 500; color: var(--text3); }
+    .cal-weekday { padding: 0.55rem; text-align: center; font-size: 0.78rem; font-weight: 600; color: var(--text3); }
     .cal-weekday:first-child { color: #ef4444; }
     .cal-weekday:last-child { color: #3b82f6; }
     .cal-days { display: grid; grid-template-columns: repeat(7, 1fr); }
@@ -123,18 +120,28 @@
     .cal-day.today .day-num { background: #1a202c; color: #fff; border-radius: 50%; }
     .cal-day.sunday .day-num { color: #ef4444; }
     .cal-day.saturday .day-num { color: #3b82f6; }
-    .cal-day.clickable:not(.other-month):hover { background: #f0f7ff; cursor: pointer; }
-    .cal-day.clickable:not(.other-month)::after { content: '＋'; position: absolute; top: 3px; right: 5px; font-size: 0.7rem; color: var(--text3); opacity: 0; transition: opacity 0.13s; pointer-events: none; }
-    .cal-day.clickable:not(.other-month):hover::after { opacity: 1; }
 
-    .day-num { font-size: 0.8rem; font-weight: 500; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.2rem; border-radius: 50%; transition: background 0.1s; cursor: pointer; }
-    .day-num:hover { background: #e2eeff; }
-    .cal-day.today .day-num:hover { background: #2d3748; }
+    /* Logged-in: clicking cell BG opens add modal */
+    .cal-day.can-add:not(.other-month):hover { background: #f0f7ff; cursor: pointer; }
+    .cal-day.can-add:not(.other-month)::after { content: '＋'; position: absolute; top: 3px; right: 5px; font-size: 0.72rem; color: var(--text3); opacity: 0; transition: opacity 0.13s; pointer-events: none; }
+    .cal-day.can-add:not(.other-month):hover::after { opacity: 1; }
+
+    /* Day number: always clickable to open day-detail */
+    .day-num {
+      font-size: 0.82rem; font-weight: 600; width: 26px; height: 26px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 0.2rem; border-radius: 50%; transition: background 0.1s;
+      cursor: pointer; flex-shrink: 0;
+    }
+    .day-num:hover { background: #dbeafe !important; }
+    .cal-day.today .day-num:hover { background: #374151 !important; }
+    .cal-day.sunday .day-num:hover { background: #fee2e2 !important; }
+    .cal-day.saturday .day-num:hover { background: #dbeafe !important; }
 
     .day-events { display: flex; flex-direction: column; gap: 2px; }
-    .event-chip { border-radius: 3px; padding: 1px 4px; font-size: 0.65rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; transition: filter 0.1s; line-height: 1.55; }
+    .event-chip { border-radius: 3px; padding: 1px 5px; font-size: 0.67rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; transition: filter 0.1s; line-height: 1.55; }
     .event-chip:hover { filter: brightness(0.88); }
-    .more-chip { font-size: 0.63rem; color: var(--text3); padding: 1px 3px; cursor: pointer; }
+    .more-chip { font-size: 0.65rem; color: var(--text3); padding: 1px 3px; cursor: pointer; }
 
     /* Dept colors */
     .bg-教務處 { background: var(--教務處); color: #fff; }
@@ -151,52 +158,76 @@
     .dot-總務處 { background: var(--總務處); }
 
     /* ── Modals ── */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.42); display: none; align-items: center; justify-content: center; z-index: 200; padding: 1rem; backdrop-filter: blur(3px); }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center; z-index: 200; padding: 1rem; backdrop-filter: blur(3px); }
     .modal-overlay.open { display: flex; }
     .modal { background: var(--surface); border-radius: 14px; box-shadow: var(--shadow-lg); width: 100%; max-width: 480px; animation: mIn 0.2s cubic-bezier(0.16,1,0.3,1); overflow: hidden; }
     @keyframes mIn { from { opacity:0; transform:scale(0.94) translateY(10px); } to { opacity:1; transform:scale(1) translateY(0); } }
     .modal-header { padding: 1.1rem 1.4rem 0.9rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-    .modal-header h3 { font-size: 0.95rem; font-weight: 700; }
+    .modal-header h3 { font-size: 0.98rem; font-weight: 700; }
     .modal-close { width: 26px; height: 26px; border-radius: 5px; border: none; background: var(--bg); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; color: var(--text2); transition: background 0.1s; }
     .modal-close:hover { background: var(--border); }
     .modal-body { padding: 1.1rem 1.4rem; max-height: 68vh; overflow-y: auto; }
     .modal-footer { padding: 0.9rem 1.4rem; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 0.45rem; }
     .form-group { margin-bottom: 0.9rem; }
-    .form-group label { display: block; font-size: 0.75rem; font-weight: 500; color: var(--text2); margin-bottom: 0.3rem; }
+    .form-group label { display: block; font-size: 0.8rem; font-weight: 500; color: var(--text2); margin-bottom: 0.3rem; }
     .req { color: #ef4444; }
     .form-group input, .form-group select, .form-group textarea {
-      width: 100%; padding: 0.5rem 0.7rem; border: 1.5px solid var(--border);
-      border-radius: 7px; font-family: 'Noto Sans TC', sans-serif; font-size: 0.85rem;
+      width: 100%; padding: 0.52rem 0.75rem; border: 1.5px solid var(--border);
+      border-radius: 7px; font-family: 'Noto Sans TC', sans-serif; font-size: 0.88rem;
       color: var(--text); background: var(--surface); outline: none; transition: border-color 0.14s;
     }
     .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #1a202c; }
     .form-group textarea { resize: vertical; min-height: 60px; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; }
-    .form-msg { font-size: 0.75rem; color: #ef4444; margin-top: 0.4rem; display: none; }
+    .form-msg { font-size: 0.78rem; color: #ef4444; margin-top: 0.4rem; display: none; line-height: 1.5; }
     .form-msg.ok { color: #059669; }
-    .btn-md { padding: 0.5rem 1.1rem; border-radius: 7px; font-family: 'Noto Sans TC', sans-serif; font-size: 0.82rem; font-weight: 500; cursor: pointer; border: none; transition: all 0.14s; }
+    .btn-md { padding: 0.52rem 1.15rem; border-radius: 7px; font-family: 'Noto Sans TC', sans-serif; font-size: 0.85rem; font-weight: 500; cursor: pointer; border: none; transition: all 0.14s; }
     .btn-md.p { background: #1a202c; color: #fff; } .btn-md.p:hover { background: #2d3748; }
     .btn-md.c { background: var(--bg); color: var(--text2); } .btn-md.c:hover { background: var(--border); }
     .btn-md.d { background: #fee2e2; color: #dc2626; } .btn-md.d:hover { background: #fecaca; }
     .btn-md:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* Day detail */
-    .day-modal .modal { max-width: 520px; }
-    .day-modal-hdr { padding: 1.1rem 1.4rem 0.9rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-    .day-modal-hdr h3 { font-family: 'Noto Serif TC', serif; font-size: 1rem; font-weight: 700; }
-    .dept-section { margin-bottom: 1rem; }
-    .dept-sec-hdr { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; font-weight: 700; padding: 0.35rem 0.55rem; border-radius: 5px; margin-bottom: 0.4rem; }
-    .sec-dot { width: 7px; height: 7px; border-radius: 2px; }
-    .ev-card { border: 1px solid var(--border); border-radius: 8px; padding: 0.65rem 0.85rem; margin-bottom: 0.4rem; }
-    .ev-card-title { font-size: 0.87rem; font-weight: 600; margin-bottom: 0.28rem; }
-    .ev-card-meta { font-size: 0.72rem; color: var(--text2); display: flex; flex-wrap: wrap; gap: 0.55rem; }
-    .ev-card-actions { display: flex; gap: 0.35rem; margin-top: 0.5rem; }
-    .btn-xs { padding: 0.22rem 0.6rem; border-radius: 4px; font-size: 0.7rem; font-weight: 500; cursor: pointer; border: none; font-family: 'Noto Sans TC', sans-serif; transition: all 0.12s; }
-    .btn-xs.e { background: var(--bg); color: var(--text2); } .btn-xs.e:hover { background: var(--border); }
+    /* ── Day Detail Modal ── */
+    .day-modal .modal { max-width: 580px; }
+    .day-modal-hdr {
+      padding: 1.1rem 1.4rem 0.9rem; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .day-modal-hdr h3 { font-family: 'Noto Serif TC', serif; font-size: 1.05rem; font-weight: 700; }
+
+    /* 4-column dept grid */
+    .dept-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      padding: 1.1rem 1.4rem;
+    }
+    .dept-col {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .dept-col-header {
+      display: flex; align-items: center; gap: 0.45rem;
+      padding: 0.55rem 0.75rem;
+      font-size: 0.82rem; font-weight: 700;
+    }
+    .dept-col-body { padding: 0.5rem 0.6rem; min-height: 60px; }
+    .dept-ev-item {
+      padding: 0.45rem 0.55rem; border-radius: 6px; margin-bottom: 0.35rem;
+      background: var(--surface2); border: 1px solid var(--border);
+    }
+    .dept-ev-item:last-child { margin-bottom: 0; }
+    .dept-ev-title { font-size: 0.82rem; font-weight: 600; margin-bottom: 0.2rem; }
+    .dept-ev-meta { font-size: 0.7rem; color: var(--text2); display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .dept-ev-actions { display: flex; gap: 0.3rem; margin-top: 0.35rem; }
+    .btn-xs { padding: 0.2rem 0.55rem; border-radius: 4px; font-size: 0.68rem; font-weight: 500; cursor: pointer; border: none; font-family: 'Noto Sans TC', sans-serif; transition: all 0.12s; }
+    .btn-xs.e { background: #f1f5f9; color: var(--text2); } .btn-xs.e:hover { background: var(--border); }
     .btn-xs.d { background: #fee2e2; color: #dc2626; } .btn-xs.d:hover { background: #fecaca; }
-    .no-ev { font-size: 0.8rem; color: var(--text3); text-align: center; padding: 1.25rem 0; }
-    .add-day-btn { width: 100%; padding: 0.55rem; border-radius: 7px; border: 1.5px dashed var(--border); background: none; font-family: 'Noto Sans TC', sans-serif; font-size: 0.8rem; color: var(--text3); cursor: pointer; transition: all 0.14s; display: none; }
-    .add-day-btn:hover { border-color: #94a3b8; color: var(--text2); background: var(--surface2); }
+    .dept-empty { font-size: 0.75rem; color: var(--text3); text-align: center; padding: 0.6rem 0; }
+    .day-modal-footer { padding: 0.85rem 1.4rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: flex-end; gap: 0.45rem; }
+    .add-day-btn { padding: 0.5rem 1.1rem; border-radius: 7px; background: #1a202c; color: #fff; border: none; font-family: 'Noto Sans TC', sans-serif; font-size: 0.82rem; font-weight: 500; cursor: pointer; display: none; transition: background 0.13s; }
+    .add-day-btn:hover { background: #2d3748; }
 
     /* Login */
     .login-modal .modal { max-width: 370px; }
@@ -207,11 +238,14 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     .loading-text { font-size: 0.82rem; color: var(--text3); }
 
-    @media (max-width: 700px) {
+    @media (max-width: 720px) {
+      .sidebar { width: 96px; }
+      .dept-grid { grid-template-columns: 1fr; }
+      .school-title { display: none; }
+    }
+    @media (max-width: 520px) {
       .sidebar { display: none; }
       .cal-day { min-height: 72px; }
-      .school-title { display: none; }
-      .location-bar { top: 56px; }
     }
   </style>
 </head>
@@ -231,8 +265,10 @@
   <div class="header-right">
     <div id="user-info">
       <span id="user-dept-pill" class="user-dept-pill"></span>
-      <span id="user-email-show" style="font-size:0.72rem;color:var(--text3)"></span>
+      <span id="user-email-show" style="font-size:0.75rem;color:var(--text3)"></span>
     </div>
+    <!-- Add event button - top right, only shown when logged in -->
+    <button id="btn-add-header" onclick="openAddModal(null)">＋ 新增活動</button>
     <button class="btn-sm btn-ghost" id="btn-logout" style="display:none" onclick="handleLogout()">登出</button>
     <button class="btn-sm btn-primary" id="btn-login-open" onclick="openLoginModal()">教職員登入</button>
   </div>
@@ -240,17 +276,15 @@
 
 <!-- Location Filter Bar -->
 <div class="location-bar" id="location-bar">
-  <span class="loc-label">地點篩選：</span>
-  <!-- buttons injected by JS -->
+  <span class="loc-label">地點：</span>
 </div>
 
 <!-- Body -->
 <div class="body-wrap">
-
-  <!-- Sidebar: dept filter -->
+  <!-- Sidebar -->
   <div class="sidebar">
     <div class="sidebar-label">處室篩選</div>
-    <button class="dept-btn" id="dbtn-all" onclick="setDeptFilter('all')">
+    <button class="dept-btn active active-all" id="dbtn-all" onclick="setDeptFilter('all')">
       <span class="d-dot" style="background:#94a3b8"></span>全部
     </button>
     <button class="dept-btn" id="dbtn-教務處" onclick="setDeptFilter('教務處')">
@@ -265,8 +299,6 @@
     <button class="dept-btn" id="dbtn-總務處" onclick="setDeptFilter('總務處')">
       <span class="d-dot dot-總務處"></span>總務處
     </button>
-    <div class="sidebar-divider"></div>
-    <button class="add-btn-side" id="add-btn-side" onclick="openAddModal(null)">＋ 新增活動</button>
   </div>
 
   <!-- Calendar -->
@@ -291,17 +323,16 @@
   </div>
 </div>
 
-<!-- ── Day Detail Modal ── -->
+<!-- ── Day Detail Modal (4 dept columns) ── -->
 <div class="modal-overlay day-modal" id="modal-day">
-  <div class="modal" style="max-width:520px">
+  <div class="modal" style="max-width:620px">
     <div class="day-modal-hdr">
       <h3 id="day-hdr-title"></h3>
       <button class="modal-close" onclick="closeDayModal()">✕</button>
     </div>
-    <div class="modal-body" id="day-body"></div>
-    <div class="modal-footer">
+    <div class="dept-grid" id="dept-grid"></div>
+    <div class="day-modal-footer">
       <button class="add-day-btn" id="add-day-btn" onclick="addFromDay()">＋ 新增這天的活動</button>
-      <div style="flex:1"></div>
       <button class="btn-md c" onclick="closeDayModal()">關閉</button>
     </div>
   </div>
@@ -343,16 +374,19 @@
         <label>地點 / 教室 <span class="req">*</span></label>
         <select id="ev-location">
           <option value="">請選擇地點</option>
-          <option>圖書館</option>
+          <option>1F大穿堂</option>
+          <option>1F小玄關</option>
+          <option>1F靜思書軒</option>
+          <option>2F校長室旁會議室</option>
+          <option>3F視聽教室</option>
+          <option>4F圖書館</option>
+          <option>5F活動中心</option>
           <option>球場南一（二.五.六年級）</option>
           <option>球場南二（二.五.六年級）</option>
           <option>球場北一（一.三.四年級）</option>
           <option>球場北二（一.三.四年級）</option>
           <option>桌球教室</option>
           <option>樂活教室</option>
-          <option>活動中心</option>
-          <option>靜思書軒</option>
-          <option>二樓會議室</option>
         </select>
       </div>
       <div class="form-group">
@@ -387,7 +421,7 @@
       <button class="modal-close" onclick="closeLoginModal()">✕</button>
     </div>
     <div class="modal-body">
-      <p style="font-size:0.78rem;color:var(--text3);margin-bottom:0.9rem;line-height:1.7;">
+      <p style="font-size:0.82rem;color:var(--text3);margin-bottom:0.9rem;line-height:1.7;">
         僅限 <strong style="color:var(--text)">@sjps.kh.edu.tw</strong> 信箱登入<br>
         訪客可直接瀏覽行事曆，無需登入
       </p>
@@ -402,12 +436,12 @@
       <div class="form-msg" id="login-msg"></div>
     </div>
     <div class="modal-footer" style="flex-direction:column;align-items:stretch;gap:0.45rem;">
-      <button class="btn-md p" onclick="handleEmailLogin()" style="width:100%;padding:0.6rem;justify-content:center;">登入</button>
-      <button onclick="handleGoogleLogin()" style="width:100%;padding:0.6rem;background:var(--surface2);border:1px solid var(--border);border-radius:7px;display:flex;align-items:center;justify-content:center;gap:0.5rem;cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.82rem;transition:background 0.13s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='var(--surface2)'">
+      <button class="btn-md p" onclick="handleEmailLogin()" style="width:100%;padding:0.6rem;text-align:center;">登入</button>
+      <button onclick="handleGoogleLogin()" style="width:100%;padding:0.6rem;background:var(--surface2);border:1.5px solid var(--border);border-radius:7px;display:flex;align-items:center;justify-content:center;gap:0.5rem;cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.85rem;transition:background 0.13s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='var(--surface2)'">
         <svg width="15" height="15" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
         使用 Google 帳號登入
       </button>
-      <div style="text-align:center;font-size:0.7rem;color:var(--text3);margin-top:0.2rem;">
+      <div style="text-align:center;font-size:0.72rem;color:var(--text3);margin-top:0.2rem;">
         <a onclick="handleForgotPassword()" style="cursor:pointer;text-decoration:underline;color:var(--text3);">忘記密碼？</a>
       </div>
     </div>
@@ -439,64 +473,62 @@ const gProvider = new GoogleAuthProvider();
 const DOMAIN = 'sjps.kh.edu.tw';
 const COL = 'calendar_events';
 const DEPTS = ['教務處','學務處','輔導處','總務處'];
-const LOCATIONS = ['圖書館','球場南一（二.五.六年級）','球場南二（二.五.六年級）','球場北一（一.三.四年級）','球場北二（一.三.四年級）','桌球教室','樂活教室','活動中心','靜思書軒','二樓會議室'];
+const LOCATIONS = [
+  '1F大穿堂','1F小玄關','1F靜思書軒','2F校長室旁會議室',
+  '3F視聽教室','4F圖書館','5F活動中心',
+  '球場南一（二.五.六年級）','球場南二（二.五.六年級）',
+  '球場北一（一.三.四年級）','球場北二（一.三.四年級）',
+  '桌球教室','樂活教室'
+];
 
 let currentUser = null;
 let curYear = new Date().getFullYear();
 let curMonth = new Date().getMonth();
 let events = [];
-let deptFilter = 'all';   // 'all' or dept name
-let locFilter = 'all';    // 'all' or location name
+let deptFilter = 'all';
+let locFilter = 'all';
 let editingId = null;
-let dayModalDateStr = null;
+let dayModalDate = null;
 
-// ── Location bar init ──
-function initLocationBar(){
+// ── Build location bar (full text, no truncation) ──
+(function initLocBar(){
   const bar = document.getElementById('location-bar');
-  // "全部" button
   const allBtn = document.createElement('button');
   allBtn.className = 'filter-btn active';
   allBtn.id = 'locbtn-all';
   allBtn.textContent = '全部';
   allBtn.onclick = () => setLocFilter('all');
   bar.appendChild(allBtn);
-  // location buttons
   LOCATIONS.forEach(loc => {
     const btn = document.createElement('button');
     btn.className = 'filter-btn';
-    btn.id = `locbtn-${loc}`;
-    btn.textContent = loc.length > 6 ? loc.slice(0,3)+'…' : loc;
-    btn.title = loc;
+    btn.id = 'locbtn-' + loc;
+    btn.textContent = loc; // full text, no ellipsis
     btn.onclick = () => setLocFilter(loc);
     bar.appendChild(btn);
   });
-}
-initLocationBar();
+})();
 
 // ── Filters ──
 window.setDeptFilter = (dept) => {
   deptFilter = dept;
-  // update sidebar buttons
   ['all','教務處','學務處','輔導處','總務處'].forEach(d => {
-    const btn = document.getElementById(`dbtn-${d}`);
+    const btn = document.getElementById('dbtn-' + d);
     if(!btn) return;
     btn.className = 'dept-btn';
-    if(d === dept){
-      if(d === 'all') btn.className += ' active';
-      else { btn.className += ` active active-${d}`; }
-    }
+    if(d === dept) btn.className += ` active active-${d}`;
   });
   renderCalendar();
+  if(dayModalDate) renderDeptGrid(dayModalDate);
 };
 
 window.setLocFilter = (loc) => {
   locFilter = loc;
-  // update location bar buttons
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  const id = loc === 'all' ? 'locbtn-all' : `locbtn-${loc}`;
-  const el = document.getElementById(id);
+  const el = document.getElementById(loc === 'all' ? 'locbtn-all' : 'locbtn-' + loc);
   if(el) el.classList.add('active');
   renderCalendar();
+  if(dayModalDate) renderDeptGrid(dayModalDate);
 };
 
 function passesFilter(ev){
@@ -505,51 +537,48 @@ function passesFilter(ev){
   return true;
 }
 
-// Init sidebar: 'all' active
-setDeptFilter('all');
-
 // ── Auth ──
 onAuthStateChanged(auth, user => {
   if(user){
     const domain = (user.email||'').split('@')[1];
-    if(domain !== DOMAIN){ signOut(auth); showMsg('login-msg','','僅限 @'+DOMAIN+' 信箱'); return; }
+    if(domain !== DOMAIN){ signOut(auth); showFMsg('login-msg','','僅限 @'+DOMAIN+' 信箱'); return; }
     currentUser = user;
     document.getElementById('user-info').style.display = 'flex';
     document.getElementById('user-email-show').textContent = user.email.split('@')[0];
     document.getElementById('btn-logout').style.display = '';
     document.getElementById('btn-login-open').style.display = 'none';
-    document.getElementById('add-btn-side').style.display = 'block';
+    document.getElementById('btn-add-header').style.display = '';
     closeLoginModal();
   } else {
     currentUser = null;
     document.getElementById('user-info').style.display = 'none';
     document.getElementById('btn-logout').style.display = 'none';
     document.getElementById('btn-login-open').style.display = '';
-    document.getElementById('add-btn-side').style.display = 'none';
+    document.getElementById('btn-add-header').style.display = 'none';
   }
   document.getElementById('loading').style.display = 'none';
   renderCalendar();
+  if(dayModalDate) renderDeptGrid(dayModalDate);
 });
 
 // ── Firestore ──
 onSnapshot(query(collection(db, COL), orderBy('start')), snap => {
   events = snap.docs.map(d => ({id: d.id, ...d.data()}));
   renderCalendar();
-  if(dayModalDateStr) renderDayBody(dayModalDateStr);
+  if(dayModalDate) renderDeptGrid(dayModalDate);
 }, err => {
   console.error(err);
   document.getElementById('loading').style.display = 'none';
 });
 
-// ── Calendar ──
+// ── Calendar helpers ──
 function pad(n){ return String(n).padStart(2,'0'); }
-function dateStr(date){ return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`; }
-function dowName(n){ return ['日','一','二','三','四','五','六'][n]; }
+function ds(date){ return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`; }
+function dowCh(n){ return ['日','一','二','三','四','五','六'][n]; }
 
 function renderCalendar(){
   document.getElementById('cal-month-label').textContent = `${curYear} 年 ${curMonth+1} 月`;
-  const first = new Date(curYear, curMonth, 1);
-  const firstDow = first.getDay();
+  const firstDow = new Date(curYear, curMonth, 1).getDay();
   const daysInMonth = new Date(curYear, curMonth+1, 0).getDate();
   const prevTotal = new Date(curYear, curMonth, 0).getDate();
   const today = new Date();
@@ -564,12 +593,12 @@ function renderCalendar(){
   }
   const total = firstDow + daysInMonth;
   const rem = total%7===0 ? 0 : 7-(total%7);
-  for(let d = 1; d <= rem; d++)
+  for(let d=1; d<=rem; d++)
     container.appendChild(makeCell(new Date(curYear, curMonth+1, d), true));
 }
 
 function makeCell(date, otherMonth, isToday=false){
-  const ds = dateStr(date);
+  const dateStr = ds(date);
   const dow = date.getDay();
   const cell = document.createElement('div');
   cell.className = 'cal-day'
@@ -577,22 +606,21 @@ function makeCell(date, otherMonth, isToday=false){
     +(isToday?' today':'')
     +(!otherMonth&&dow===0?' sunday':'')
     +(!otherMonth&&dow===6?' saturday':'')
-    +(!otherMonth&&currentUser?' clickable':'');
+    +(!otherMonth&&currentUser?' can-add':'');
 
-  // Day number — open day detail
+  // Day number → open day detail modal
   const numEl = document.createElement('div');
   numEl.className = 'day-num';
   numEl.textContent = date.getDate();
-  numEl.onclick = e => { e.stopPropagation(); openDayModal(ds); };
+  numEl.onclick = e => { e.stopPropagation(); openDayModal(dateStr); };
   cell.appendChild(numEl);
 
-  // Events (filtered)
+  // Event chips
   const dayEvs = events.filter(ev => {
     if(!passesFilter(ev)) return false;
     const end = ev.end||ev.start;
-    return ds >= ev.start && ds <= end;
+    return dateStr >= ev.start && dateStr <= end;
   });
-
   const evWrap = document.createElement('div');
   evWrap.className = 'day-events';
   const MAX = 3;
@@ -600,116 +628,119 @@ function makeCell(date, otherMonth, isToday=false){
     const chip = document.createElement('div');
     chip.className = `event-chip bg-${ev.dept}`;
     chip.textContent = ev.title;
-    chip.title = ev.title + (ev.location ? ' @ '+ev.location : '');
-    chip.onclick = e => { e.stopPropagation(); openDayModal(ds); };
+    chip.title = ev.title + (ev.location?' @ '+ev.location:'');
+    chip.onclick = e => { e.stopPropagation(); openDayModal(dateStr); };
     evWrap.appendChild(chip);
   });
   if(dayEvs.length > MAX){
     const more = document.createElement('div');
     more.className = 'more-chip';
     more.textContent = `還有 ${dayEvs.length-MAX} 個`;
-    more.onclick = e => { e.stopPropagation(); openDayModal(ds); };
+    more.onclick = e => { e.stopPropagation(); openDayModal(dateStr); };
     evWrap.appendChild(more);
   }
   cell.appendChild(evWrap);
 
-  // Click cell bg → add event
+  // Click cell BG → add event (only when logged in, not other-month)
   if(!otherMonth && currentUser)
-    cell.onclick = () => openAddModal(ds);
+    cell.onclick = () => openAddModal(dateStr);
 
   return cell;
 }
 
-window.changeMonth = d => { curMonth+=d; if(curMonth<0){curMonth=11;curYear--;} if(curMonth>11){curMonth=0;curYear++;} renderCalendar(); };
+window.changeMonth = d => {
+  curMonth += d;
+  if(curMonth<0){curMonth=11;curYear--;} if(curMonth>11){curMonth=0;curYear++;}
+  renderCalendar();
+};
 window.goToday = () => { curYear=new Date().getFullYear(); curMonth=new Date().getMonth(); renderCalendar(); };
 
 // ── Day Modal ──
-window.openDayModal = (ds) => {
-  dayModalDateStr = ds;
-  const d = new Date(ds);
+window.openDayModal = (dateStr) => {
+  dayModalDate = dateStr;
+  const d = new Date(dateStr);
   document.getElementById('day-hdr-title').textContent =
-    `${d.getFullYear()} 年 ${d.getMonth()+1} 月 ${d.getDate()} 日（${dowName(d.getDay())}）`;
-  renderDayBody(ds);
-  document.getElementById('add-day-btn').style.display = currentUser ? 'block' : 'none';
+    `${d.getFullYear()} 年 ${d.getMonth()+1} 月 ${d.getDate()} 日（${dowCh(d.getDay())}）`;
+  renderDeptGrid(dateStr);
+  document.getElementById('add-day-btn').style.display = currentUser ? 'inline-flex' : 'none';
   document.getElementById('modal-day').classList.add('open');
 };
 
-function renderDayBody(ds){
-  const body = document.getElementById('day-body');
-  body.innerHTML = '';
+function renderDeptGrid(dateStr){
+  const grid = document.getElementById('dept-grid');
+  grid.innerHTML = '';
+  // Get all events on this date (no filter applied — show all 4 depts always in the 4-col view)
   const dayEvs = events.filter(ev => {
     const end = ev.end||ev.start;
-    return ds >= ev.start && ds <= end;
+    return dateStr >= ev.start && dateStr <= end;
   });
-  // Filter by active filters
-  const filtered = dayEvs.filter(passesFilter);
 
-  let hasAny = false;
   DEPTS.forEach(dept => {
-    const dEvs = filtered.filter(e => e.dept===dept);
-    if(!dEvs.length) return;
-    hasAny = true;
-    const sec = document.createElement('div');
-    sec.className = 'dept-section';
-    const hdr = document.createElement('div');
-    hdr.className = `dept-sec-hdr soft-${dept}`;
-    hdr.innerHTML = `<span class="sec-dot dot-${dept}"></span>${dept}`;
-    sec.appendChild(hdr);
-    dEvs.forEach(ev => {
-      const card = document.createElement('div');
-      card.className = 'ev-card';
-      const dateRange = ev.end&&ev.end!==ev.start ? `${ev.start} ～ ${ev.end}` : ev.start;
-      const timePart = (ev.stime||ev.etime) ? `🕐 ${ev.stime||''}${ev.etime?' – '+ev.etime:''}` : '';
-      card.innerHTML = `
-        <div class="ev-card-title">${ev.title}</div>
-        <div class="ev-card-meta">
-          <span>📅 ${dateRange}</span>
-          ${timePart?`<span>${timePart}</span>`:''}
-          ${ev.location?`<span>📍 ${ev.location}</span>`:''}
-        </div>
-        ${ev.note?`<div style="font-size:0.72rem;color:var(--text3);margin-top:0.28rem;">📝 ${ev.note}</div>`:''}
-        ${currentUser?`<div class="ev-card-actions">
-          <button class="btn-xs e" onclick="openEditEvent('${ev.id}')">編輯</button>
-          <button class="btn-xs d" onclick="confirmDelete('${ev.id}')">刪除</button>
-        </div>`:''}
-      `;
-      sec.appendChild(card);
-    });
-    body.appendChild(sec);
-  });
+    const col = document.createElement('div');
+    col.className = 'dept-col';
 
-  if(!hasAny){
-    const msg = deptFilter!=='all'||locFilter!=='all'
-      ? `目前篩選條件下這天沒有活動`
-      : '這天還沒有任何活動';
-    body.innerHTML = `<div class="no-ev">${msg}</div>`;
-  }
+    const hdr = document.createElement('div');
+    hdr.className = `dept-col-header soft-${dept}`;
+    hdr.innerHTML = `<span class="d-dot dot-${dept}"></span>${dept}`;
+    col.appendChild(hdr);
+
+    const body = document.createElement('div');
+    body.className = 'dept-col-body';
+
+    const dEvs = dayEvs.filter(e => e.dept === dept);
+    if(dEvs.length === 0){
+      body.innerHTML = '<div class="dept-empty">—</div>';
+    } else {
+      dEvs.forEach(ev => {
+        const item = document.createElement('div');
+        item.className = 'dept-ev-item';
+        const dateRange = ev.end&&ev.end!==ev.start ? `${ev.start}～${ev.end}` : ev.start;
+        const timeStr = (ev.stime||ev.etime) ? `🕐 ${ev.stime||''}${ev.etime?' – '+ev.etime:''}` : '';
+        item.innerHTML = `
+          <div class="dept-ev-title">${ev.title}</div>
+          <div class="dept-ev-meta">
+            <span>📅 ${dateRange}</span>
+            ${timeStr?`<span>${timeStr}</span>`:''}
+            ${ev.location?`<span>📍 ${ev.location}</span>`:''}
+          </div>
+          ${ev.note?`<div style="font-size:0.68rem;color:var(--text3);margin-top:0.22rem;">📝 ${ev.note}</div>`:''}
+          ${currentUser?`<div class="dept-ev-actions">
+            <button class="btn-xs e" onclick="openEditEvent('${ev.id}')">編輯</button>
+            <button class="btn-xs d" onclick="confirmDelete('${ev.id}')">刪除</button>
+          </div>`:''}
+        `;
+        body.appendChild(item);
+      });
+    }
+    col.appendChild(body);
+    grid.appendChild(col);
+  });
 }
 
-window.closeDayModal = () => { document.getElementById('modal-day').classList.remove('open'); dayModalDateStr=null; };
-window.addFromDay = () => { const d=dayModalDateStr; closeDayModal(); openAddModal(d); };
+window.closeDayModal = () => { document.getElementById('modal-day').classList.remove('open'); dayModalDate=null; };
+window.addFromDay = () => { const d=dayModalDate; closeDayModal(); openAddModal(d); };
 
-// ── Add/Edit ──
-window.openAddModal = (ds) => {
+// ── Add/Edit Modal ──
+window.openAddModal = (dateStr) => {
   if(!currentUser) return;
   editingId = null;
   document.getElementById('add-modal-title').textContent = '新增活動';
   document.getElementById('ev-title').value = '';
-  document.getElementById('ev-start').value = ds||'';
-  document.getElementById('ev-end').value = ds||'';
+  document.getElementById('ev-start').value = dateStr||'';
+  document.getElementById('ev-end').value = dateStr||'';
   document.getElementById('ev-stime').value = '';
   document.getElementById('ev-etime').value = '';
   document.getElementById('ev-location').value = '';
   document.getElementById('ev-dept').value = '教務處';
   document.getElementById('ev-note').value = '';
   document.getElementById('btn-del-ev').style.display = 'none';
-  clearMsg('add-msg');
+  clearFMsg('add-msg');
   document.getElementById('modal-add').classList.add('open');
 };
 
 window.openEditEvent = (id) => {
   const ev = events.find(e=>e.id===id);
-  if(!ev) return;
+  if(!ev||!currentUser) return;
   editingId = id;
   document.getElementById('add-modal-title').textContent = '編輯活動';
   document.getElementById('ev-title').value = ev.title||'';
@@ -721,7 +752,7 @@ window.openEditEvent = (id) => {
   document.getElementById('ev-dept').value = ev.dept||'教務處';
   document.getElementById('ev-note').value = ev.note||'';
   document.getElementById('btn-del-ev').style.display = '';
-  clearMsg('add-msg');
+  clearFMsg('add-msg');
   document.getElementById('modal-add').classList.add('open');
 };
 
@@ -737,11 +768,11 @@ window.handleSaveEvent = async () => {
   const dept = document.getElementById('ev-dept').value;
   const note = document.getElementById('ev-note').value.trim();
 
-  if(!title) return showMsg('add-msg','','請填寫活動名稱');
-  if(!start) return showMsg('add-msg','','請選擇開始日期');
-  if(!end) return showMsg('add-msg','','請選擇結束日期');
-  if(!location) return showMsg('add-msg','','請選擇地點或教室');
-  if(end < start) return showMsg('add-msg','','結束日期不能早於開始日期');
+  if(!title) return showFMsg('add-msg','','請填寫活動名稱');
+  if(!start) return showFMsg('add-msg','','請選擇開始日期');
+  if(!end) return showFMsg('add-msg','','請選擇結束日期');
+  if(!location) return showFMsg('add-msg','','請選擇地點或教室');
+  if(end < start) return showFMsg('add-msg','','結束日期不能早於開始日期');
 
   const btn = document.getElementById('btn-save-ev');
   btn.disabled=true; btn.textContent='儲存中…';
@@ -750,12 +781,12 @@ window.handleSaveEvent = async () => {
     if(editingId){ await updateDoc(doc(db,COL,editingId),payload); }
     else { payload.createdAt=serverTimestamp(); await addDoc(collection(db,COL),payload); }
     closeAddModal();
-  } catch(e){ showMsg('add-msg','','儲存失敗：'+e.message); }
+  } catch(e){ showFMsg('add-msg','','儲存失敗：'+e.message); }
   btn.disabled=false; btn.textContent='儲存';
 };
 
 window.handleDeleteEvent = async () => {
-  if(!editingId||!confirm('確定刪除？')) return;
+  if(!editingId||!confirm('確定刪除這個活動？')) return;
   await deleteDoc(doc(db,COL,editingId));
   closeAddModal();
 };
@@ -766,36 +797,36 @@ window.confirmDelete = async (id) => {
 };
 
 // ── Login ──
-function showMsg(id, cls, text){ const el=document.getElementById(id); el.className='form-msg '+cls; el.textContent=text; el.style.display='block'; }
-function clearMsg(id){ const el=document.getElementById(id); el.style.display='none'; }
+function showFMsg(id, cls, text){ const el=document.getElementById(id); el.className='form-msg '+cls; el.textContent=text; el.style.display='block'; }
+function clearFMsg(id){ const el=document.getElementById(id); el.style.display='none'; el.textContent=''; }
 
-window.openLoginModal = () => { clearMsg('login-msg'); document.getElementById('modal-login').classList.add('open'); };
+window.openLoginModal = () => { clearFMsg('login-msg'); document.getElementById('modal-login').classList.add('open'); };
 window.closeLoginModal = () => document.getElementById('modal-login').classList.remove('open');
 
 window.handleEmailLogin = async () => {
   const email=document.getElementById('login-email').value.trim();
   const pw=document.getElementById('login-pw').value;
-  if(!email||!pw) return showMsg('login-msg','','請填寫帳號和密碼');
-  if(!email.endsWith('@'+DOMAIN)) return showMsg('login-msg','','僅限 @'+DOMAIN+' 信箱');
+  if(!email||!pw) return showFMsg('login-msg','','請填寫帳號和密碼');
+  if(!email.endsWith('@'+DOMAIN)) return showFMsg('login-msg','','僅限 @'+DOMAIN+' 信箱');
   try { await signInWithEmailAndPassword(auth,email,pw); }
   catch(e){
     const m={'auth/invalid-credential':'帳號或密碼錯誤','auth/too-many-requests':'嘗試太多次，請稍後再試','auth/user-not-found':'找不到此帳號'};
-    showMsg('login-msg','',m[e.code]||'錯誤：'+e.code);
+    showFMsg('login-msg','',m[e.code]||'錯誤：'+e.code);
   }
 };
 
 window.handleGoogleLogin = async () => {
   try {
     const r=await signInWithPopup(auth,gProvider);
-    if(!r.user.email.endsWith('@'+DOMAIN)){ await signOut(auth); showMsg('login-msg','','僅限 @'+DOMAIN+' 信箱'); }
-  } catch(e){ if(e.code!=='auth/popup-closed-by-user') showMsg('login-msg','','Google 登入失敗'); }
+    if(!r.user.email.endsWith('@'+DOMAIN)){ await signOut(auth); showFMsg('login-msg','','僅限 @'+DOMAIN+' 信箱'); }
+  } catch(e){ if(e.code!=='auth/popup-closed-by-user') showFMsg('login-msg','','Google 登入失敗'); }
 };
 
 window.handleForgotPassword = async () => {
   const email=document.getElementById('login-email').value.trim();
-  if(!email) return showMsg('login-msg','','請先輸入電子郵件');
-  try { await sendPasswordResetEmail(auth,email); showMsg('login-msg','ok','✓ 重設密碼信已寄出'); }
-  catch(e){ showMsg('login-msg','','寄送失敗，請確認信箱'); }
+  if(!email) return showFMsg('login-msg','','請先輸入電子郵件');
+  try { await sendPasswordResetEmail(auth,email); showFMsg('login-msg','ok','✓ 重設密碼信已寄出'); }
+  catch(e){ showFMsg('login-msg','','寄送失敗，請確認信箱'); }
 };
 
 window.handleLogout = () => signOut(auth);
