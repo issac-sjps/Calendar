@@ -124,6 +124,22 @@ header{
 .qnav-sep{width:1px;height:16px;background:var(--border);margin:0 0.25rem;}
 .year-select{padding:0.22rem 0.45rem;border:1px solid var(--border);border-radius:5px;font-family:'Noto Sans TC',sans-serif;font-size:0.75rem;color:var(--text);outline:none;cursor:pointer;}
 
+/* Location filter bar buttons */
+.loc-bar-btn{
+  padding:0.2rem 0.6rem;border-radius:999px;border:1.5px solid var(--border);
+  background:none;font-family:'Noto Sans TC',sans-serif;font-size:0.74rem;font-weight:500;
+  cursor:pointer;color:var(--text2);transition:all .13s;white-space:nowrap;
+  display:inline-flex;align-items:center;gap:3px;
+}
+.loc-bar-btn:hover{border-color:#94a3b8;color:var(--text);}
+.loc-bar-btn.active{background:#1a202c;border-color:#1a202c;color:#fff;}
+.loc-bar-btn.active .loc-dot{opacity:0.6;}
+#loc-bar{display:flex;}
+
+@media(max-width:640px){
+  #loc-bar{display:none!important;}
+}
+
 /* Cal nav */
 .cal-nav{display:flex;align-items:center;justify-content:space-between;}
 .cal-nav-center{display:flex;align-items:center;gap:0.65rem;}
@@ -556,18 +572,19 @@ header{
   </div>
 
   <div class="cal-wrap">
-    <!-- Quick month/year nav + location filter -->
+    <!-- Quick month/year nav -->
     <div class="quick-nav" id="quick-nav">
       <span class="qnav-label">年份：</span>
       <select class="year-select" id="year-select" onchange="setYear(this.value)"></select>
       <div class="qnav-sep"></div>
       <span class="qnav-label">月份：</span>
       <span id="month-btns"></span>
-      <div class="qnav-sep"></div>
+    </div>
+
+    <!-- Location filter bar (desktop) -->
+    <div id="loc-bar" style="display:flex;align-items:center;gap:0.35rem;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:0.45rem 0.85rem;">
       <span class="qnav-label">地點：</span>
-      <select id="loc-select" onchange="setLocFilter(this.value)" style="padding:0.22rem 0.55rem;border:1.5px solid var(--border);border-radius:6px;font-family:'Noto Sans TC',sans-serif;font-size:0.75rem;color:var(--text);outline:none;cursor:pointer;max-width:180px;">
-        <option value="all">全部地點</option>
-      </select>
+      <button class="loc-bar-btn active" id="locbtn-all" onclick="setLocFilter('all')">全部</button>
     </div>
 
     <!-- Cal nav -->
@@ -985,13 +1002,15 @@ initQuickNav();
 
 // ── Location bar ──
 (function initLocBar(){
-  // Desktop: populate location <select> in quick-nav
-  const sel = document.getElementById('loc-select');
-  if(sel){
-    LOCATIONS.forEach(loc=>{
-      const opt=document.createElement('option');
-      opt.value=loc; opt.textContent=loc;
-      sel.appendChild(opt);
+  // Desktop: horizontal button bar
+  const bar = document.getElementById('loc-bar');
+  if(bar){
+    LOCATIONS.forEach((loc,i)=>{
+      const btn=document.createElement('button');
+      btn.className='loc-bar-btn'; btn.id='locbtn-'+loc;
+      btn.innerHTML=`<span class="loc-dot ldot-${(i+1)%14}"></span>${loc}`;
+      btn.onclick=()=>setLocFilter(loc);
+      bar.appendChild(btn);
     });
   }
 
@@ -1028,9 +1047,10 @@ window.setDeptFilter=(dept)=>{
 
 window.setLocFilter=(loc)=>{
   locFilter=loc;
-  // Sync desktop dropdown
-  const sel=document.getElementById('loc-select');
-  if(sel) sel.value=loc==='all'?'all':loc;
+  // Sync desktop loc-bar buttons
+  document.querySelectorAll('.loc-bar-btn').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById(loc==='all'?'locbtn-all':'locbtn-'+loc);
+  if(el) el.classList.add('active');
   renderView();
   if(dayModalDate) renderDeptGrid(dayModalDate);
 };
