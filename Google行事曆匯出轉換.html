@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICS 轉 CSV 工具</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans TC',sans-serif;background:#f0f4f8;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem;}
+.card{background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.08);width:100%;max-width:720px;overflow:hidden;}
+.card-header{background:#1a202c;color:#fff;padding:1.5rem 2rem;}
+.card-header h1{font-size:1.25rem;font-weight:700;margin-bottom:0.3rem;}
+.card-header p{font-size:0.82rem;opacity:0.65;line-height:1.6;}
+.card-body{padding:1.75rem 2rem;}
+
+.step{margin-bottom:1.75rem;}
+.step-label{font-size:0.72rem;font-weight:700;color:#a0aec0;letter-spacing:.08em;text-transform:uppercase;margin-bottom:0.5rem;}
+.step-title{font-size:0.95rem;font-weight:700;color:#1a202c;margin-bottom:0.75rem;}
+
+/* Drop zone */
+.drop-zone{
+  border:2px dashed #e2e8f0;border-radius:12px;padding:2.5rem;
+  text-align:center;cursor:pointer;transition:all .2s;background:#f8fafc;
+}
+.drop-zone:hover,.drop-zone.drag{border-color:#1a202c;background:#f0f7ff;}
+.drop-icon{font-size:2.5rem;margin-bottom:0.75rem;}
+.drop-text{font-size:0.9rem;font-weight:500;color:#4a5568;margin-bottom:0.3rem;}
+.drop-sub{font-size:0.78rem;color:#a0aec0;}
+
+/* Options */
+.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;}
+.form-group{display:flex;flex-direction:column;gap:0.3rem;}
+.form-group label{font-size:0.78rem;font-weight:600;color:#4a5568;}
+.form-group select,.form-group input{
+  padding:0.48rem 0.65rem;border:1.5px solid #e2e8f0;border-radius:8px;
+  font-family:'Noto Sans TC',sans-serif;font-size:0.84rem;color:#1a202c;outline:none;
+  transition:border-color .14s;
+}
+.form-group select:focus,.form-group input:focus{border-color:#1a202c;}
+
+/* Preview table */
+.preview-wrap{overflow-x:auto;border:1px solid #e2e8f0;border-radius:10px;max-height:360px;overflow-y:auto;}
+table{width:100%;border-collapse:collapse;font-size:0.78rem;}
+thead{background:#f8fafc;position:sticky;top:0;}
+th{padding:0.5rem 0.75rem;text-align:left;font-weight:600;color:#4a5568;border-bottom:2px solid #e2e8f0;white-space:nowrap;}
+td{padding:0.42rem 0.75rem;border-bottom:1px solid #f1f5f9;color:#1a202c;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#f8fafc;}
+.badge{display:inline-block;padding:0.1rem 0.45rem;border-radius:999px;font-size:0.68rem;font-weight:600;}
+.badge-教務處{background:#eff6ff;color:#1d4ed8;}
+.badge-學務處{background:#f0fdf4;color:#065f46;}
+.badge-輔導處{background:#fffbeb;color:#92400e;}
+.badge-總務處{background:#f5f3ff;color:#5b21b6;}
+.badge-未分類{background:#f1f5f9;color:#64748b;}
+
+/* Stats bar */
+.stats{display:flex;gap:1rem;padding:0.75rem 1rem;background:#f8fafc;border-radius:8px;margin-bottom:1rem;flex-wrap:wrap;}
+.stat{font-size:0.78rem;color:#4a5568;}.stat strong{color:#1a202c;}
+
+/* Buttons */
+.btn-row{display:flex;gap:0.5rem;flex-wrap:wrap;}
+.btn{padding:0.55rem 1.25rem;border-radius:8px;font-family:'Noto Sans TC',sans-serif;font-size:0.84rem;font-weight:500;cursor:pointer;border:none;transition:all .14s;}
+.btn-primary{background:#1a202c;color:#fff;}.btn-primary:hover{background:#2d3748;}
+.btn-ghost{background:#f1f5f9;color:#4a5568;border:1.5px solid #e2e8f0;}.btn-ghost:hover{background:#e2e8f0;}
+.btn:disabled{opacity:.45;cursor:not-allowed;}
+
+/* Msg */
+.msg{padding:0.65rem 1rem;border-radius:8px;font-size:0.82rem;font-weight:500;margin-bottom:0.75rem;display:none;}
+.msg.ok{background:#f0fdf4;color:#059669;border:1px solid #bbf7d0;}
+.msg.err{background:#fff5f5;color:#dc2626;border:1px solid #fecaca;}
+.msg.info{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;}
+
+/* Editable dept cell */
+.dept-select{padding:0.18rem 0.32rem;border:1px solid #e2e8f0;border-radius:5px;font-size:0.74rem;font-family:'Noto Sans TC',sans-serif;color:#1a202c;outline:none;cursor:pointer;background:#fff;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <h1>📅 ICS → CSV 轉換工具</h1>
+    <p>將 Google 行事曆匯出的 .ics 檔案轉換成學校行事曆可匯入的 CSV 格式</p>
+  </div>
+  <div class="card-body">
+
+    <!-- Step 1: Upload -->
+    <div class="step">
+      <div class="step-label">Step 1</div>
+      <div class="step-title">上傳 .ics 檔案</div>
+      <div class="drop-zone" id="drop-zone"
+        onclick="document.getElementById('ics-input').click()"
+        ondragover="handleDragOver(event)"
+        ondragleave="handleDragLeave(event)"
+        ondrop="handleDrop(event)">
+        <div class="drop-icon">📂</div>
+        <div class="drop-text">點擊選擇檔案，或拖曳 .ics 到這裡</div>
+        <div class="drop-sub">支援 Google 行事曆匯出的 .ics 格式</div>
+      </div>
+      <input type="file" id="ics-input" accept=".ics" style="display:none" onchange="handleFile(this.files[0])">
+    </div>
+
+    <!-- Step 2: Options (hidden until file loaded) -->
+    <div class="step" id="step-options" style="display:none;">
+      <div class="step-label">Step 2</div>
+      <div class="step-title">設定預設值</div>
+      <div class="options-grid">
+        <div class="form-group">
+          <label>預設處室（可在下方逐筆修改）</label>
+          <select id="default-dept">
+            <option value="教務處">教務處</option>
+            <option value="學務處">學務處</option>
+            <option value="輔導處">輔導處</option>
+            <option value="總務處">總務處</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>預設地點（選填）</label>
+          <select id="default-loc">
+            <option value="">（空白）</option>
+            <option>1F大穿堂</option>
+            <option>1F小玄關</option>
+            <option>1F靜思書軒</option>
+            <option>2F校長室旁會議室</option>
+            <option>3F視聽教室</option>
+            <option>4F圖書館</option>
+            <option>4F樂活教室</option>
+            <option>5F活動中心</option>
+            <option>球場南一（二.五.六年級）</option>
+            <option>球場南二（二.五.六年級）</option>
+            <option>球場北一（一.三.四年級）</option>
+            <option>球場北二（一.三.四年級）</option>
+            <option>桌球教室</option>
+            <option>指定班級教室</option>
+            <option>校外</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:0.75rem;">
+        <button class="btn btn-ghost" onclick="applyDefaults()">套用預設值到所有項目</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Preview -->
+    <div class="step" id="step-preview" style="display:none;">
+      <div class="step-label">Step 3</div>
+      <div class="step-title">預覽並調整</div>
+      <div id="msg-bar" class="msg"></div>
+      <div class="stats" id="stats-bar"></div>
+      <div class="preview-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:32px;">#</th>
+              <th>活動名稱</th>
+              <th>開始日期</th>
+              <th>結束日期</th>
+              <th>時間</th>
+              <th>地點</th>
+              <th>處室</th>
+              <th style="width:36px;"></th>
+            </tr>
+          </thead>
+          <tbody id="preview-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Step 4: Download -->
+    <div class="step" id="step-download" style="display:none;">
+      <div class="step-label">Step 4</div>
+      <div class="step-title">下載 CSV</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="downloadCSV()">⬇ 下載 CSV 檔案</button>
+        <button class="btn btn-ghost" onclick="resetAll()">🔄 重新上傳</button>
+      </div>
+      <p style="font-size:0.76rem;color:#a0aec0;margin-top:0.65rem;">下載後到學校行事曆的「📋 批次管理 → 匯入CSV」上傳即可</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let parsedEvents = [];
+
+// ── Drag & Drop ──
+function handleDragOver(e){ e.preventDefault(); document.getElementById('drop-zone').classList.add('drag'); }
+function handleDragLeave(e){ document.getElementById('drop-zone').classList.remove('drag'); }
+function handleDrop(e){
+  e.preventDefault(); document.getElementById('drop-zone').classList.remove('drag');
+  const f = e.dataTransfer.files[0];
+  if(f) handleFile(f);
+}
+
+// ── File handling ──
+function handleFile(file){
+  if(!file || !file.name.endsWith('.ics')){ showMsg('請上傳 .ics 格式的檔案','err'); return; }
+  const reader = new FileReader();
+  reader.onload = e => parseICS(e.target.result);
+  reader.readAsText(file, 'UTF-8');
+}
+
+// ── ICS Parser ──
+function parseICS(text){
+  parsedEvents = [];
+  // Unfold long lines (ICS spec: lines folded with \r\n + space/tab)
+  text = text.replace(/\r\n[ \t]/g,'').replace(/\n[ \t]/g,'');
+  const lines = text.split(/\r?\n/);
+
+  let inEvent = false, cur = {};
+  lines.forEach(line => {
+    if(line === 'BEGIN:VEVENT'){ inEvent = true; cur = {}; return; }
+    if(line === 'END:VEVENT'){
+      inEvent = false;
+      const ev = processEvent(cur);
+      if(ev) parsedEvents.push(ev);
+      return;
+    }
+    if(!inEvent) return;
+    const idx = line.indexOf(':');
+    if(idx < 0) return;
+    const key = line.slice(0, idx).split(';')[0].toUpperCase();
+    const val = line.slice(idx + 1).trim();
+    cur[key] = val;
+    // Also store with params for DTSTART/DTEND
+    if(key === 'DTSTART' || key === 'DTEND'){
+      cur[key + '_RAW'] = line.slice(idx + 1).trim();
+      cur[key + '_PARAMS'] = line.slice(0, idx);
+    }
+  });
+
+  if(!parsedEvents.length){ showMsg('找不到任何活動，請確認是正確的 .ics 檔案','err'); return; }
+  renderPreview();
+  document.getElementById('step-options').style.display = '';
+  document.getElementById('step-preview').style.display = '';
+  document.getElementById('step-download').style.display = '';
+  showMsg(`成功解析 ${parsedEvents.length} 個活動`, 'ok');
+}
+
+function processEvent(cur){
+  const summary = decodeICSText(cur['SUMMARY'] || '（無標題）');
+  const location = decodeICSText(cur['LOCATION'] || '');
+  const desc = decodeICSText(cur['DESCRIPTION'] || '');
+  
+  const startRaw = cur['DTSTART_RAW'] || cur['DTSTART'] || '';
+  const endRaw = cur['DTEND_RAW'] || cur['DTEND'] || '';
+  if(!startRaw) return null;
+
+  const { date: startDate, time: startTime } = parseICSDate(startRaw, cur['DTSTART_PARAMS']);
+  const { date: endDate, time: endTime } = parseICSDate(endRaw, cur['DTEND_PARAMS']);
+
+  // For all-day events, DTEND is exclusive (next day), subtract one day
+  let adjEndDate = endDate;
+  const isAllDay = !startTime;
+  if(isAllDay && endDate && endDate !== startDate){
+    const d = new Date(endDate);
+    d.setDate(d.getDate() - 1);
+    adjEndDate = toDateStr(d);
+  }
+
+  return {
+    title: summary,
+    start: startDate,
+    end: adjEndDate || startDate,
+    stime: startTime,
+    etime: endTime,
+    location: matchLocation(location),
+    locationRaw: location,
+    dept: '教務處',
+    note: desc.slice(0, 100),
+    keep: true
+  };
+}
+
+function parseICSDate(raw, params=''){
+  if(!raw) return { date:'', time:'' };
+  // All-day: YYYYMMDD
+  if(/^\d{8}$/.test(raw)){
+    return { date: `${raw.slice(0,4)}-${raw.slice(4,6)}-${raw.slice(6,8)}`, time: '' };
+  }
+  // DateTime: YYYYMMDDTHHmmss[Z]
+  if(/^\d{8}T\d{6}/.test(raw)){
+    const d = raw.slice(0,8);
+    const t = raw.slice(9,15);
+    const dateStr = `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}`;
+    const timeStr = `${t.slice(0,2)}:${t.slice(2,4)}`;
+    return { date: dateStr, time: timeStr };
+  }
+  return { date:'', time:'' };
+}
+
+function toDateStr(d){
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function decodeICSText(s){
+  return s.replace(/\\n/g,' ').replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\\\/g,'\\');
+}
+
+// Try to match location to known locations
+const KNOWN_LOCS = ['1F大穿堂','1F小玄關','1F靜思書軒','2F校長室旁會議室','3F視聽教室','4F圖書館','4F樂活教室','5F活動中心','球場南一（二.五.六年級）','球場南二（二.五.六年級）','球場北一（一.三.四年級）','球場北二（一.三.四年級）','桌球教室','指定班級教室','校外'];
+function matchLocation(loc){
+  if(!loc) return '';
+  const found = KNOWN_LOCS.find(l => loc.includes(l) || l.includes(loc));
+  return found || loc;
+}
+
+// ── Render preview ──
+function renderPreview(){
+  const tbody = document.getElementById('preview-tbody');
+  tbody.innerHTML = '';
+  let kept = 0;
+  parsedEvents.forEach((ev, i) => {
+    if(!ev.keep){ return; }
+    kept++;
+    const deptOpts = ['教務處','學務處','輔導處','總務處'].map(d =>
+      `<option value="${d}" ${ev.dept===d?'selected':''}>${d}</option>`).join('');
+    const tr = document.createElement('tr');
+    tr.id = 'row-' + i;
+    tr.innerHTML = `
+      <td style="color:#a0aec0;font-size:0.7rem;">${i+1}</td>
+      <td style="max-width:180px;"><span style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${ev.title}">${ev.title}</span></td>
+      <td style="white-space:nowrap;">${ev.start}</td>
+      <td style="white-space:nowrap;">${ev.end !== ev.start ? ev.end : '—'}</td>
+      <td style="white-space:nowrap;color:#64748b;">${ev.stime || '整天'}${ev.etime ? '–'+ev.etime : ''}</td>
+      <td style="max-width:120px;">
+        <span style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:0.72rem;color:#64748b;" title="${ev.locationRaw||''}">${ev.locationRaw ? (KNOWN_LOCS.includes(ev.location)?'✓ '+ev.location:'⚠ '+ev.locationRaw) : '—'}</span>
+      </td>
+      <td><select class="dept-select" onchange="parsedEvents[${i}].dept=this.value">${deptOpts}</select></td>
+      <td><button onclick="removeRow(${i})" style="background:none;border:none;color:#a0aec0;cursor:pointer;font-size:0.9rem;padding:2px 5px;" title="移除">✕</button></td>`;
+    tbody.appendChild(tr);
+  });
+
+  // Stats
+  const total = parsedEvents.filter(e=>e.keep).length;
+  const withLoc = parsedEvents.filter(e=>e.keep&&e.locationRaw).length;
+  const unknownLoc = parsedEvents.filter(e=>e.keep&&e.locationRaw&&!KNOWN_LOCS.includes(e.location)).length;
+  document.getElementById('stats-bar').innerHTML = `
+    <span class="stat">共 <strong>${total}</strong> 筆</span>
+    <span class="stat">有地點 <strong>${withLoc}</strong> 筆</span>
+    ${unknownLoc ? `<span class="stat" style="color:#f59e0b;">⚠ <strong>${unknownLoc}</strong> 筆地點需確認</span>` : ''}
+    <span class="stat" style="color:#a0aec0;font-size:0.72rem;">⚠ 標示的地點名稱不在預設清單中，匯入後可手動修改</span>`;
+}
+
+function removeRow(i){
+  parsedEvents[i].keep = false;
+  document.getElementById('row-'+i)?.remove();
+  const total = parsedEvents.filter(e=>e.keep).length;
+  showMsg(`已移除，剩餘 ${total} 筆`, 'info');
+}
+
+function applyDefaults(){
+  const dept = document.getElementById('default-dept').value;
+  const loc = document.getElementById('default-loc').value;
+  parsedEvents.forEach(ev => {
+    if(!ev.keep) return;
+    ev.dept = dept;
+    if(loc) ev.location = loc;
+  });
+  renderPreview();
+  showMsg('已套用預設值', 'ok');
+}
+
+// ── Download CSV ──
+function downloadCSV(){
+  const rows = parsedEvents.filter(e => e.keep);
+  if(!rows.length){ showMsg('沒有資料可下載','err'); return; }
+  const header = '活動名稱,開始日期,結束日期,開始時間,結束時間,地點,處室,備註';
+  const lines = rows.map(ev => [
+    csvEsc(ev.title),
+    ev.start,
+    ev.end || ev.start,
+    ev.stime || '',
+    ev.etime || '',
+    csvEsc(ev.location || ''),
+    csvEsc(ev.dept),
+    csvEsc(ev.note || '')
+  ].join(','));
+  const content = '\uFEFF' + header + '\n' + lines.join('\n');
+  const blob = new Blob([content], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `google行事曆轉換_${new Date().toLocaleDateString('zh-TW').replace(/\//g,'-')}.csv`;
+  a.click();
+  showMsg(`✅ 已下載 ${rows.length} 筆活動的 CSV`, 'ok');
+}
+
+function csvEsc(s){
+  if(!s) return '';
+  s = String(s);
+  if(s.includes(',') || s.includes('"') || s.includes('\n'))
+    return '"' + s.replace(/"/g,'""') + '"';
+  return s;
+}
+
+function showMsg(text, type){
+  const el = document.getElementById('msg-bar');
+  el.textContent = text; el.className = 'msg ' + type; el.style.display = '';
+  if(type === 'ok' || type === 'info') setTimeout(()=>el.style.display='none', 3500);
+}
+
+function resetAll(){
+  parsedEvents = [];
+  ['step-options','step-preview','step-download'].forEach(id => document.getElementById(id).style.display = 'none');
+  document.getElementById('preview-tbody').innerHTML = '';
+  document.getElementById('ics-input').value = '';
+  document.getElementById('msg-bar').style.display = 'none';
+}
+</script>
+</body>
+</html>
