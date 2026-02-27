@@ -146,7 +146,7 @@ header{
 .cal-days{display:grid;grid-template-columns:repeat(7,1fr);}
 
 .cal-day{
-  min-height:115px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);
+  min-height:105px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);
   padding:0.28rem;position:relative;transition:background .1s;cursor:pointer;
 }
 .cal-day:nth-child(7n){border-right:none;}
@@ -166,16 +166,17 @@ header{
 .cal-day.saturday .day-num{color:#3b82f6;}
 .holiday-name{font-size:0.58rem;color:#ef4444;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60px;}
 
-.day-events{display:flex;flex-direction:column;gap:2px;}
+.day-events{display:flex;flex-direction:column;gap:1px;}
 .event-chip{
-  border-radius:3px;padding:1px 4px;font-size:0.63rem;font-weight:500;
-  cursor:pointer;transition:filter .1s;line-height:1.5;
-  display:flex;flex-direction:column;gap:0;
+  border-radius:3px;padding:2px 5px;font-size:0.63rem;font-weight:500;
+  cursor:pointer;transition:filter .1s;line-height:1.45;
+  display:flex;flex-direction:row;align-items:center;gap:3px;
+  overflow:hidden;white-space:nowrap;
 }
 .event-chip:hover{filter:brightness(.88);}
-.chip-time{font-size:0.58rem;opacity:0.85;font-weight:400;}
-.chip-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.chip-loc{font-size:0.57rem;opacity:0.8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.chip-time{font-size:0.58rem;opacity:0.85;font-weight:400;flex-shrink:0;white-space:nowrap;}
+.chip-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;}
+.chip-loc{font-size:0.58rem;opacity:0.8;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70px;}
 .chip-conflict{position:relative;}
 .chip-conflict::after{content:'⚠';position:absolute;top:-3px;right:-3px;font-size:0.6rem;background:#fff;border-radius:50%;line-height:1;padding:0 1px;}
 .more-chip{font-size:0.63rem;color:var(--text3);padding:1px 3px;cursor:pointer;}
@@ -1299,32 +1300,41 @@ function makeCell(date,otherMonth,conflicts){
   const evWrap=document.createElement('div');
   evWrap.className='day-events';
   const mob=isMobile();
-  const MAX=mob?2:3;
+  const MAX=mob?2:4;
   dayEvs.slice(0,MAX).forEach(ev=>{
     const chip=document.createElement('div');
     const hasConflict=conflicts.has(ev.id);
     chip.className=`event-chip bg-${ev.dept}`+(hasConflict?' chip-conflict':'');
     chip.onclick=e=>{e.stopPropagation();openDayModal(ds);};
-    // Time on top (desktop only)
-    if(ev.stime&&!mob){
-      const t=document.createElement('div');
-      t.className='chip-time';
-      t.textContent=ev.stime+(ev.etime?'–'+ev.etime:'');
-      chip.appendChild(t);
-    }
-    // Title — mobile: 2 chars + ellipsis
-    const ti=document.createElement('div');
-    ti.className='chip-title';
-    ti.textContent=mob
-      ? (ev.title.length>2 ? ev.title.slice(0,2)+'…' : ev.title)
-      : ev.title;
-    chip.appendChild(ti);
-    // Location at bottom (desktop only)
-    if(ev.location&&!mob){
-      const lo=document.createElement('div');
-      lo.className='chip-loc';
-      lo.textContent='📍'+ev.location;
-      chip.appendChild(lo);
+
+    if(mob){
+      // Mobile: just 2-char title
+      chip.textContent=ev.title.length>2?ev.title.slice(0,2)+'…':ev.title;
+    } else {
+      // Desktop: single row — time · title · 📍location
+      // Time (only if stime exists, etime optional)
+      if(ev.stime){
+        const t=document.createElement('span');
+        t.className='chip-time';
+        t.textContent=ev.stime+(ev.etime?'–'+ev.etime:'');
+        chip.appendChild(t);
+        const sep=document.createElement('span');
+        sep.style.cssText='opacity:0.5;flex-shrink:0;';
+        sep.textContent='·';
+        chip.appendChild(sep);
+      }
+      // Title
+      const ti=document.createElement('span');
+      ti.className='chip-title';
+      ti.textContent=ev.title;
+      chip.appendChild(ti);
+      // Location
+      if(ev.location){
+        const lo=document.createElement('span');
+        lo.className='chip-loc';
+        lo.textContent='📍'+ev.location;
+        chip.appendChild(lo);
+      }
     }
     evWrap.appendChild(chip);
   });
