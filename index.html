@@ -72,7 +72,7 @@ header{
 
 /* ── Sidebar ── */
 .sidebar{
-  width:148px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);
+  width:110px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);
   padding:0.85rem 0.65rem;display:flex;flex-direction:column;gap:0.4rem;overflow-y:auto;
 }
 .sidebar-label{font-size:0.72rem;font-weight:700;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:0.1rem;padding-left:0.2rem;}
@@ -315,6 +315,10 @@ header{
 @media(max-width:900px){.week-4col{grid-template-columns:1fr 1fr;}.dept-grid{grid-template-columns:1fr 1fr;}}
 
 /* ── Mobile styles (≤640px) ── */
+/* mob-drawer and overlay: always hidden unless on mobile AND open */
+.mob-drawer-overlay{display:none;}
+.mob-drawer{display:none;}
+
 /* mob-filter-row hidden on desktop, shown on mobile via media query */
 .mob-filter-row{display:none;}
 
@@ -352,18 +356,19 @@ header{
 
   /* Drawer overlay */
   .mob-drawer-overlay{
-    position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:500;
-    display:none;backdrop-filter:blur(2px);
+    display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:500;
+    backdrop-filter:blur(2px);
   }
   .mob-drawer-overlay.open{display:block;}
   .mob-drawer{
+    display:flex;flex-direction:column;
     position:fixed;bottom:0;left:0;right:0;
     background:var(--surface);border-radius:18px 18px 0 0;
     box-shadow:0 -4px 24px rgba(0,0,0,.14);
     padding:0 0 env(safe-area-inset-bottom,0);
     z-index:501;
     transform:translateY(100%);transition:transform .28s cubic-bezier(.16,1,.3,1);
-    max-height:80vh;display:flex;flex-direction:column;
+    max-height:80vh;
   }
   .mob-drawer.open{transform:translateY(0);}
   .mob-drawer-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 0;}
@@ -546,21 +551,22 @@ header{
     <button class="dept-btn" id="dbtn-輔導處" onclick="setDeptFilter('輔導處')"><span class="d-dot dot-輔導處"></span>輔導處</button>
     <button class="dept-btn" id="dbtn-總務處" onclick="setDeptFilter('總務處')"><span class="d-dot dot-總務處"></span>總務處</button>
     <div class="sidebar-divider"></div>
-    <!-- Location filter in sidebar (desktop) -->
-    <div class="sidebar-label" style="margin-top:0.2rem;">地點篩選</div>
-    <div id="sidebar-loc-btns" style="display:flex;flex-direction:column;gap:3px;"></div>
-    <div class="sidebar-divider"></div>
     <button class="add-btn-side" id="add-btn-side" onclick="openAddModal(null)" style="display:none;width:100%;padding:0.5rem 0.6rem;border-radius:8px;background:#1a202c;color:#fff;border:none;font-family:'Noto Sans TC',sans-serif;font-size:0.8rem;font-weight:500;cursor:pointer;transition:background .14s;">＋ 新增</button>
   </div>
 
   <div class="cal-wrap">
-    <!-- Quick month/year nav -->
+    <!-- Quick month/year nav + location filter -->
     <div class="quick-nav" id="quick-nav">
       <span class="qnav-label">年份：</span>
       <select class="year-select" id="year-select" onchange="setYear(this.value)"></select>
       <div class="qnav-sep"></div>
       <span class="qnav-label">月份：</span>
       <span id="month-btns"></span>
+      <div class="qnav-sep"></div>
+      <span class="qnav-label">地點：</span>
+      <select id="loc-select" onchange="setLocFilter(this.value)" style="padding:0.22rem 0.55rem;border:1.5px solid var(--border);border-radius:6px;font-family:'Noto Sans TC',sans-serif;font-size:0.75rem;color:var(--text);outline:none;cursor:pointer;max-width:180px;">
+        <option value="all">全部地點</option>
+      </select>
     </div>
 
     <!-- Cal nav -->
@@ -978,22 +984,30 @@ initQuickNav();
 
 // ── Location bar ──
 (function initLocBar(){
-  // Desktop: sidebar location buttons
-  const sidebar = document.getElementById('sidebar-loc-btns');
-  if(sidebar){
-    const allBtn = document.createElement('button');
-    allBtn.className='sidebar-loc-btn active'; allBtn.id='locbtn-all';
-    allBtn.innerHTML='<span class="loc-dot" style="background:#94a3b8;width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0;"></span>全部';
-    allBtn.onclick=()=>setLocFilter('all');
-    sidebar.appendChild(allBtn);
+  // Desktop: populate location <select> in quick-nav
+  const sel = document.getElementById('loc-select');
+  if(sel){
+    LOCATIONS.forEach(loc=>{
+      const opt=document.createElement('option');
+      opt.value=loc; opt.textContent=loc;
+      sel.appendChild(opt);
+    });
+  }
+
+  // Mobile drawer location buttons
+  const grid = document.getElementById('mob-loc-grid');
+  if(grid){
+    const allMob = document.createElement('button');
+    allMob.className='mob-loc-item active'; allMob.id='mlbtn-all';
+    allMob.textContent='全部';
+    allMob.onclick=()=>mobSetLoc('all');
+    grid.appendChild(allMob);
     LOCATIONS.forEach((loc,i)=>{
       const btn=document.createElement('button');
-      btn.className='sidebar-loc-btn'; btn.id='locbtn-'+loc;
-      const short = loc.length>9 ? loc.slice(0,8)+'…' : loc;
-      btn.innerHTML=`<span class="loc-dot ldot-${(i+1)%14}" style="flex-shrink:0;"></span><span style="overflow:hidden;text-overflow:ellipsis;display:block;">${short}</span>`;
-      btn.title=loc;
-      btn.onclick=()=>setLocFilter(loc);
-      sidebar.appendChild(btn);
+      btn.className='mob-loc-item'; btn.id='mlbtn-'+loc;
+      btn.innerHTML=`<span class="loc-dot ldot-${(i+1)%14}"></span>${loc}`;
+      btn.onclick=()=>mobSetLoc(loc);
+      grid.appendChild(btn);
     });
   }
 })();
@@ -1013,10 +1027,9 @@ window.setDeptFilter=(dept)=>{
 
 window.setLocFilter=(loc)=>{
   locFilter=loc;
-  // Update sidebar desktop buttons
-  document.querySelectorAll('.sidebar-loc-btn').forEach(b=>b.classList.remove('active'));
-  const el=document.getElementById(loc==='all'?'locbtn-all':'locbtn-'+loc);
-  if(el) el.classList.add('active');
+  // Sync desktop dropdown
+  const sel=document.getElementById('loc-select');
+  if(sel) sel.value=loc==='all'?'all':loc;
   renderView();
   if(dayModalDate) renderDeptGrid(dayModalDate);
 };
