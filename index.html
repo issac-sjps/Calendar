@@ -662,7 +662,7 @@ header{
           <option>4F樂活教室</option><option>5F活動中心</option>
           <option>球場南一（二.五.六年級）</option><option>球場南二（二.五.六年級）</option>
           <option>球場北一（一.三.四年級）</option><option>球場北二（一.三.四年級）</option>
-          <option>桌球教室</option><option>指定班級教室</option>
+          <option>桌球教室</option><option>指定班級教室</option><option>校外</option>
         </select>
       </div>
       <div class="form-group">
@@ -732,7 +732,7 @@ header{
         <div><label style="font-size:0.78rem;font-weight:500;color:var(--text2);display:block;margin-bottom:0.3rem;">預設處室</label>
         <select id="paste-dept" style="width:100%;padding:0.48rem 0.65rem;border:1.5px solid var(--border);border-radius:7px;font-family:'Noto Sans TC',sans-serif;font-size:0.86rem;outline:none;"><option value="教務處">教務處</option><option value="學務處">學務處</option><option value="輔導處">輔導處</option><option value="總務處">總務處</option></select></div>
         <div><label style="font-size:0.78rem;font-weight:500;color:var(--text2);display:block;margin-bottom:0.3rem;">預設地點</label>
-        <select id="paste-loc" style="width:100%;padding:0.48rem 0.65rem;border:1.5px solid var(--border);border-radius:7px;font-family:'Noto Sans TC',sans-serif;font-size:0.86rem;outline:none;"><option value="">（之後再填）</option><option>1F大穿堂</option><option>1F小玄關</option><option>1F靜思書軒</option><option>2F校長室旁會議室</option><option>3F視聽教室</option><option>4F圖書館</option><option>4F樂活教室</option><option>5F活動中心</option><option>球場南一（二.五.六年級）</option><option>球場南二（二.五.六年級）</option><option>球場北一（一.三.四年級）</option><option>球場北二（一.三.四年級）</option><option>桌球教室</option><option>指定班級教室</option></select></div>
+        <select id="paste-loc" style="width:100%;padding:0.48rem 0.65rem;border:1.5px solid var(--border);border-radius:7px;font-family:'Noto Sans TC',sans-serif;font-size:0.86rem;outline:none;"><option value="">（之後再填）</option><option>1F大穿堂</option><option>1F小玄關</option><option>1F靜思書軒</option><option>2F校長室旁會議室</option><option>3F視聽教室</option><option>4F圖書館</option><option>4F樂活教室</option><option>5F活動中心</option><option>球場南一（二.五.六年級）</option><option>球場南二（二.五.六年級）</option><option>球場北一（一.三.四年級）</option><option>球場北二（一.三.四年級）</option><option>桌球教室</option><option>指定班級教室</option><option>校外</option></select></div>
       </div>
       <label style="font-size:0.78rem;font-weight:500;color:var(--text2);display:block;margin-bottom:0.3rem;">貼上文字（每行一筆）</label>
       <textarea id="paste-text" rows="10" placeholder="3/12五年級英語歌唱比賽&#10;3/26~3/28新生報到&#10;6/12畢業典禮" style="width:100%;padding:0.55rem 0.7rem;border:1.5px solid var(--border);border-radius:8px;font-family:'Noto Sans TC',sans-serif;font-size:0.86rem;color:var(--text);outline:none;resize:vertical;line-height:1.7;"></textarea>
@@ -833,7 +833,7 @@ const gProvider = new GoogleAuthProvider();
 const DOMAIN = 'sjps.kh.edu.tw';
 const COL = 'calendar_events';
 const DEPTS = ['教務處','學務處','輔導處','總務處'];
-const LOCATIONS = ['1F大穿堂','1F小玄關','1F靜思書軒','2F校長室旁會議室','3F視聽教室','4F圖書館','4F樂活教室','5F活動中心','球場南一（二.五.六年級）','球場南二（二.五.六年級）','球場北一（一.三.四年級）','球場北二（一.三.四年級）','桌球教室','指定班級教室'];
+const LOCATIONS = ['1F大穿堂','1F小玄關','1F靜思書軒','2F校長室旁會議室','3F視聽教室','4F圖書館','4F樂活教室','5F活動中心','球場南一（二.五.六年級）','球場南二（二.五.六年級）','球場北一（一.三.四年級）','球場北二（一.三.四年級）','桌球教室','指定班級教室','校外'];
 const BATCH_LOCS = ['', ...LOCATIONS];
 
 // Taiwan public holidays (fixed annual + key ones for 2025/2026)
@@ -1002,7 +1002,7 @@ initQuickNav();
 
 // ── Location bar ──
 (function initLocBar(){
-  // Desktop: horizontal button bar
+  // Desktop: horizontal button bar only
   const bar = document.getElementById('loc-bar');
   if(bar){
     LOCATIONS.forEach((loc,i)=>{
@@ -1013,23 +1013,7 @@ initQuickNav();
       bar.appendChild(btn);
     });
   }
-
-  // Mobile drawer location buttons
-  const grid = document.getElementById('mob-loc-grid');
-  if(grid){
-    const allMob = document.createElement('button');
-    allMob.className='mob-loc-item active'; allMob.id='mlbtn-all';
-    allMob.textContent='全部';
-    allMob.onclick=()=>mobSetLoc('all');
-    grid.appendChild(allMob);
-    LOCATIONS.forEach((loc,i)=>{
-      const btn=document.createElement('button');
-      btn.className='mob-loc-item'; btn.id='mlbtn-'+loc;
-      btn.innerHTML=`<span class="loc-dot ldot-${(i+1)%14}"></span>${loc}`;
-      btn.onclick=()=>mobSetLoc(loc);
-      grid.appendChild(btn);
-    });
-  }
+  // Mobile loc grid is built by buildMobLocGrid() — do NOT duplicate here
 })();
 
 // ── Filters ──
