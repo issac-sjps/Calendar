@@ -192,9 +192,9 @@ header{
   overflow:hidden;white-space:nowrap;flex-shrink:0;
 }
 .event-chip:hover{filter:brightness(.88);}
-.chip-time{font-size:0.58rem;opacity:0.85;font-weight:400;flex-shrink:0;white-space:nowrap;}
-.chip-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;}
-.chip-loc{font-size:0.58rem;opacity:0.8;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70px;}
+.chip-time{font-size:0.55rem;opacity:0.65;font-weight:400;flex-shrink:0;white-space:nowrap;margin-left:2px;}
+.chip-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;font-weight:500;}
+.chip-loc{font-size:0.56rem;opacity:0.75;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60px;margin-left:1px;}
 .chip-conflict{position:relative;}
 .chip-conflict::after{content:'⚠';position:absolute;top:-3px;right:-3px;font-size:0.6rem;background:#fff;border-radius:50%;line-height:1;padding:0 1px;}
 .more-chip{font-size:0.62rem;color:var(--text3);padding:1px 4px;cursor:pointer;flex-shrink:0;margin-top:auto;}
@@ -1409,22 +1409,19 @@ function makeCell(date,otherMonth,conflicts){
     if(mob){
       chip.textContent=ev.title.length>2?ev.title.slice(0,2)+'…':ev.title;
     } else {
-      if(ev.stime){
-        const t=document.createElement('span');
-        t.className='chip-time';
-        // Only show etime if it's not empty/zero
-        const timeStr=ev.stime+(ev.etime&&ev.etime!=='00:00'?'–'+ev.etime:'');
-        t.textContent=timeStr;
-        chip.appendChild(t);
-        const sep=document.createElement('span');
-        sep.style.cssText='opacity:0.4;flex-shrink:0;font-size:0.55rem;';
-        sep.textContent='·';
-        chip.appendChild(sep);
-      }
+      // Title first — takes all available space, ellipsis if overflow
       const ti=document.createElement('span');
       ti.className='chip-title';
       ti.textContent=ev.title;
       chip.appendChild(ti);
+      // Time — small, right-aligned, only show start time (no end time to save space)
+      if(ev.stime){
+        const t=document.createElement('span');
+        t.className='chip-time';
+        t.textContent=ev.stime;
+        chip.appendChild(t);
+      }
+      // Location dot only (no text) to save space
       if(ev.location){
         const lo=document.createElement('span');
         lo.className='chip-loc';
