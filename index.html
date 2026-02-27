@@ -162,8 +162,10 @@ header{
 .cal-days{display:grid;grid-template-columns:repeat(7,1fr);}
 
 .cal-day{
-  min-height:105px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);
+  height:120px;
+  border-right:1px solid var(--border);border-bottom:1px solid var(--border);
   padding:0.28rem;position:relative;transition:background .1s;cursor:pointer;
+  overflow:hidden;display:flex;flex-direction:column;
 }
 .cal-day:nth-child(7n){border-right:none;}
 .cal-day:nth-last-child(-n+7){border-bottom:none;}
@@ -177,17 +179,17 @@ header{
 .cal-day.today:hover .day-num{background:#2d3748;}
 
 .day-num{font-size:0.8rem;font-weight:600;width:24px;height:24px;display:flex;align-items:center;justify-content:center;margin-bottom:0.15rem;border-radius:50%;transition:background .1s;flex-shrink:0;}
-.day-num-wrap{display:flex;align-items:center;gap:0.25rem;margin-bottom:0.15rem;}
+.day-num-wrap{display:flex;align-items:center;gap:0.25rem;margin-bottom:0.12rem;flex-shrink:0;}
 .cal-day.sunday .day-num{color:#ef4444;}
 .cal-day.saturday .day-num{color:#3b82f6;}
 .holiday-name{font-size:0.58rem;color:#ef4444;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60px;}
 
-.day-events{display:flex;flex-direction:column;gap:1px;}
+.day-events{display:flex;flex-direction:column;gap:1px;flex:1;overflow:hidden;min-height:0;}
 .event-chip{
   border-radius:3px;padding:2px 5px;font-size:0.63rem;font-weight:500;
   cursor:pointer;transition:filter .1s;line-height:1.45;
   display:flex;flex-direction:row;align-items:center;gap:3px;
-  overflow:hidden;white-space:nowrap;
+  overflow:hidden;white-space:nowrap;flex-shrink:0;
 }
 .event-chip:hover{filter:brightness(.88);}
 .chip-time{font-size:0.58rem;opacity:0.85;font-weight:400;flex-shrink:0;white-space:nowrap;}
@@ -195,7 +197,7 @@ header{
 .chip-loc{font-size:0.58rem;opacity:0.8;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70px;}
 .chip-conflict{position:relative;}
 .chip-conflict::after{content:'⚠';position:absolute;top:-3px;right:-3px;font-size:0.6rem;background:#fff;border-radius:50%;line-height:1;padding:0 1px;}
-.more-chip{font-size:0.63rem;color:var(--text3);padding:1px 3px;cursor:pointer;}
+.more-chip{font-size:0.62rem;color:var(--text3);padding:1px 4px;cursor:pointer;flex-shrink:0;margin-top:auto;}
 
 /* Dept / location dot colors */
 .bg-教務處{background:var(--教務處);color:#fff;}
@@ -1394,7 +1396,10 @@ function makeCell(date,otherMonth,conflicts){
   const evWrap=document.createElement('div');
   evWrap.className='day-events';
   const mob=isMobile();
-  const MAX=mob?2:4;
+  // Fixed cell: 120px total, ~36px for date row → ~84px for events
+  // Each chip ~20px + 1px gap. Reserve ~14px for "+N more" chip
+  // So max chips = floor((84 - 14) / 21) = 3 on desktop
+  const MAX=mob?2:3;
   dayEvs.slice(0,MAX).forEach(ev=>{
     const chip=document.createElement('div');
     const hasConflict=conflicts.has(ev.id);
@@ -1402,27 +1407,24 @@ function makeCell(date,otherMonth,conflicts){
     chip.onclick=e=>{e.stopPropagation();openDayModal(ds);};
 
     if(mob){
-      // Mobile: just 2-char title
       chip.textContent=ev.title.length>2?ev.title.slice(0,2)+'…':ev.title;
     } else {
-      // Desktop: single row — time · title · 📍location
-      // Time (only if stime exists, etime optional)
       if(ev.stime){
         const t=document.createElement('span');
         t.className='chip-time';
-        t.textContent=ev.stime+(ev.etime?'–'+ev.etime:'');
+        // Only show etime if it's not empty/zero
+        const timeStr=ev.stime+(ev.etime&&ev.etime!=='00:00'?'–'+ev.etime:'');
+        t.textContent=timeStr;
         chip.appendChild(t);
         const sep=document.createElement('span');
-        sep.style.cssText='opacity:0.5;flex-shrink:0;';
+        sep.style.cssText='opacity:0.4;flex-shrink:0;font-size:0.55rem;';
         sep.textContent='·';
         chip.appendChild(sep);
       }
-      // Title
       const ti=document.createElement('span');
       ti.className='chip-title';
       ti.textContent=ev.title;
       chip.appendChild(ti);
-      // Location
       if(ev.location){
         const lo=document.createElement('span');
         lo.className='chip-loc';
@@ -1435,7 +1437,8 @@ function makeCell(date,otherMonth,conflicts){
   if(dayEvs.length>MAX){
     const more=document.createElement('div');
     more.className='more-chip';
-    more.textContent=mob?`+${dayEvs.length-MAX}`:`還有 ${dayEvs.length-MAX} 個`;
+    const extra=dayEvs.length-MAX;
+    more.textContent=mob?`+${extra}`:`+${extra} 筆`;
     more.onclick=e=>{e.stopPropagation();openDayModal(ds);};
     evWrap.appendChild(more);
   }
