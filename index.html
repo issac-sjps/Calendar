@@ -85,10 +85,20 @@ header{
 
 /* ── Sidebar ── */
 .sidebar{
-  width:118px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);
+  width:148px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);
   padding:0.85rem 0.65rem;display:flex;flex-direction:column;gap:0.4rem;overflow-y:auto;
 }
-.sidebar-label{font-size:0.78rem;font-weight:700;color:var(--text2);letter-spacing:.04em;margin-bottom:0.15rem;padding-left:0.2rem;}
+.sidebar-label{font-size:0.72rem;font-weight:700;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:0.1rem;padding-left:0.2rem;}
+.sidebar-loc-btn{
+  width:100%;padding:0.3rem 0.5rem;border-radius:6px;
+  border:1px solid transparent;background:none;
+  font-family:'Noto Sans TC',sans-serif;font-size:0.73rem;font-weight:500;
+  cursor:pointer;transition:all .13s;text-align:left;
+  display:flex;align-items:center;gap:0.35rem;color:var(--text2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.sidebar-loc-btn:hover{background:var(--surface2);color:var(--text);}
+.sidebar-loc-btn.active{background:#1a202c;color:#fff;}
 .dept-btn{
   width:100%;padding:0.5rem 0.6rem;border-radius:8px;
   border:1.5px solid var(--border);background:none;
@@ -491,8 +501,8 @@ header{
   </div>
 </header>
 
-<!-- Location Filter Bar (desktop) -->
-<div class="location-bar" id="location-bar">
+<!-- Location Filter Bar (desktop) - now hidden, filters moved to sidebar -->
+<div class="location-bar" id="location-bar" style="display:none;">
   <span class="loc-label">地點：</span>
 </div>
 
@@ -538,13 +548,17 @@ header{
 
 <!-- Body -->
 <div class="body-wrap">
-  <div class="sidebar">
+  <div class="sidebar" id="desktop-sidebar">
     <div class="sidebar-label">處室篩選</div>
     <button class="dept-btn active active-all" id="dbtn-all" onclick="setDeptFilter('all')"><span class="d-dot" style="background:#94a3b8"></span>全部</button>
     <button class="dept-btn" id="dbtn-教務處" onclick="setDeptFilter('教務處')"><span class="d-dot dot-教務處"></span>教務處</button>
     <button class="dept-btn" id="dbtn-學務處" onclick="setDeptFilter('學務處')"><span class="d-dot dot-學務處"></span>學務處</button>
     <button class="dept-btn" id="dbtn-輔導處" onclick="setDeptFilter('輔導處')"><span class="d-dot dot-輔導處"></span>輔導處</button>
     <button class="dept-btn" id="dbtn-總務處" onclick="setDeptFilter('總務處')"><span class="d-dot dot-總務處"></span>總務處</button>
+    <div class="sidebar-divider"></div>
+    <!-- Location filter in sidebar (desktop) -->
+    <div class="sidebar-label" style="margin-top:0.2rem;">地點篩選</div>
+    <div id="sidebar-loc-btns" style="display:flex;flex-direction:column;gap:3px;"></div>
     <div class="sidebar-divider"></div>
     <button class="add-btn-side" id="add-btn-side" onclick="openAddModal(null)" style="display:none;width:100%;padding:0.5rem 0.6rem;border-radius:8px;background:#1a202c;color:#fff;border:none;font-family:'Noto Sans TC',sans-serif;font-size:0.8rem;font-weight:500;cursor:pointer;transition:background .14s;">＋ 新增</button>
   </div>
@@ -604,6 +618,7 @@ header{
     </div>
     <div class="dept-grid" id="dept-grid"></div>
     <div class="day-modal-footer">
+      <button id="comp-day-btn" onclick="toggleCompDayFromModal()" style="display:none;padding:0.48rem 0.9rem;border-radius:7px;border:1.5px solid #fca5a5;background:#fff5f5;color:#dc2626;font-family:'Noto Sans TC',sans-serif;font-size:0.8rem;font-weight:500;cursor:pointer;transition:all .14s;" title="長按日期格也可切換">🗓 設為補休日</button>
       <button class="add-day-btn" id="add-day-btn" onclick="addFromDay()">＋ 新增這天的活動</button>
       <button class="btn-md c" onclick="closeDayModal()">關閉</button>
     </div>
@@ -853,8 +868,9 @@ function syncMobileUI(){
   const mob = isMobile();
   document.getElementById('mob-filter-row').style.display = mob ? 'flex' : 'none';
   document.getElementById('mob-fab-area').style.display = mob ? 'flex' : 'none';
-  // On mobile hide desktop location bar
-  document.getElementById('location-bar').style.display = mob ? 'none' : '';
+  // Desktop sidebar visible only on non-mobile (CSS handles this too)
+  const sidebar = document.getElementById('desktop-sidebar');
+  if(sidebar) sidebar.style.display = mob ? 'none' : '';
 }
 syncMobileUI();
 window.addEventListener('resize', syncMobileUI);
@@ -971,18 +987,24 @@ initQuickNav();
 
 // ── Location bar ──
 (function initLocBar(){
-  const bar = document.getElementById('location-bar');
-  const allBtn = document.createElement('button');
-  allBtn.className='filter-btn active'; allBtn.id='locbtn-all';
-  allBtn.innerHTML='全部'; allBtn.onclick=()=>setLocFilter('all');
-  bar.appendChild(allBtn);
-  LOCATIONS.forEach((loc,i)=>{
-    const btn=document.createElement('button');
-    btn.className='filter-btn'; btn.id='locbtn-'+loc;
-    btn.innerHTML=`<span class="loc-dot ldot-${i%14}"></span>${loc}`;
-    btn.onclick=()=>setLocFilter(loc);
-    bar.appendChild(btn);
-  });
+  // Desktop: sidebar location buttons
+  const sidebar = document.getElementById('sidebar-loc-btns');
+  if(sidebar){
+    const allBtn = document.createElement('button');
+    allBtn.className='sidebar-loc-btn active'; allBtn.id='locbtn-all';
+    allBtn.innerHTML='<span class="loc-dot" style="background:#94a3b8;width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0;"></span>全部';
+    allBtn.onclick=()=>setLocFilter('all');
+    sidebar.appendChild(allBtn);
+    LOCATIONS.forEach((loc,i)=>{
+      const btn=document.createElement('button');
+      btn.className='sidebar-loc-btn'; btn.id='locbtn-'+loc;
+      const short = loc.length>9 ? loc.slice(0,8)+'…' : loc;
+      btn.innerHTML=`<span class="loc-dot ldot-${(i+1)%14}" style="flex-shrink:0;"></span><span style="overflow:hidden;text-overflow:ellipsis;display:block;">${short}</span>`;
+      btn.title=loc;
+      btn.onclick=()=>setLocFilter(loc);
+      sidebar.appendChild(btn);
+    });
+  }
 })();
 
 // ── Filters ──
@@ -1000,7 +1022,8 @@ window.setDeptFilter=(dept)=>{
 
 window.setLocFilter=(loc)=>{
   locFilter=loc;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  // Update sidebar desktop buttons
+  document.querySelectorAll('.sidebar-loc-btn').forEach(b=>b.classList.remove('active'));
   const el=document.getElementById(loc==='all'?'locbtn-all':'locbtn-'+loc);
   if(el) el.classList.add('active');
   renderView();
@@ -1011,6 +1034,49 @@ function passesFilter(ev){
   if(deptFilter!=='all'&&ev.dept!==deptFilter) return false;
   if(locFilter!=='all'&&ev.location!==locFilter) return false;
   return true;
+}
+
+// ── Compensation holidays (補休/彈性假日) ──
+// Stored in localStorage as a Set of date strings
+let compDays = new Set(JSON.parse(localStorage.getItem('compDays')||'[]'));
+
+function saveCompDays(){ localStorage.setItem('compDays', JSON.stringify([...compDays])); }
+
+function isCompDay(ds){ return compDays.has(ds); }
+
+function toggleCompDay(ds){
+  if(compDays.has(ds)){ compDays.delete(ds); }
+  else { compDays.add(ds); }
+  saveCompDays();
+  renderView();
+}
+
+// Long press detection for calendar cells
+let longPressTimer = null;
+let longPressTarget = null;
+
+function attachLongPress(cell, ds){
+  const DURATION = 1500; // 1.5 seconds feels right, 10s is too long
+  const start = (e) => {
+    longPressTarget = ds;
+    longPressTimer = setTimeout(()=>{
+      // Visual feedback
+      cell.style.transition = 'background 0.2s';
+      cell.style.background = '#fde8e8';
+      setTimeout(()=>{ cell.style.background=''; cell.style.transition=''; }, 400);
+      toggleCompDay(ds);
+      // Haptic if available
+      if(navigator.vibrate) navigator.vibrate(80);
+    }, DURATION);
+  };
+  const cancel = () => { clearTimeout(longPressTimer); longPressTimer = null; };
+
+  cell.addEventListener('mousedown', start);
+  cell.addEventListener('touchstart', e=>{ e.preventDefault(); start(e); }, {passive:false});
+  cell.addEventListener('mouseup', cancel);
+  cell.addEventListener('mouseleave', cancel);
+  cell.addEventListener('touchend', cancel);
+  cell.addEventListener('touchcancel', cancel);
 }
 
 // ── Conflict detection ──
@@ -1185,17 +1251,21 @@ function makeCell(date,otherMonth,conflicts){
   const ds=toDS(date); const dow=date.getDay();
   const isToday=ds===toDS(new Date());
   const holiday=!otherMonth?getHolidayName(ds):null;
+  const isComp=!otherMonth&&isCompDay(ds);
   const isWeekend=dow===0||dow===6;
 
   const cell=document.createElement('div');
   cell.className='cal-day'
     +(otherMonth?' other-month':'')
     +(isToday?' today':'')
-    +(!otherMonth&&isWeekend&&!holiday?' weekend':'')
-    +(!otherMonth&&holiday?' holiday':'')
+    +(!otherMonth&&(isWeekend||isComp)&&!holiday?' weekend':'')
+    +(!otherMonth&&(holiday||isComp)?' holiday':'')
     +(dow===0&&!otherMonth?' sunday':'')
     +(dow===6&&!otherMonth?' saturday':'');
   cell.onclick=()=>openDayModal(ds);
+
+  // Attach long-press to toggle comp day
+  if(!otherMonth) attachLongPress(cell, ds);
 
   // Day number row
   const numWrap=document.createElement('div');
@@ -1208,6 +1278,11 @@ function makeCell(date,otherMonth,conflicts){
     const hn=document.createElement('span');
     hn.className='holiday-name';
     hn.textContent=holiday;
+    numWrap.appendChild(hn);
+  } else if(isComp){
+    const hn=document.createElement('span');
+    hn.className='holiday-name';
+    hn.textContent='補休';
     numWrap.appendChild(hn);
   }
   cell.appendChild(numWrap);
@@ -1300,13 +1375,14 @@ function renderWeekView(){
         const ds=toDS(date); const dow=date.getDay();
         const isToday=ds===todayStr;
         const holiday=getHolidayName(ds);
+        const isComp=isCompDay(ds);
         const isWeekend=dow===0||dow===6;
 
         const dayRow=document.createElement('div');
         dayRow.className='week-day-row'
           +(isToday?' is-today':'')
-          +(isWeekend&&!holiday?' weekend-row':'')
-          +(holiday?' holiday-row':'');
+          +((isWeekend||isComp)&&!holiday?' weekend-row':'')
+          +((holiday||isComp)?' holiday-row':'');
         dayRow.onclick=()=>openDayModal(ds);
 
         const dateLine=document.createElement('div');
@@ -1320,10 +1396,10 @@ function renderWeekView(){
         dowEl.textContent=dowCh(dow);
         dateLine.appendChild(numEl);
         dateLine.appendChild(dowEl);
-        if(holiday){
+        if(holiday||isComp){
           const hl=document.createElement('div');
           hl.className='week-holiday-name';
-          hl.textContent=holiday;
+          hl.textContent=holiday||(isComp?'補休':'');
           dateLine.appendChild(hl);
         }
         dayRow.appendChild(dateLine);
@@ -1367,12 +1443,28 @@ window.openDayModal=(ds)=>{
   dayModalDate=ds;
   const d=new Date(ds);
   const holiday=getHolidayName(ds);
+  const isComp=isCompDay(ds);
   document.getElementById('day-hdr-title').textContent=
     `${d.getFullYear()} 年 ${d.getMonth()+1} 月 ${d.getDate()} 日（${dowCh(d.getDay())}）`
-    +(holiday?` ─ ${holiday}`:'');
+    +(holiday?` ─ ${holiday}`:isComp?' ─ 補休日':'');
   renderDeptGrid(ds);
   document.getElementById('add-day-btn').style.display=currentUser?'inline-flex':'none';
+  const compBtn=document.getElementById('comp-day-btn');
+  if(compBtn){
+    compBtn.style.display=currentUser?'':'none';
+    compBtn.textContent=isComp?'🗓 取消補休日':'🗓 設為補休日';
+    compBtn.style.background=isComp?'#fef3c7':'#fff5f5';
+    compBtn.style.borderColor=isComp?'#fbbf24':'#fca5a5';
+    compBtn.style.color=isComp?'#92400e':'#dc2626';
+  }
   document.getElementById('modal-day').classList.add('open');
+};
+
+window.toggleCompDayFromModal=()=>{
+  if(!dayModalDate) return;
+  toggleCompDay(dayModalDate);
+  // Refresh modal
+  openDayModal(dayModalDate);
 };
 
 function renderDeptGrid(ds){
