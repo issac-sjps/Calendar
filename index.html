@@ -508,6 +508,7 @@ header{
     </div>
     <button id="btn-batch" onclick="openBatchModal()">📋 批次管理</button>
     <button id="btn-add-header" onclick="openAddModal(null)">＋ 新增活動</button>
+    <button id="btn-admin" onclick="openAdminModal()" style="display:none;padding:0.35rem 0.85rem;border-radius:6px;font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;font-weight:500;cursor:pointer;border:1px solid #f59e0b;background:#fffbeb;color:#92400e;transition:all .14s;">⚙ 權限管理</button>
     <button class="btn-sm btn-ghost" id="btn-logout" style="display:none" onclick="handleLogout()">登出</button>
     <button class="btn-sm btn-primary" id="btn-login-open" onclick="openLoginModal()">教職員登入</button>
   </div>
@@ -790,12 +791,52 @@ header{
   </div>
 </div>
 
+<!-- Admin Modal -->
+<div class="modal-overlay" id="modal-admin">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-header">
+      <h3>⚙ 權限管理</h3>
+      <button class="modal-close" onclick="closeAdminModal()">✕</button>
+    </div>
+    <div class="modal-body" style="padding:0;">
+      <!-- Pending approvals -->
+      <div style="padding:1rem 1.4rem 0.5rem;">
+        <div style="font-size:0.82rem;font-weight:700;color:var(--text2);margin-bottom:0.6rem;">📋 待審核帳號</div>
+        <div id="admin-pending" style="display:flex;flex-direction:column;gap:0.4rem;min-height:32px;">
+          <div style="font-size:0.78rem;color:var(--text3);">載入中…</div>
+        </div>
+      </div>
+      <div style="height:1px;background:var(--border);margin:0.75rem 0;"></div>
+      <!-- Approved editors -->
+      <div style="padding:0 1.4rem 0.5rem;">
+        <div style="font-size:0.82rem;font-weight:700;color:var(--text2);margin-bottom:0.6rem;">✅ 已核准編輯帳號</div>
+        <div id="admin-editors" style="display:flex;flex-direction:column;gap:0.4rem;min-height:32px;">
+          <div style="font-size:0.78rem;color:var(--text3);">載入中…</div>
+        </div>
+      </div>
+      <div style="height:1px;background:var(--border);margin:0.75rem 0;"></div>
+      <!-- Manual add -->
+      <div style="padding:0 1.4rem 1rem;">
+        <div style="font-size:0.82rem;font-weight:700;color:var(--text2);margin-bottom:0.6rem;">➕ 手動新增編輯權限</div>
+        <div style="display:flex;gap:0.5rem;align-items:center;">
+          <input type="email" id="admin-add-email" placeholder="輸入 email 地址" style="flex:1;padding:0.45rem 0.65rem;border:1.5px solid var(--border);border-radius:7px;font-family:'Noto Sans TC',sans-serif;font-size:0.84rem;outline:none;">
+          <button onclick="adminGrantEditor(document.getElementById('admin-add-email').value)" style="padding:0.45rem 1rem;border-radius:7px;background:#1a202c;color:#fff;border:none;font-family:'Noto Sans TC',sans-serif;font-size:0.82rem;cursor:pointer;white-space:nowrap;">授予編輯</button>
+        </div>
+        <div id="admin-add-msg" style="font-size:0.75rem;margin-top:0.4rem;display:none;"></div>
+      </div>
+    </div>
+    <div class="modal-footer" style="justify-content:flex-end;">
+      <button class="btn-md c" onclick="closeAdminModal()">關閉</button>
+    </div>
+  </div>
+</div>
+
 <!-- Login modal -->
 <div class="modal-overlay login-modal" id="modal-login">
   <div class="modal" style="max-width:360px;">
     <div class="modal-header"><h3>教職員登入</h3><button class="modal-close" onclick="closeLoginModal()">✕</button></div>
     <div class="modal-body">
-      <p style="font-size:0.8rem;color:var(--text3);margin-bottom:1rem;line-height:1.7;">僅限 <strong style="color:var(--text)">@sjps.kh.edu.tw</strong> 信箱登入<br>訪客可直接瀏覽行事曆</p>
+      <p style="font-size:0.8rem;color:var(--text3);margin-bottom:1rem;line-height:1.7;">校內帳號 <strong style="color:var(--text)">@sjps.kh.edu.tw</strong> 登入後自動取得編輯權限<br>校外帳號登入後僅能瀏覽，需管理員核准才能編輯</p>
       <div class="form-msg" id="login-msg" style="margin-bottom:0.75rem;"></div>
     </div>
     <div class="modal-footer" style="flex-direction:column;align-items:stretch;gap:0.45rem;">
@@ -817,7 +858,7 @@ header{
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, serverTimestamp, getDoc, setDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
 const app = initializeApp({
   apiKey:"AIzaSyAhAduO-twiIX8kPUcXcwJDyuRCZT_GOZI",
@@ -831,6 +872,8 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const gProvider = new GoogleAuthProvider();
 const DOMAIN = 'sjps.kh.edu.tw';
+const SUPERADMIN = 'issac@sjps.kh.edu.tw';
+const PERM_COL = 'permissions';
 const COL = 'calendar_events';
 const DEPTS = ['教務處','學務處','輔導處','總務處'];
 const LOCATIONS = ['1F大穿堂','1F小玄關','1F靜思書軒','2F校長室旁會議室','3F視聽教室','4F圖書館','4F樂活教室','5F活動中心','球場南一（二.五.六年級）','球場南二（二.五.六年級）','球場北一（一.三.四年級）','球場北二（一.三.四年級）','桌球教室','指定班級教室','校外'];
@@ -857,6 +900,8 @@ function getHolidayName(dateStr){
 }
 
 let currentUser = null;
+let canEdit = false;   // true if user has edit permission
+let isAdmin = false;   // true if superadmin
 let curYear = new Date().getFullYear();
 let curMonth = new Date().getMonth();
 let events = [];
@@ -1067,7 +1112,7 @@ let longPressTarget = null;
 function attachLongPress(cell, ds){
   const DURATION = 5000; // 5 seconds, login required
   const start = (e) => {
-    if(!currentUser) return; // must be logged in
+    if(!currentUser||!canEdit) return; // must be logged in with edit permission
     longPressTarget = ds;
     longPressTimer = setTimeout(()=>{
       cell.style.transition = 'background 0.2s';
@@ -1121,30 +1166,75 @@ setTimeout(()=>{
   }
 },6000);
 
-onAuthStateChanged(auth,user=>{
+// ── Permission helpers ──
+async function checkAndSetPermission(user){
+  const email = user.email;
+  const domain = (email||'').split('@')[1];
+  const permRef = doc(db, PERM_COL, email.replace(/\./g,'_'));
+
+  // Superadmin
+  if(email === SUPERADMIN){
+    isAdmin = true; canEdit = true;
+    // Ensure superadmin doc exists
+    await setDoc(permRef, {email, role:'superadmin', grantedAt:serverTimestamp()}, {merge:true});
+    return;
+  }
+
+  // School domain → auto editor
+  if(domain === DOMAIN){
+    canEdit = true; isAdmin = false;
+    await setDoc(permRef, {email, role:'editor', domain:DOMAIN, grantedAt:serverTimestamp()}, {merge:true});
+    return;
+  }
+
+  // External user → check Firestore for approval
+  const snap = await getDoc(permRef);
+  if(snap.exists() && snap.data().role === 'editor'){
+    canEdit = true; isAdmin = false;
+  } else {
+    canEdit = false; isAdmin = false;
+    // Register as pending if not already
+    if(!snap.exists()){
+      await setDoc(permRef, {email, role:'pending', requestedAt:serverTimestamp()});
+    }
+  }
+}
+
+function applyUIPermissions(){
+  const showEdit = canEdit;
+  const showAdmin = isAdmin;
+  document.getElementById('btn-add-header').style.display = showEdit ? '' : 'none';
+  document.getElementById('btn-batch').style.display = showEdit ? '' : 'none';
+  document.getElementById('btn-admin').style.display = showAdmin ? '' : 'none';
+  document.getElementById('add-btn-side').style.display = showEdit ? 'block' : 'none';
+  const mbb = document.getElementById('mob-batch-btn');
+  if(mbb) mbb.style.display = showEdit ? '' : 'none';
+  syncFAB();
+}
+
+onAuthStateChanged(auth, async user=>{
   if(user){
-    const domain=(user.email||'').split('@')[1];
-    if(domain!==DOMAIN){ signOut(auth); showFMsg('login-msg','','僅限 @'+DOMAIN+' 信箱'); return; }
-    currentUser=user;
+    currentUser = user;
+    await checkAndSetPermission(user);
     document.getElementById('user-info').style.display='flex';
     document.getElementById('user-email-show').textContent=user.email.split('@')[0];
     document.getElementById('btn-logout').style.display='';
     document.getElementById('btn-login-open').style.display='none';
-    document.getElementById('btn-add-header').style.display='';
-    document.getElementById('btn-batch').style.display='';
-    document.getElementById('add-btn-side').style.display='block';
-    // Mobile
-    const mbb = document.getElementById('mob-batch-btn');
-    if(mbb) mbb.style.display='';
-    syncFAB();
+    applyUIPermissions();
+
+    // Show pending notice for external viewers
+    if(!canEdit && !isAdmin){
+      showFMsg('login-msg','','✅ 已登入（僅瀏覽）— 編輯權限待管理員核准');
+    }
     closeLoginModal();
   } else {
-    currentUser=null;
+    currentUser = null; canEdit = false; isAdmin = false;
     document.getElementById('user-info').style.display='none';
     document.getElementById('btn-logout').style.display='none';
     document.getElementById('btn-login-open').style.display='';
     document.getElementById('btn-add-header').style.display='none';
     document.getElementById('btn-batch').style.display='none';
+    document.getElementById('btn-admin').style.display='none';
     document.getElementById('add-btn-side').style.display='none';
     const mbb = document.getElementById('mob-batch-btn');
     if(mbb) mbb.style.display='none';
@@ -1465,10 +1555,10 @@ window.openDayModal=(ds)=>{
     `${d.getFullYear()} 年 ${d.getMonth()+1} 月 ${d.getDate()} 日（${dowCh(d.getDay())}）`
     +(holiday?` ─ ${holiday}`:isComp?' ─ 補休日':'');
   renderDeptGrid(ds);
-  document.getElementById('add-day-btn').style.display=currentUser?'inline-flex':'none';
+  document.getElementById('add-day-btn').style.display=canEdit?'inline-flex':'none';
   const compBtn=document.getElementById('comp-day-btn');
   if(compBtn){
-    compBtn.style.display=currentUser?'':'none';
+    compBtn.style.display=canEdit?'':'none';
     compBtn.textContent=isComp?'🗓 取消補休日':'🗓 設為補休日';
     compBtn.style.background=isComp?'#fef3c7':'#fff5f5';
     compBtn.style.borderColor=isComp?'#fbbf24':'#fca5a5';
@@ -1518,7 +1608,7 @@ function renderDeptGrid(ds){
             ${ev.location?`<span>📍 ${esc(ev.location)}</span>`:''}
           </div>
           ${ev.note?`<div style="font-size:0.7rem;color:var(--text3);margin-top:0.2rem;">📝 ${esc(ev.note)}</div>`:''}
-          ${currentUser?`<div class="dept-ev-actions">
+          ${canEdit?`<div class="dept-ev-actions">
             <button class="btn-xs e" onclick="openEditEvent('${ev.id}')">編輯</button>
             <button class="btn-xs d" onclick="confirmDelete('${ev.id}')">刪除</button>
           </div>`:''}
@@ -1536,7 +1626,7 @@ window.addFromDay=()=>{const d=dayModalDate;closeDayModal();openAddModal(d);};
 
 // ── Add/Edit ──
 window.openAddModal=(ds)=>{
-  if(!currentUser) return;
+  if(!canEdit) return;
   editingId=null;
   document.getElementById('add-modal-title').textContent='新增活動';
   document.getElementById('ev-title').value='';
@@ -1554,7 +1644,7 @@ window.openAddModal=(ds)=>{
 
 window.openEditEvent=(id)=>{
   const ev=events.find(e=>e.id===id);
-  if(!ev||!currentUser) return;
+  if(!ev||!canEdit) return;
   editingId=id;
   document.getElementById('add-modal-title').textContent='編輯活動';
   document.getElementById('ev-title').value=ev.title||'';
@@ -1617,12 +1707,99 @@ window.closeLoginModal=()=>document.getElementById('modal-login').classList.remo
 
 window.handleGoogleLogin=async()=>{
   try{
-    const r=await signInWithPopup(auth,gProvider);
-    if(!r.user.email.endsWith('@'+DOMAIN)){await signOut(auth);showFMsg('login-msg','','僅限 @'+DOMAIN+' 信箱');}
+    await signInWithPopup(auth,gProvider);
+    // Permission check happens in onAuthStateChanged
   }catch(e){if(e.code!=='auth/popup-closed-by-user') showFMsg('login-msg','','Google 登入失敗');}
 };
 
 window.handleLogout=()=>signOut(auth);
+
+// ── Admin Modal ──
+window.openAdminModal=async()=>{
+  if(!isAdmin) return;
+  document.getElementById('modal-admin').classList.add('open');
+  await loadAdminData();
+};
+window.closeAdminModal=()=>document.getElementById('modal-admin').classList.remove('open');
+
+async function loadAdminData(){
+  const pendingDiv=document.getElementById('admin-pending');
+  const editorsDiv=document.getElementById('admin-editors');
+  pendingDiv.innerHTML='<div style="font-size:0.78rem;color:var(--text3);">載入中…</div>';
+  editorsDiv.innerHTML='<div style="font-size:0.78rem;color:var(--text3);">載入中…</div>';
+
+  try{
+    const snap=await getDocs(collection(db,PERM_COL));
+    const pending=[], editors=[];
+    snap.forEach(d=>{
+      const data=d.data();
+      if(data.email===SUPERADMIN) return; // skip superadmin
+      if(data.role==='pending') pending.push(data);
+      else if(data.role==='editor') editors.push(data);
+    });
+
+    // Render pending
+    if(!pending.length){
+      pendingDiv.innerHTML='<div style="font-size:0.78rem;color:var(--text3);">沒有待審核帳號</div>';
+    } else {
+      pendingDiv.innerHTML=pending.map(u=>`
+        <div style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;background:var(--surface2);border-radius:8px;border:1px solid var(--border);">
+          <div style="flex:1;">
+            <div style="font-size:0.82rem;font-weight:600;">${u.email}</div>
+            <div style="font-size:0.7rem;color:var(--text3);">申請時間：${u.requestedAt?.toDate ? u.requestedAt.toDate().toLocaleDateString('zh-TW') : '—'}</div>
+          </div>
+          <button onclick="adminGrantEditor('${u.email}')" style="padding:0.28rem 0.7rem;border-radius:6px;background:#059669;color:#fff;border:none;font-size:0.76rem;cursor:pointer;font-family:'Noto Sans TC',sans-serif;">✓ 核准</button>
+          <button onclick="adminRevokeUser('${u.email}')" style="padding:0.28rem 0.7rem;border-radius:6px;background:#fee2e2;color:#dc2626;border:none;font-size:0.76rem;cursor:pointer;font-family:'Noto Sans TC',sans-serif;">✕ 拒絕</button>
+        </div>`).join('');
+    }
+
+    // Render editors
+    if(!editors.length){
+      editorsDiv.innerHTML='<div style="font-size:0.78rem;color:var(--text3);">沒有已核准的外部帳號</div>';
+    } else {
+      editorsDiv.innerHTML=editors.map(u=>`
+        <div style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0;">
+          <div style="flex:1;">
+            <div style="font-size:0.82rem;font-weight:600;">${u.email}</div>
+            <div style="font-size:0.7rem;color:var(--text3);">${u.domain===DOMAIN?'校內帳號':'外部帳號'}</div>
+          </div>
+          ${u.domain!==DOMAIN?`<button onclick="adminRevokeUser('${u.email}')" style="padding:0.28rem 0.7rem;border-radius:6px;background:#fee2e2;color:#dc2626;border:none;font-size:0.76rem;cursor:pointer;font-family:'Noto Sans TC',sans-serif;">撤銷</button>`:''}
+        </div>`).join('');
+    }
+  }catch(e){
+    pendingDiv.innerHTML='<div style="font-size:0.78rem;color:#ef4444;">載入失敗</div>';
+  }
+}
+
+window.adminGrantEditor=async(email)=>{
+  if(!email||!email.includes('@')){ showAdminMsg('請輸入有效的 email','#ef4444'); return; }
+  email=email.trim().toLowerCase();
+  const key=email.replace(/\./g,'_');
+  try{
+    await setDoc(doc(db,PERM_COL,key),{
+      email, role:'editor',
+      approvedBy:currentUser.email, approvedAt:serverTimestamp()
+    },{merge:true});
+    document.getElementById('admin-add-email').value='';
+    showAdminMsg(`✅ 已授予 ${email} 編輯權限`,'#059669');
+    await loadAdminData();
+  }catch(e){ showAdminMsg('操作失敗：'+e.message,'#ef4444'); }
+};
+
+window.adminRevokeUser=async(email)=>{
+  if(!confirm(`確定要移除 ${email} 的權限？`)) return;
+  const key=email.replace(/\./g,'_');
+  try{
+    await setDoc(doc(db,PERM_COL,key),{email,role:'revoked',revokedAt:serverTimestamp()},{merge:true});
+    await loadAdminData();
+  }catch(e){ alert('操作失敗：'+e.message); }
+};
+
+function showAdminMsg(msg,color){
+  const el=document.getElementById('admin-add-msg');
+  el.textContent=msg; el.style.color=color; el.style.display='block';
+  setTimeout(()=>el.style.display='none',3500);
+}
 
 // ── Batch Manager ──
 let batchRows=[], parsedRows=[], csvRows=[];
