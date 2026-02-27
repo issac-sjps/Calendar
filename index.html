@@ -61,24 +61,11 @@ header{
 #btn-batch:hover{background:var(--bg);}
 
 /* ── Location Filter Bar ── */
-.location-bar{
-  background:var(--surface);border-bottom:1px solid var(--border);
-  padding:0.55rem 1.25rem;display:flex;align-items:center;
-  gap:0.4rem;flex-wrap:wrap;position:sticky;top:56px;z-index:99;flex-shrink:0;
-}
+.location-bar{display:none;}
 .loc-label{font-size:0.82rem;font-weight:600;color:var(--text2);margin-right:0.2rem;white-space:nowrap;}
 
 /* Location dot colors */
 .loc-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:3px;flex-shrink:0;}
-.filter-btn{
-  padding:0.28rem 0.75rem;border-radius:999px;font-size:0.78rem;font-weight:500;
-  border:1.5px solid var(--border);background:var(--surface);color:var(--text2);
-  cursor:pointer;transition:all .14s;white-space:nowrap;
-  font-family:'Noto Sans TC',sans-serif;display:inline-flex;align-items:center;gap:3px;
-}
-.filter-btn:hover{border-color:#94a3b8;color:var(--text);}
-.filter-btn.active{background:#1a202c;border-color:#1a202c;color:#fff;}
-.filter-btn.active .loc-dot{opacity:0.7;}
 
 /* ── Body ── */
 .body-wrap{display:flex;flex:1;min-height:0;overflow:hidden;}
@@ -328,6 +315,9 @@ header{
 @media(max-width:900px){.week-4col{grid-template-columns:1fr 1fr;}.dept-grid{grid-template-columns:1fr 1fr;}}
 
 /* ── Mobile styles (≤640px) ── */
+/* mob-filter-row hidden on desktop, shown on mobile via media query */
+.mob-filter-row{display:none;}
+
 @media(max-width:640px){
   /* Sidebar hidden on mobile — replaced by bottom drawer */
   .sidebar{display:none;}
@@ -824,15 +814,16 @@ const BATCH_LOCS = ['', ...LOCATIONS];
 
 // Taiwan public holidays (fixed annual + key ones for 2025/2026)
 const TW_HOLIDAYS = {
-  '01-01':'元旦','02-28':'和平紀念日','04-04':'兒童節','04-05':'清明節',
-  '05-01':'勞動節','06-10':'端午節','09-28':'教師節','10-10':'國慶日',
+  // Taiwan public holidays — only FIXED dates (not lunar-based)
+  '01-01':'元旦','02-28':'和平紀念日','04-04':'兒童節',
+  '05-01':'勞動節','09-28':'教師節','10-10':'國慶日',
   '12-25':'行憲紀念日',
-  // 2025 lunar
-  '2025-01-29':'除夕','2025-01-30':'春節','2025-01-31':'春節','2025-02-01':'春節',
-  '2025-05-31':'端午節','2025-09-06':'中秋節',
+  // Lunar holidays by exact year (correct dates)
+  '2025-01-28':'除夕','2025-01-29':'春節','2025-01-30':'春節','2025-01-31':'春節',
+  '2025-05-31':'端午節','2025-10-06':'中秋節',
   // 2026 lunar
   '2026-02-16':'除夕','2026-02-17':'春節','2026-02-18':'春節','2026-02-19':'春節',
-  '2026-06-19':'端午節','2026-09-25':'中秋節',
+  '2026-06-20':'端午節','2026-09-25':'中秋節',
 };
 
 function getHolidayName(dateStr){
@@ -1056,17 +1047,16 @@ let longPressTimer = null;
 let longPressTarget = null;
 
 function attachLongPress(cell, ds){
-  const DURATION = 1500; // 1.5 seconds feels right, 10s is too long
+  const DURATION = 5000; // 5 seconds, login required
   const start = (e) => {
+    if(!currentUser) return; // must be logged in
     longPressTarget = ds;
     longPressTimer = setTimeout(()=>{
-      // Visual feedback
       cell.style.transition = 'background 0.2s';
       cell.style.background = '#fde8e8';
-      setTimeout(()=>{ cell.style.background=''; cell.style.transition=''; }, 400);
+      setTimeout(()=>{ cell.style.background=''; cell.style.transition=''; }, 500);
       toggleCompDay(ds);
-      // Haptic if available
-      if(navigator.vibrate) navigator.vibrate(80);
+      if(navigator.vibrate) navigator.vibrate(100);
     }, DURATION);
   };
   const cancel = () => { clearTimeout(longPressTimer); longPressTimer = null; };
