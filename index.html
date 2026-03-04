@@ -230,30 +230,81 @@ header{
 .ldot-13{background:#f43f5e;}
 
 /* ── Week view ── */
-.week-4col{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;}
-.week-dept-col{background:var(--surface);border-radius:10px;border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden;}
-.week-dept-header{padding:0.55rem 0.75rem;font-size:0.82rem;font-weight:700;display:flex;align-items:center;gap:0.4rem;}
-.week-dept-body{padding:0.5rem;display:flex;flex-direction:column;gap:0;}
-.week-day-row{border-bottom:1px solid var(--border);padding:0.4rem 0.25rem;cursor:pointer;transition:background .1s;}
-.week-day-row:last-child{border-bottom:none;}
-.week-day-row:hover{background:var(--surface2);}
-.week-day-row.is-today{background:#eff6ff;}
-.week-day-row.weekend-row{background:var(--weekend-bg);}
-.week-day-row.holiday-row{background:var(--holiday-bg);}
-.week-date-line{display:flex;align-items:center;gap:0.35rem;margin-bottom:0.2rem;}
-.week-day-num{font-size:0.85rem;font-weight:700;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:50%;flex-shrink:0;}
-.week-day-row.is-today .week-day-num{background:#1a202c;color:#fff;}
-.week-dow{font-size:0.68rem;color:var(--text3);}
-.week-holiday-name{font-size:0.62rem;color:#ef4444;font-weight:600;}
-.week-events{display:flex;flex-direction:column;gap:2px;padding-left:0.25rem;}
+/* Week view: shared grid for alignment */
+.week-4col{display:block;}
+.week-grid{
+  display:grid;
+  grid-template-columns: 52px repeat(4,1fr);
+  border:1px solid var(--border);border-radius:10px;
+  background:var(--surface);box-shadow:var(--shadow);
+  overflow:hidden;
+}
+/* Header row */
+.week-grid-header{
+  display:contents;
+}
+.week-grid-header-cell{
+  padding:0.55rem 0.65rem;font-size:0.8rem;font-weight:700;
+  display:flex;align-items:center;gap:0.4rem;
+  border-bottom:2px solid var(--border);
+  position:sticky;top:0;z-index:10;background:var(--surface);
+}
+.week-grid-header-cell:not(:last-child){border-right:1px solid var(--border);}
+.week-grid-date-header{
+  padding:0.55rem 0.4rem;font-size:0.7rem;font-weight:700;color:var(--text3);
+  border-bottom:2px solid var(--border);border-right:1px solid var(--border);
+  background:var(--surface);position:sticky;top:0;z-index:10;
+  display:flex;align-items:center;justify-content:center;
+}
+/* Week separator row */
+.week-sep-row{display:contents;}
+.week-sep-cell{
+  grid-column:1/-1;
+  padding:0.22rem 0.65rem;font-size:0.65rem;color:var(--text3);
+  background:var(--bg);border-bottom:1px solid var(--border);
+  font-weight:600;letter-spacing:.04em;
+}
+/* Day row: one row per date, spans all columns */
+.week-row{display:contents;}
+.week-row-date{
+  padding:0.35rem 0.4rem;
+  border-bottom:1px solid var(--border);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  gap:1px;cursor:pointer;transition:background .1s;min-height:36px;
+}
+.week-row-date:hover{background:var(--surface2);}
+.week-row-date.is-today{background:#eff6ff;}
+.week-row-date.weekend-bg{background:var(--weekend-bg);}
+.week-row-date.holiday-bg{background:var(--holiday-bg);}
+.week-row-cell{
+  padding:0.3rem 0.5rem;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;transition:background .1s;min-height:36px;
+  display:flex;flex-direction:column;gap:2px;
+}
+.week-row-cell:not(:last-child){border-right:1px solid var(--border);}
+.week-row-cell:hover{background:var(--surface2);}
+.week-row-cell.is-today{background:#eff6ff;}
+.week-row-cell.weekend-bg{background:var(--weekend-bg);}
+.week-row-cell.holiday-bg{background:var(--holiday-bg);}
+/* Last row: no bottom border */
+.week-row-last .week-row-date,
+.week-row-last .week-row-cell{border-bottom:none;}
+
+.week-day-num{font-size:0.82rem;font-weight:700;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:50%;flex-shrink:0;}
+.week-row-date.is-today .week-day-num{background:#1a202c;color:#fff;}
+.week-dow{font-size:0.62rem;color:var(--text3);line-height:1;}
+.week-holiday-name{font-size:0.58rem;color:#ef4444;font-weight:600;text-align:center;line-height:1.2;}
+
 .week-ev-pill{
-  padding:0.2rem 0.45rem;border-radius:4px;font-size:0.72rem;font-weight:500;
+  padding:0.18rem 0.4rem;border-radius:4px;font-size:0.72rem;font-weight:500;
   cursor:pointer;transition:filter .1s;position:relative;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .week-ev-pill:hover{filter:brightness(.88);}
-.week-ev-time{font-size:0.62rem;opacity:.85;}
-.week-ev-loc{font-size:0.62rem;opacity:.8;}
-.week-no-ev{font-size:0.7rem;color:var(--text3);padding:0.15rem 0.25rem;}
+.week-ev-time{font-size:0.6rem;opacity:.8;display:inline;margin-right:3px;}
+.week-ev-loc{font-size:0.6rem;opacity:.75;margin-top:1px;}
+.week-no-ev{font-size:0.7rem;color:var(--text3);padding:0.1rem 0;}
 
 /* ── Modals ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:200;padding:1rem;backdrop-filter:blur(3px);}
@@ -506,7 +557,7 @@ header{
   </div>
   <div class="header-right">
     <div id="user-info">
-      <span id="user-email-show" style="font-size:0.72rem;color:var(--text3)"></span>
+      <span id="user-email-show" style="font-size:0.72rem;color:var(--text3);cursor:pointer;" onclick="openNameModal()" title="點擊修改顯示名稱"></span>
     </div>
     <button id="btn-batch" onclick="openBatchModal()">📋 批次管理</button>
     <button id="btn-add-header" onclick="openAddModal(null)">＋ 新增活動</button>
@@ -789,6 +840,29 @@ header{
           <span id="csv-import-msg" style="font-size:0.76rem;color:var(--text2);display:none;"></span>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Name Edit Modal -->
+<div class="modal-overlay" id="modal-name">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-header">
+      <h3>✏️ 修改顯示名稱</h3>
+      <button class="modal-close" onclick="closeNameModal()">✕</button>
+    </div>
+    <div class="modal-body" style="padding:1.25rem 1.4rem;">
+      <p style="font-size:0.8rem;color:var(--text3);margin-bottom:1rem;line-height:1.6;">顯示名稱會出現在管理員後台，方便管理員確認您的身分。</p>
+      <div class="form-group">
+        <label>顯示名稱</label>
+        <input type="text" id="name-input" placeholder="例如：王小明 老師" maxlength="20"
+          style="width:100%;padding:0.5rem 0.65rem;border:1.5px solid var(--border);border-radius:8px;font-family:'Noto Sans TC',sans-serif;font-size:0.9rem;outline:none;">
+      </div>
+      <div id="name-msg" style="font-size:0.75rem;margin-top:0.4rem;display:none;"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-md c" onclick="closeNameModal()">取消</button>
+      <button class="btn-md p" onclick="saveDisplayName()">儲存</button>
     </div>
   </div>
 </div>
@@ -1169,6 +1243,8 @@ setTimeout(()=>{
 },6000);
 
 // ── Permission helpers ──
+let currentDisplayName = '';
+
 async function checkAndSetPermission(user){
   const email = user.email;
   const domain = (email||'').split('@')[1];
@@ -1177,27 +1253,33 @@ async function checkAndSetPermission(user){
   // Superadmin
   if(email === SUPERADMIN){
     isAdmin = true; canEdit = true;
-    // Ensure superadmin doc exists
-    await setDoc(permRef, {email, role:'superadmin', grantedAt:serverTimestamp()}, {merge:true});
+    const snap = await getDoc(permRef);
+    currentDisplayName = snap.exists() && snap.data().displayName ? snap.data().displayName : (user.displayName || email.split('@')[0]);
+    await setDoc(permRef, {email, role:'superadmin', displayName:currentDisplayName, grantedAt:serverTimestamp()}, {merge:true});
     return;
   }
 
   // School domain → auto editor
   if(domain === DOMAIN){
     canEdit = true; isAdmin = false;
-    await setDoc(permRef, {email, role:'editor', domain:DOMAIN, grantedAt:serverTimestamp()}, {merge:true});
+    const snap = await getDoc(permRef);
+    currentDisplayName = snap.exists() && snap.data().displayName ? snap.data().displayName : (user.displayName || email.split('@')[0]);
+    await setDoc(permRef, {email, role:'editor', domain:DOMAIN, displayName:currentDisplayName, grantedAt:serverTimestamp()}, {merge:true});
     return;
   }
 
   // External user → check Firestore for approval
   const snap = await getDoc(permRef);
+  currentDisplayName = snap.exists() && snap.data().displayName ? snap.data().displayName : (user.displayName || email.split('@')[0]);
   if(snap.exists() && snap.data().role === 'editor'){
     canEdit = true; isAdmin = false;
+    await setDoc(permRef, {displayName:currentDisplayName}, {merge:true});
   } else {
     canEdit = false; isAdmin = false;
-    // Register as pending if not already
     if(!snap.exists()){
-      await setDoc(permRef, {email, role:'pending', requestedAt:serverTimestamp()});
+      await setDoc(permRef, {email, role:'pending', displayName:currentDisplayName, requestedAt:serverTimestamp()});
+    } else {
+      await setDoc(permRef, {displayName:currentDisplayName}, {merge:true});
     }
   }
 }
@@ -1219,7 +1301,8 @@ onAuthStateChanged(auth, async user=>{
     currentUser = user;
     await checkAndSetPermission(user);
     document.getElementById('user-info').style.display='flex';
-    document.getElementById('user-email-show').textContent=user.email.split('@')[0];
+    document.getElementById('user-email-show').textContent = currentDisplayName + ' ✏';
+    document.getElementById('user-email-show').title = user.email + '（點擊修改名稱）';
     document.getElementById('btn-logout').style.display='';
     document.getElementById('btn-login-open').style.display='none';
     applyUIPermissions();
@@ -1455,94 +1538,100 @@ function renderWeekView(){
   const todayStr=toDS(new Date());
   const conflicts=getConflicts();
 
+  // Build one shared grid: col0=date, col1-4=depts
+  const grid=document.createElement('div');
+  grid.className='week-grid';
+
+  // Header row
+  const dateHdr=document.createElement('div');
+  dateHdr.className='week-grid-date-header';
+  dateHdr.textContent='日期';
+  grid.appendChild(dateHdr);
   DEPTS.forEach(dept=>{
-    const col=document.createElement('div');
-    col.className='week-dept-col';
-
     const hdr=document.createElement('div');
-    hdr.className=`week-dept-header soft-${dept}`;
+    hdr.className=`week-grid-header-cell soft-${dept}`;
     hdr.innerHTML=`<span class="d-dot dot-${dept}"></span>${dept}`;
-    col.appendChild(hdr);
-
-    const body=document.createElement('div');
-    body.className='week-dept-body';
-
-    for(let w=0;w<4;w++){
-      // Week separator
-      const wStart=new Date(weekStartDate); wStart.setDate(wStart.getDate()+w*7);
-      const wEnd=new Date(wStart); wEnd.setDate(wEnd.getDate()+6);
-      const wLabel=document.createElement('div');
-      wLabel.style.cssText='font-size:0.65rem;color:var(--text3);padding:0.3rem 0.25rem 0.15rem;letter-spacing:.04em;font-weight:600;border-top:1px solid var(--border);margin-top:2px;';
-      if(w===0) wLabel.style.borderTop='none';
-      wLabel.textContent=`${wStart.getMonth()+1}/${wStart.getDate()}–${wEnd.getMonth()+1}/${wEnd.getDate()}`;
-      body.appendChild(wLabel);
-
-      for(let d=0;d<7;d++){
-        const date=new Date(wStart); date.setDate(date.getDate()+d);
-        const ds=toDS(date); const dow=date.getDay();
-        const isToday=ds===todayStr;
-        const holiday=getHolidayName(ds);
-        const isComp=isCompDay(ds);
-        const isWeekend=dow===0||dow===6;
-
-        const dayRow=document.createElement('div');
-        dayRow.className='week-day-row'
-          +(isToday?' is-today':'')
-          +((isWeekend||isComp)&&!holiday?' weekend-row':'')
-          +((holiday||isComp)?' holiday-row':'');
-        dayRow.onclick=()=>openDayModal(ds);
-
-        const dateLine=document.createElement('div');
-        dateLine.className='week-date-line';
-        const numEl=document.createElement('div');
-        numEl.className='week-day-num'+(dow===0?' '+(isToday?'':''):'');
-        numEl.style.color=dow===0?'#ef4444':dow===6?'#3b82f6':'';
-        numEl.textContent=date.getDate();
-        const dowEl=document.createElement('div');
-        dowEl.className='week-dow';
-        dowEl.textContent=dowCh(dow);
-        dateLine.appendChild(numEl);
-        dateLine.appendChild(dowEl);
-        if(holiday||isComp){
-          const hl=document.createElement('div');
-          hl.className='week-holiday-name';
-          hl.textContent=holiday||(isComp?'補休':'');
-          dateLine.appendChild(hl);
-        }
-        dayRow.appendChild(dateLine);
-
-        const evs=events.filter(ev=>{
-          if(ev.dept!==dept) return false;
-          if(locFilter!=='all'&&ev.location!==locFilter) return false;
-          const end=ev.end||ev.start;
-          return ds>=ev.start&&ds<=end;
-        });
-
-        if(evs.length>0){
-          const evDiv=document.createElement('div');
-          evDiv.className='week-events';
-          evs.forEach(ev=>{
-            const pill=document.createElement('div');
-            const hasConflict=conflicts.has(ev.id);
-            pill.className=`week-ev-pill bg-${ev.dept}`;
-            pill.style.position='relative';
-            let html='';
-            if(ev.stime) html+=`<div class="week-ev-time">${ev.stime}${ev.etime?'–'+ev.etime:''}</div>`;
-            html+=`<div style="font-weight:600;font-size:0.74rem;">${esc(ev.title)}</div>`;
-            if(ev.location) html+=`<div class="week-ev-loc">📍${esc(ev.location)}</div>`;
-            if(hasConflict) html+=`<span style="position:absolute;top:-4px;right:-4px;font-size:0.65rem;background:#f59e0b;color:#fff;border-radius:50%;width:14px;height:14px;display:flex;align-items:center;justify-content:center;">⚠</span>`;
-            pill.innerHTML=html;
-            pill.onclick=e=>{e.stopPropagation();openDayModal(ds);};
-            evDiv.appendChild(pill);
-          });
-          dayRow.appendChild(evDiv);
-        }
-        body.appendChild(dayRow);
-      }
-    }
-    col.appendChild(body);
-    container.appendChild(col);
+    grid.appendChild(hdr);
   });
+
+  // Build 28 days
+  for(let i=0;i<28;i++){
+    const date=new Date(weekStartDate); date.setDate(date.getDate()+i);
+    const ds=toDS(date); const dow=date.getDay();
+    const isToday=ds===todayStr;
+    const holiday=getHolidayName(ds);
+    const isComp=isCompDay(ds);
+    const isWeekend=dow===0||dow===6;
+    const isLast=i===27;
+
+    // Week separator before every 7 days
+    if(i%7===0){
+      const wStart=new Date(weekStartDate); wStart.setDate(wStart.getDate()+i);
+      const wEnd=new Date(wStart); wEnd.setDate(wEnd.getDate()+6);
+      const sep=document.createElement('div');
+      sep.className='week-sep-cell';
+      sep.textContent=`${wStart.getMonth()+1}/${wStart.getDate()} – ${wEnd.getMonth()+1}/${wEnd.getDate()}`;
+      grid.appendChild(sep);
+    }
+
+    // Shared bg classes
+    const bgClass=(holiday||isComp)?'holiday-bg':(isWeekend?'weekend-bg':'');
+    const todayCls=isToday?'is-today':'';
+    const lastCls=isLast?'week-row-last':'';
+
+    // Date cell (col 0)
+    const dateCell=document.createElement('div');
+    dateCell.className=`week-row-date ${todayCls} ${bgClass} ${lastCls}`.trim();
+    dateCell.onclick=()=>openDayModal(ds);
+    const numEl=document.createElement('div');
+    numEl.className='week-day-num';
+    numEl.style.color=dow===0?'#ef4444':dow===6?'#3b82f6':'';
+    numEl.textContent=date.getDate();
+    const dowEl=document.createElement('div');
+    dowEl.className='week-dow';
+    dowEl.textContent=dowCh(dow);
+    dateCell.appendChild(numEl);
+    dateCell.appendChild(dowEl);
+    if(holiday||isComp){
+      const hl=document.createElement('div');
+      hl.className='week-holiday-name';
+      hl.textContent=holiday||(isComp?'補休':'');
+      dateCell.appendChild(hl);
+    }
+    grid.appendChild(dateCell);
+
+    // One cell per dept (col 1–4)
+    DEPTS.forEach(dept=>{
+      const cell=document.createElement('div');
+      cell.className=`week-row-cell ${todayCls} ${bgClass} ${lastCls}`.trim();
+      cell.onclick=()=>openDayModal(ds);
+
+      const evs=events.filter(ev=>{
+        if(ev.dept!==dept) return false;
+        if(locFilter!=='all'&&ev.location!==locFilter) return false;
+        const end=ev.end||ev.start;
+        return ds>=ev.start&&ds<=end;
+      });
+
+      evs.forEach(ev=>{
+        const pill=document.createElement('div');
+        const hasConflict=conflicts.has(ev.id);
+        pill.className=`week-ev-pill bg-${dept}`;
+        let html='';
+        if(ev.stime) html+=`<span class="week-ev-time">${ev.stime}</span>`;
+        html+=`<span style="font-weight:600;">${esc(ev.title)}</span>`;
+        if(ev.location) html+=`<div class="week-ev-loc">📍${esc(ev.location)}</div>`;
+        if(hasConflict) html+=`<span style="position:absolute;top:-4px;right:-4px;font-size:0.6rem;background:#f59e0b;color:#fff;border-radius:50%;width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;">⚠</span>`;
+        pill.innerHTML=html;
+        pill.onclick=e=>{e.stopPropagation();openDayModal(ds);};
+        cell.appendChild(pill);
+      });
+
+      grid.appendChild(cell);
+    });
+  }
+
+  container.appendChild(grid);
 }
 
 // ── Day Modal ──
@@ -1712,6 +1801,32 @@ window.handleGoogleLogin=async()=>{
   }catch(e){if(e.code!=='auth/popup-closed-by-user') showFMsg('login-msg','','Google 登入失敗');}
 };
 
+// ── Display Name Modal ──
+window.openNameModal=()=>{
+  if(!currentUser) return;
+  document.getElementById('name-input').value = currentDisplayName;
+  document.getElementById('name-msg').style.display='none';
+  document.getElementById('modal-name').classList.add('open');
+};
+window.closeNameModal=()=>document.getElementById('modal-name').classList.remove('open');
+
+window.saveDisplayName=async()=>{
+  const name = document.getElementById('name-input').value.trim();
+  if(!name){ showNameMsg('請輸入名稱','#ef4444'); return; }
+  const permRef = doc(db, PERM_COL, currentUser.email.replace(/\./g,'_'));
+  try{
+    await setDoc(permRef, {displayName:name}, {merge:true});
+    currentDisplayName = name;
+    document.getElementById('user-email-show').textContent = name + ' ✏';
+    showNameMsg('✅ 已儲存','#059669');
+    setTimeout(()=>closeNameModal(), 800);
+  }catch(e){ showNameMsg('儲存失敗','#ef4444'); }
+};
+function showNameMsg(msg,color){
+  const el=document.getElementById('name-msg');
+  el.textContent=msg; el.style.color=color; el.style.display='block';
+}
+
 window.handleLogout=()=>signOut(auth);
 
 // ── Admin Modal ──
@@ -1745,8 +1860,9 @@ async function loadAdminData(){
       pendingDiv.innerHTML=pending.map(u=>`
         <div style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;background:var(--surface2);border-radius:8px;border:1px solid var(--border);">
           <div style="flex:1;">
-            <div style="font-size:0.82rem;font-weight:600;">${u.email}</div>
-            <div style="font-size:0.7rem;color:var(--text3);">申請時間：${u.requestedAt?.toDate ? u.requestedAt.toDate().toLocaleDateString('zh-TW') : '—'}</div>
+            <div style="font-size:0.85rem;font-weight:700;color:var(--text);">${u.displayName||'（未設定名稱）'}</div>
+            <div style="font-size:0.73rem;color:var(--text3);">${u.email}</div>
+            <div style="font-size:0.7rem;color:var(--text3);">申請：${u.requestedAt?.toDate ? u.requestedAt.toDate().toLocaleDateString('zh-TW') : '—'}</div>
           </div>
           <button onclick="adminGrantEditor('${u.email}')" style="padding:0.28rem 0.7rem;border-radius:6px;background:#059669;color:#fff;border:none;font-size:0.76rem;cursor:pointer;font-family:'Noto Sans TC',sans-serif;">✓ 核准</button>
           <button onclick="adminRevokeUser('${u.email}')" style="padding:0.28rem 0.7rem;border-radius:6px;background:#fee2e2;color:#dc2626;border:none;font-size:0.76rem;cursor:pointer;font-family:'Noto Sans TC',sans-serif;">✕ 拒絕</button>
@@ -1760,8 +1876,9 @@ async function loadAdminData(){
       editorsDiv.innerHTML=editors.map(u=>`
         <div style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0;">
           <div style="flex:1;">
-            <div style="font-size:0.82rem;font-weight:600;">${u.email}</div>
-            <div style="font-size:0.7rem;color:var(--text3);">${u.domain===DOMAIN?'校內帳號':'外部帳號'}</div>
+            <div style="font-size:0.85rem;font-weight:700;color:var(--text);">${u.displayName||'（未設定名稱）'}</div>
+            <div style="font-size:0.73rem;color:var(--text3);">${u.email}</div>
+            <div style="font-size:0.7rem;color:var(--text3);">${u.domain===DOMAIN?'🏫 校內帳號':'🌐 外部帳號'}</div>
           </div>
           ${u.domain!==DOMAIN?`<button onclick="adminRevokeUser('${u.email}')" style="padding:0.28rem 0.7rem;border-radius:6px;background:#fee2e2;color:#dc2626;border:none;font-size:0.76rem;cursor:pointer;font-family:'Noto Sans TC',sans-serif;">撤銷</button>`:''}
         </div>`).join('');
