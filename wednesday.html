@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>週三進修活動 — 新莊國小</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f0f4f8;--surface:#fff;--border:#e2e8f0;
+  --text:#1a202c;--text2:#4a5568;--text3:#94a3b8;
+  --shadow:0 1px 6px rgba(0,0,0,.07);
+  --教務處:#3b82f6;--學務處:#10b981;--輔導處:#f59e0b;--總務處:#8b5cf6;
+}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* ── Toolbar ── */
+.toolbar{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0.85rem 1.75rem;display:flex;flex-wrap:wrap;gap:1rem;align-items:center;
+  position:sticky;top:0;z-index:100;box-shadow:var(--shadow);
+}
+.toolbar-title{font-size:0.95rem;font-weight:700;color:var(--text);white-space:nowrap;}
+.toolbar-sub{font-size:0.72rem;color:var(--text3);margin-top:1px;}
+.ctrl-group{display:flex;flex-direction:column;gap:0.22rem;}
+.ctrl-label{font-size:0.65rem;font-weight:700;color:var(--text3);letter-spacing:.07em;text-transform:uppercase;}
+.ctrl-row{display:flex;gap:0.35rem;align-items:center;flex-wrap:wrap;}
+
+.pill-btn{
+  padding:0.28rem 0.78rem;border-radius:999px;border:1.5px solid var(--border);
+  background:none;font-family:'Noto Sans TC',sans-serif;font-size:0.76rem;font-weight:500;
+  cursor:pointer;color:var(--text2);transition:all .13s;white-space:nowrap;
+}
+.pill-btn:hover{border-color:#94a3b8;}
+.pill-btn.active{background:#1a202c;border-color:#1a202c;color:#fff;}
+
+.ctrl-select,.ctrl-input{
+  padding:0.3rem 0.55rem;border:1.5px solid var(--border);border-radius:7px;
+  font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;color:var(--text);
+  outline:none;background:var(--surface);transition:border-color .13s;
+}
+.ctrl-select:focus,.ctrl-input:focus{border-color:#1a202c;}
+
+.exp-btn{
+  padding:0.38rem 0.95rem;border-radius:8px;font-family:'Noto Sans TC',sans-serif;
+  font-size:0.78rem;font-weight:600;cursor:pointer;border:none;
+  display:inline-flex;align-items:center;gap:0.3rem;transition:all .13s;white-space:nowrap;
+}
+.exp-btn:hover{filter:brightness(.92);}
+.exp-btn:disabled{opacity:.4;cursor:not-allowed;}
+.btn-print{background:#1a202c;color:#fff;}
+.btn-excel{background:#217346;color:#fff;}
+.btn-word{background:#2b579a;color:#fff;}
+
+/* ── Main ── */
+.main{max-width:860px;margin:1.5rem auto;padding:0 1.25rem;}
+
+.page-header{
+  background:var(--surface);border-radius:12px;padding:1.25rem 1.5rem;
+  margin-bottom:1rem;box-shadow:var(--shadow);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;
+}
+.page-header h1{font-size:1.15rem;font-weight:700;}
+.page-header .meta{font-size:0.78rem;color:var(--text3);}
+.count-badge{background:#f0fdf4;color:#059669;border:1px solid #bbf7d0;border-radius:999px;padding:0.18rem 0.65rem;font-size:0.72rem;font-weight:600;}
+
+/* ── Week blocks ── */
+.week-blocks{display:flex;flex-direction:column;gap:0.75rem;}
+
+.week-block{
+  background:var(--surface);border-radius:10px;box-shadow:var(--shadow);
+  overflow:hidden;border:1px solid var(--border);
+}
+.week-block-header{
+  padding:0.6rem 1.1rem;display:flex;align-items:center;gap:0.75rem;
+  border-bottom:1px solid var(--border);background:#f8fafc;
+}
+.week-num{font-size:0.68rem;font-weight:700;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;}
+.week-date{font-size:1rem;font-weight:700;color:var(--text);}
+.week-date .dow{font-size:0.72rem;color:var(--text3);margin-left:3px;font-weight:400;}
+.week-date.is-today-week .week-date-inner{background:#1a202c;color:#fff;border-radius:6px;padding:1px 8px;}
+.holiday-tag{font-size:0.68rem;color:#dc2626;font-weight:600;background:#fff0f0;border:1px solid #fecaca;border-radius:999px;padding:0.1rem 0.5rem;}
+.week-count{margin-left:auto;font-size:0.68rem;color:var(--text3);}
+
+.week-block-body{padding:0.6rem 1.1rem;display:flex;flex-direction:column;gap:0.45rem;}
+
+.ev-row{
+  display:flex;align-items:flex-start;gap:0.65rem;
+  padding:0.5rem 0.65rem;border-radius:8px;border-left:3px solid transparent;
+  transition:background .1s;
+}
+.ev-row:hover{background:#f8fafc;}
+.ev-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+.ev-body{flex:1;min-width:0;}
+.ev-title{font-size:0.88rem;font-weight:600;color:var(--text);margin-bottom:2px;}
+.ev-meta{display:flex;flex-wrap:wrap;gap:0.5rem;font-size:0.72rem;color:var(--text3);}
+.ev-time{white-space:nowrap;}
+.ev-loc{white-space:nowrap;}
+.ev-dept-tag{font-size:0.68rem;font-weight:600;border-radius:999px;padding:0.1rem 0.5rem;border:1px solid transparent;}
+.dept-教務處{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe;}
+.dept-學務處{background:#f0fdf4;color:#059669;border-color:#bbf7d0;}
+.dept-輔導處{background:#fffbeb;color:#d97706;border-color:#fde68a;}
+.dept-總務處{background:#f5f3ff;color:#7c3aed;border-color:#ddd6fe;}
+
+.empty-state{font-size:0.8rem;color:var(--text3);padding:0.25rem 0;text-align:center;}
+
+/* Loading */
+.loading{text-align:center;padding:3rem;color:var(--text3);font-size:0.9rem;}
+
+/* ── Print styles ── */
+@media print{
+  body{background:#fff;}
+  .toolbar,.page-header .count-badge{display:none!important;}
+  .main{max-width:100%;margin:0;padding:0;}
+  .page-header{box-shadow:none;border-radius:0;border:none;padding:0.5rem 0 1rem;}
+  .week-block{box-shadow:none;break-inside:avoid;border:1px solid #ccc;margin-bottom:0.5rem;}
+  .week-block-header{background:#f0f0f0!important;}
+  .ev-row:hover{background:none;}
+  @page{size:A4;margin:1.5cm;}
+}
+</style>
+</head>
+<body>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <div>
+    <div class="toolbar-title">📚 週三進修活動</div>
+    <div class="toolbar-sub">新莊國小教師進修專頁</div>
+  </div>
+
+  <!-- 學年度 -->
+  <div class="ctrl-group">
+    <div class="ctrl-label">學年度</div>
+    <select class="ctrl-select" id="school-year">
+      <option value="113">113學年度</option>
+      <option value="114" selected>114學年度</option>
+      <option value="115">115學年度</option>
+    </select>
+  </div>
+
+  <!-- 期間 -->
+  <div class="ctrl-group">
+    <div class="ctrl-label">期間</div>
+    <div class="ctrl-row" id="period-btns">
+      <button class="pill-btn active" data-period="upcoming">今天以後</button>
+      <button class="pill-btn" data-period="sem1">上學期 (9–1月)</button>
+      <button class="pill-btn" data-period="sem2">下學期 (2–6月)</button>
+      <button class="pill-btn" data-period="custom">自訂範圍</button>
+    </div>
+  </div>
+
+  <!-- 自訂日期 -->
+  <div class="ctrl-group" id="custom-dates" style="display:none;">
+    <div class="ctrl-label">自訂範圍</div>
+    <div class="ctrl-row">
+      <input type="date" class="ctrl-input" id="custom-start">
+      <span style="color:var(--text3);font-size:0.8rem;">至</span>
+      <input type="date" class="ctrl-input" id="custom-end">
+    </div>
+  </div>
+
+  <!-- 匯出 -->
+  <div class="ctrl-group" style="margin-left:auto;">
+    <div class="ctrl-label">匯出</div>
+    <div class="ctrl-row">
+      <button class="exp-btn btn-print" onclick="doPrint()">🖨 列印</button>
+      <button class="exp-btn btn-excel" onclick="doExcel()">📊 Excel</button>
+      <button class="exp-btn btn-word" id="btn-word" onclick="doWord()">📄 Word</button>
+    </div>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="main" id="main">
+  <div class="page-header" id="page-header" style="display:none;">
+    <div>
+      <h1 id="page-title">週三進修活動</h1>
+      <div class="meta" id="page-meta"></div>
+    </div>
+    <span class="count-badge" id="count-badge"></span>
+  </div>
+  <div class="week-blocks" id="week-blocks">
+    <div class="loading">🔄 載入中…</div>
+  </div>
+</div>
+
+<!-- SheetJS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<!-- docx -->
+<script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey:"AIzaSyAhAduO-twiIX8kPUcXcwJDyuRCZT_GOZI",
+  authDomain:"myproject-c52cb.firebaseapp.com",
+  projectId:"myproject-c52cb",
+  storageBucket:"myproject-c52cb.firebasestorage.app",
+  messagingSenderId:"494432013878",
+  appId:"1:494432013878:web:3c631ca98030600f915297"
+});
+const db = getFirestore(app);
+
+// ── State ──
+let allEvents = [];
+let period = 'upcoming';
+let customStart = '', customEnd = '';
+const todayStr = new Date().toISOString().slice(0,10);
+
+// ── Holidays ──
+const TW_HOLIDAYS = {
+  '01-01':'元旦','02-28':'和平紀念日','04-04':'兒童節',
+  '05-01':'勞動節','09-28':'教師節','10-10':'國慶日','12-25':'行憲紀念日',
+  '2025-05-31':'端午節','2025-10-06':'中秋節',
+  '2026-02-16':'除夕','2026-02-17':'春節','2026-02-18':'春節','2026-02-19':'春節',
+  '2026-06-20':'端午節','2026-09-25':'中秋節',
+};
+function getHoliday(ds){ return TW_HOLIDAYS[ds]||TW_HOLIDAYS[ds.slice(5)]||''; }
+function toDS(d){ return d.toISOString().slice(0,10); }
+
+// ── Get date range ──
+function getRange(){
+  const yr = parseInt(document.getElementById('school-year').value);
+  const adYr = yr + 1911, adYrNext = adYr + 1;
+  const today = todayStr;
+  switch(period){
+    case 'upcoming': return [today, `${adYrNext}-08-31`];
+    case 'sem1':     return [`${adYr}-09-01`, `${adYrNext}-01-31`];
+    case 'sem2':     return [`${adYrNext}-02-01`, `${adYrNext}-06-30`];
+    case 'custom':   return [customStart, customEnd];
+    default:         return [today, `${adYrNext}-08-31`];
+  }
+}
+
+function getPeriodLabel(){
+  const yr = parseInt(document.getElementById('school-year').value);
+  switch(period){
+    case 'upcoming': return `${yr}學年度（今天以後）`;
+    case 'sem1':     return `${yr}學年度第1學期`;
+    case 'sem2':     return `${yr}學年度第2學期`;
+    case 'custom':   return '自訂期間';
+  }
+}
+
+// ── Get all Wednesdays in range with their events ──
+function getWednesdays(){
+  const [start, end] = getRange();
+  if(!start || !end) return [];
+
+  const result = [];
+  // Find first Wednesday on or after start
+  const cur = new Date(start + 'T00:00:00');
+  while(cur.getDay() !== 3) cur.setDate(cur.getDate()+1);
+
+  const endD = new Date(end + 'T00:00:00');
+
+  let weekNum = 1;
+  while(cur <= endD){
+    const ds = toDS(cur);
+    const holiday = getHoliday(ds);
+    const dayEvs = allEvents.filter(ev => {
+      return ds >= ev.start && ds <= (ev.end||ev.start);
+    });
+
+    if(dayEvs.length > 0){ // only weeks with events
+      result.push({ds, date: new Date(cur), holiday, events: dayEvs, weekNum});
+    }
+    weekNum++;
+    cur.setDate(cur.getDate()+7);
+  }
+  return result;
+}
+
+// ── Dept color ──
+const DEPT_COLORS = {教務處:'#3b82f6',學務處:'#10b981',輔導處:'#f59e0b',總務處:'#8b5cf6'};
+
+// ── Render ──
+function render(){
+  const wednesdays = getWednesdays();
+  const container = document.getElementById('week-blocks');
+  const header = document.getElementById('page-header');
+  const yr = document.getElementById('school-year').value;
+
+  // Update header
+  document.getElementById('page-title').textContent = `高雄市新莊國小 ${getPeriodLabel()} 週三進修活動`;
+  document.getElementById('page-meta').textContent = `每週三進修 — 僅顯示有活動的週次`;
+  const total = wednesdays.reduce((acc,w)=>acc+w.events.length,0);
+  document.getElementById('count-badge').textContent = `共 ${wednesdays.length} 個週三・${total} 筆活動`;
+  header.style.display = 'flex';
+
+  if(!allEvents.length){
+    container.innerHTML = '<div class="loading">🔄 載入中…</div>';
+    return;
+  }
+  if(!wednesdays.length){
+    container.innerHTML = '<div class="loading" style="color:#f59e0b;">⚠ 此期間週三無活動</div>';
+    return;
+  }
+
+  container.innerHTML = '';
+  const isTodayWed = new Date().getDay()===3;
+  const thisWeekWedDS = (() => {
+    const d = new Date(); while(d.getDay()!==3) d.setDate(d.getDate()+(d.getDay()<3?1:-1));
+    return toDS(d);
+  })();
+
+  wednesdays.forEach((wed, idx) => {
+    const block = document.createElement('div');
+    block.className = 'week-block';
+
+    // Date display
+    const dateObj = wed.date;
+    const mo = dateObj.getMonth()+1;
+    const da = dateObj.getDate();
+    const roYear = dateObj.getFullYear()-1911;
+    const isThisWeek = wed.ds === thisWeekWedDS;
+
+    const header_el = document.createElement('div');
+    header_el.className = 'week-block-header';
+    header_el.innerHTML = `
+      <span class="week-num">第 ${idx+1} 次</span>
+      <span class="week-date ${isThisWeek?'is-today-week':''}">
+        <span class="week-date-inner">${roYear}/${mo}/${da}<span class="dow">（三）</span></span>
+        ${isThisWeek ? '<span style="margin-left:6px;font-size:0.68rem;background:#1a202c;color:#fff;border-radius:999px;padding:1px 7px;">本週</span>' : ''}
+      </span>
+      ${wed.holiday ? `<span class="holiday-tag">${wed.holiday}</span>` : ''}
+      <span class="week-count">${wed.events.length} 筆活動</span>
+    `;
+    block.appendChild(header_el);
+
+    const body = document.createElement('div');
+    body.className = 'week-block-body';
+
+    wed.events.forEach(ev => {
+      const row = document.createElement('div');
+      const deptColor = DEPT_COLORS[ev.dept]||'#94a3b8';
+      row.className = 'ev-row';
+      row.style.borderLeftColor = deptColor;
+
+      let metaHtml = '';
+      if(ev.stime) metaHtml += `<span class="ev-time">🕐 ${ev.stime}${ev.etime&&ev.etime!=='00:00'?'–'+ev.etime:''}</span>`;
+      if(ev.location) metaHtml += `<span class="ev-loc">📍 ${ev.location}</span>`;
+      if(ev.note) metaHtml += `<span>${ev.note}</span>`;
+
+      row.innerHTML = `
+        <div class="ev-dot" style="background:${deptColor};"></div>
+        <div class="ev-body">
+          <div class="ev-title">${ev.title}</div>
+          <div class="ev-meta">
+            ${metaHtml}
+            <span class="ev-dept-tag dept-${ev.dept}">${ev.dept}</span>
+          </div>
+        </div>
+      `;
+      body.appendChild(row);
+    });
+
+    block.appendChild(body);
+    container.appendChild(block);
+  });
+}
+
+// ── Period buttons ──
+document.getElementById('period-btns').addEventListener('click', e=>{
+  const btn = e.target.closest('.pill-btn');
+  if(!btn) return;
+  document.querySelectorAll('.pill-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  period = btn.dataset.period;
+  document.getElementById('custom-dates').style.display = period==='custom' ? '' : 'none';
+  render();
+});
+document.getElementById('school-year').addEventListener('change', render);
+document.getElementById('custom-start').addEventListener('change', e=>{customStart=e.target.value; render();});
+document.getElementById('custom-end').addEventListener('change', e=>{customEnd=e.target.value; render();});
+
+// ── Firebase ──
+onSnapshot(collection(db,'calendar_events'), snap=>{
+  allEvents = snap.docs.map(d=>({id:d.id,...d.data()}));
+  allEvents.sort((a,b)=>(a.start||'').localeCompare(b.start||''));
+  render();
+});
+
+// ── Print ──
+window.doPrint = () => window.print();
+
+// ── Excel ──
+window.doExcel = () => {
+  const wednesdays = getWednesdays();
+  if(!wednesdays.length){ alert('此期間無資料'); return; }
+
+  const title = `高雄市新莊國小 ${getPeriodLabel()} 週三進修活動`;
+  const wsData = [[title],[],['次數','日期（民國）','活動名稱','時間','地點','負責單位','備註']];
+
+  wednesdays.forEach((wed, idx)=>{
+    const d = wed.date;
+    const dateStr = `${d.getFullYear()-1911}/${d.getMonth()+1}/${d.getDate()}（三）`;
+    wed.events.forEach((ev,i)=>{
+      const time = ev.stime ? ev.stime+(ev.etime&&ev.etime!=='00:00'?'–'+ev.etime:'') : '';
+      wsData.push([
+        i===0 ? `第${idx+1}次` : '',
+        i===0 ? dateStr : '',
+        ev.title,
+        time,
+        ev.location||'',
+        ev.dept,
+        ev.note||''
+      ]);
+    });
+    // blank separator row between dates
+    wsData.push(['','','','','','','']);
+  });
+
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(wsData);
+  ws['!cols'] = [{wch:8},{wch:14},{wch:36},{wch:12},{wch:16},{wch:10},{wch:20}];
+  ws['!merges'] = [{s:{r:0,c:0},e:{r:0,c:6}}];
+  XLSX.utils.book_append_sheet(wb, ws, '週三進修');
+  XLSX.writeFile(wb, `新莊國小_週三進修_${getPeriodLabel()}.xlsx`);
+};
+
+// ── Word ──
+window.doWord = async () => {
+  const btn = document.getElementById('btn-word');
+  btn.disabled=true; btn.textContent='⏳ 產生中…';
+  try{
+    const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
+            AlignmentType, WidthType, BorderStyle, VerticalAlign, ShadingType } = docx;
+
+    const wednesdays = getWednesdays();
+    if(!wednesdays.length){ alert('此期間無資料'); return; }
+
+    const title = `高雄市新莊國小 ${getPeriodLabel()} 週三進修活動`;
+
+    const MARGIN = 1000;
+    const CONTENT_W = 11906 - MARGIN*2; // 9906
+    // Cols: 次數 700, 日期 1100, 活動名稱 5106, 時間 1000, 地點 1000, 負責 1000
+    const COL_W = [700, 1100, 5106, 1000, 1000, 1000];
+
+    const border = {style:BorderStyle.SINGLE, size:6, color:'999999'};
+    const borders = {top:border,bottom:border,left:border,right:border};
+    const hdrBorder = {style:BorderStyle.SINGLE, size:10, color:'333333'};
+    const hdrBorders = {top:hdrBorder,bottom:hdrBorder,left:hdrBorder,right:hdrBorder};
+
+    function cell(text, opts={}){
+      const {w,bold=false,center=false,bg=null,rowSpan=1,sz=19,color='000000'} = opts;
+      return new TableCell({
+        borders: opts.hdr ? hdrBorders : borders,
+        width:{size:w,type:WidthType.DXA},
+        rowSpan,
+        verticalAlign:VerticalAlign.CENTER,
+        shading: bg ? {fill:bg,type:ShadingType.CLEAR} : undefined,
+        margins:{top:60,bottom:60,left:80,right:80},
+        children:[new Paragraph({
+          alignment: center ? AlignmentType.CENTER : AlignmentType.LEFT,
+          children:[new TextRun({text:String(text||''),bold,size:sz,color,font:'標楷體'})]
+        })]
+      });
+    }
+
+    // Header
+    const hdrRow = new TableRow({ tableHeader:true, children:[
+      cell('次數',  {w:COL_W[0],bold:true,center:true,bg:'1a202c',color:'FFFFFF',sz:19,hdr:true}),
+      cell('日期',  {w:COL_W[1],bold:true,center:true,bg:'1a202c',color:'FFFFFF',sz:19,hdr:true}),
+      cell('活動名稱',{w:COL_W[2],bold:true,center:true,bg:'1a202c',color:'FFFFFF',sz:19,hdr:true}),
+      cell('時間',  {w:COL_W[3],bold:true,center:true,bg:'1a202c',color:'FFFFFF',sz:19,hdr:true}),
+      cell('地點',  {w:COL_W[4],bold:true,center:true,bg:'1a202c',color:'FFFFFF',sz:19,hdr:true}),
+      cell('負責單位',{w:COL_W[5],bold:true,center:true,bg:'1a202c',color:'FFFFFF',sz:19,hdr:true}),
+    ]});
+
+    const tableRows = [hdrRow];
+
+    wednesdays.forEach((wed, idx)=>{
+      const d = wed.date;
+      const dateStr = `${d.getFullYear()-1911}/${d.getMonth()+1}/${d.getDate()}（三）`;
+      const evCount = wed.events.length;
+      const bgColor = idx%2===0 ? null : 'F8FAFC';
+
+      wed.events.forEach((ev, i)=>{
+        const time = ev.stime ? ev.stime+(ev.etime&&ev.etime!=='00:00'?'–'+ev.etime:'') : '';
+        const cells = [];
+        if(i===0){
+          cells.push(cell(`第${idx+1}次`,{w:COL_W[0],center:true,rowSpan:evCount,bg:bgColor,sz:18}));
+          cells.push(cell(dateStr,{w:COL_W[1],center:true,rowSpan:evCount,bg:bgColor,sz:18,bold:true}));
+        }
+        cells.push(cell(ev.title, {w:COL_W[2],bg:bgColor,sz:19,bold:true}));
+        cells.push(cell(time,     {w:COL_W[3],center:true,bg:bgColor,sz:18}));
+        cells.push(cell(ev.location||'',{w:COL_W[4],center:true,bg:bgColor,sz:18}));
+        cells.push(cell(ev.dept,  {w:COL_W[5],center:true,bg:bgColor,sz:18}));
+        tableRows.push(new TableRow({children:cells}));
+      });
+    });
+
+    const table = new Table({
+      width:{size:CONTENT_W,type:WidthType.DXA},
+      columnWidths:COL_W,
+      rows:tableRows,
+    });
+
+    const docObj = new Document({ sections:[{
+      properties:{ page:{ size:{width:11906,height:16838}, margin:{top:MARGIN,right:MARGIN,bottom:MARGIN,left:MARGIN} } },
+      children:[
+        new Paragraph({alignment:AlignmentType.CENTER,
+          children:[new TextRun({text:title,bold:true,size:28,font:'標楷體'})]}),
+        new Paragraph({text:'',spacing:{after:180}}),
+        table,
+      ]
+    }]});
+
+    const blob = await Packer.toBlob(docObj);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href=url;
+    a.download=`新莊國小_週三進修_${getPeriodLabel()}.docx`; a.click();
+    URL.revokeObjectURL(url);
+  } catch(err){
+    alert('Word 匯出失敗：'+err.message); console.error(err);
+  } finally {
+    btn.disabled=false; btn.textContent='📄 Word';
+  }
+};
+</script>
+</body>
+</html>
