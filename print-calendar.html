@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>行事曆列印 — 新莊國小</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ── Base ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f0f4f8;--surface:#fff;--border:#e2e8f0;--text:#1a202c;
+  --text2:#4a5568;--text3:#94a3b8;--shadow:0 1px 6px rgba(0,0,0,.07);
+  --radius:10px;
+}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* ── Control Panel ── */
+.ctrl-panel{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:1rem 2rem;display:flex;flex-wrap:wrap;gap:1rem;align-items:center;
+  position:sticky;top:0;z-index:100;box-shadow:var(--shadow);
+}
+.ctrl-logo{font-size:0.9rem;font-weight:700;color:var(--text);margin-right:0.5rem;}
+.ctrl-group{display:flex;flex-direction:column;gap:0.25rem;}
+.ctrl-label{font-size:0.68rem;font-weight:700;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;}
+.ctrl-row{display:flex;gap:0.4rem;align-items:center;flex-wrap:wrap;}
+
+/* Period buttons */
+.period-btn{
+  padding:0.32rem 0.85rem;border-radius:999px;border:1.5px solid var(--border);
+  background:none;font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;font-weight:500;
+  cursor:pointer;color:var(--text2);transition:all .13s;white-space:nowrap;
+}
+.period-btn:hover{border-color:#94a3b8;}
+.period-btn.active{background:#1a202c;border-color:#1a202c;color:#fff;}
+
+/* Selects & inputs */
+.ctrl-select,.ctrl-input{
+  padding:0.32rem 0.6rem;border:1.5px solid var(--border);border-radius:7px;
+  font-family:'Noto Sans TC',sans-serif;font-size:0.8rem;color:var(--text);outline:none;
+  background:var(--surface);transition:border-color .13s;
+}
+.ctrl-select:focus,.ctrl-input:focus{border-color:#1a202c;}
+.ctrl-input[type=date]{font-size:0.78rem;}
+
+/* Export buttons */
+.exp-btn{
+  padding:0.4rem 1rem;border-radius:8px;font-family:'Noto Sans TC',sans-serif;
+  font-size:0.8rem;font-weight:600;cursor:pointer;border:none;
+  display:inline-flex;align-items:center;gap:0.35rem;transition:all .13s;white-space:nowrap;
+}
+.exp-btn:hover{filter:brightness(.93);}
+.btn-print{background:#1a202c;color:#fff;}
+.btn-excel{background:#217346;color:#fff;}
+.btn-word{background:#2b579a;color:#fff;}
+.exp-btn:disabled{opacity:.4;cursor:not-allowed;}
+
+/* Dept filter */
+.dept-chip{
+  padding:0.25rem 0.65rem;border-radius:999px;border:1.5px solid var(--border);
+  background:none;font-family:'Noto Sans TC',sans-serif;font-size:0.75rem;font-weight:500;
+  cursor:pointer;color:var(--text2);transition:all .13s;display:inline-flex;align-items:center;gap:4px;
+}
+.dept-chip.active{background:#1a202c;border-color:#1a202c;color:#fff;}
+.d-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0;}
+
+/* Loading */
+.loading-bar{text-align:center;padding:3rem;color:var(--text3);font-size:0.9rem;}
+
+/* ── Preview area ── */
+.preview-wrap{max-width:960px;margin:1.5rem auto;padding:0 1.5rem;}
+.preview-info{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:0.75rem;font-size:0.8rem;color:var(--text3);
+}
+.preview-count{font-weight:600;color:var(--text2);}
+
+/* ── Print Table ── */
+.print-table-wrap{
+  background:var(--surface);border-radius:var(--radius);
+  box-shadow:var(--shadow);overflow:hidden;
+}
+.print-title{
+  text-align:center;font-size:1.05rem;font-weight:700;
+  padding:1rem 1.5rem 0.5rem;letter-spacing:.05em;line-height:1.6;
+}
+table.cal-table{
+  width:100%;border-collapse:collapse;font-size:0.82rem;
+}
+table.cal-table th,table.cal-table td{
+  border:1px solid #999;padding:0.4rem 0.6rem;vertical-align:middle;
+}
+table.cal-table thead th{
+  background:#1a202c;color:#fff;text-align:center;font-weight:700;
+  font-size:0.78rem;letter-spacing:.05em;
+}
+table.cal-table .col-month{width:52px;text-align:center;font-weight:700;font-size:0.9rem;}
+table.cal-table .col-date{width:48px;text-align:center;font-size:0.88rem;font-weight:600;}
+table.cal-table .col-dow{width:38px;text-align:center;color:#555;}
+table.cal-table .col-event{text-align:left;line-height:1.65;}
+table.cal-table .col-dept{width:72px;text-align:center;font-size:0.75rem;color:#333;}
+table.cal-table .col-note{width:56px;}
+table.cal-table .row-weekend td{background:#fff8f8;}
+table.cal-table .row-holiday td{background:#fff0f0;}
+table.cal-table .row-empty td{background:#fafafa;}
+.dept-tag{font-size:0.72rem;color:#555;white-space:nowrap;}
+.event-bullet{color:#1a202c;margin-right:3px;}
+.month-cell{font-weight:700;font-size:1rem;vertical-align:middle;text-align:center;}
+.dow-sun{color:#dc2626;font-weight:600;}
+.dow-sat{color:#2563eb;font-weight:600;}
+.holiday-label{font-size:0.68rem;color:#dc2626;font-weight:600;margin-left:4px;}
+
+/* ── Print styles ── */
+@media print{
+  body{background:#fff;}
+  .ctrl-panel,.preview-info{display:none!important;}
+  .preview-wrap{max-width:100%;margin:0;padding:0;}
+  .print-table-wrap{box-shadow:none;border-radius:0;}
+  table.cal-table th,table.cal-table td{font-size:10pt;padding:3pt 5pt;}
+  .print-title{font-size:12pt;padding:6pt 0;}
+  @page{size:A4;margin:1.5cm;}
+}
+</style>
+</head>
+<body>
+
+<!-- Control Panel -->
+<div class="ctrl-panel" id="ctrl-panel">
+  <div class="ctrl-logo">📅 行事曆列印</div>
+
+  <!-- 學年度 -->
+  <div class="ctrl-group">
+    <div class="ctrl-label">學年度</div>
+    <div class="ctrl-row">
+      <select class="ctrl-select" id="school-year">
+        <option value="113">113學年度</option>
+        <option value="114" selected>114學年度</option>
+        <option value="115">115學年度</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- 期間 -->
+  <div class="ctrl-group">
+    <div class="ctrl-label">期間</div>
+    <div class="ctrl-row" id="period-btns">
+      <button class="period-btn active" data-period="sem1">上學期 (9–1月)</button>
+      <button class="period-btn" data-period="sem2">下學期 (2–6月)</button>
+      <button class="period-btn" data-period="summer">暑假 (7–8月)</button>
+      <button class="period-btn" data-period="winter">寒假 (1–2月)</button>
+      <button class="period-btn" data-period="custom">自訂範圍</button>
+    </div>
+  </div>
+
+  <!-- 自訂日期 -->
+  <div class="ctrl-group" id="custom-dates" style="display:none;">
+    <div class="ctrl-label">自訂範圍</div>
+    <div class="ctrl-row">
+      <input type="date" class="ctrl-input" id="custom-start">
+      <span style="color:var(--text3);font-size:0.8rem;">至</span>
+      <input type="date" class="ctrl-input" id="custom-end">
+    </div>
+  </div>
+
+  <!-- 處室篩選 -->
+  <div class="ctrl-group">
+    <div class="ctrl-label">處室</div>
+    <div class="ctrl-row" id="dept-chips">
+      <button class="dept-chip active" data-dept="all">全部</button>
+      <button class="dept-chip" data-dept="教務處"><span class="d-dot" style="background:#3b82f6;"></span>教務處</button>
+      <button class="dept-chip" data-dept="學務處"><span class="d-dot" style="background:#10b981;"></span>學務處</button>
+      <button class="dept-chip" data-dept="輔導處"><span class="d-dot" style="background:#f59e0b;"></span>輔導處</button>
+      <button class="dept-chip" data-dept="總務處"><span class="d-dot" style="background:#8b5cf6;"></span>總務處</button>
+    </div>
+  </div>
+
+  <!-- 匯出 -->
+  <div class="ctrl-group" style="margin-left:auto;">
+    <div class="ctrl-label">匯出</div>
+    <div class="ctrl-row">
+      <button class="exp-btn btn-print" onclick="doPrint()">🖨 列印 / PDF</button>
+      <button class="exp-btn btn-excel" onclick="doExcel()">📊 Excel</button>
+      <button class="exp-btn btn-word" onclick="doWord()">📄 Word</button>
+    </div>
+  </div>
+</div>
+
+<!-- Preview -->
+<div class="preview-wrap">
+  <div class="preview-info">
+    <span class="preview-count" id="preview-count">載入中…</span>
+    <span style="font-size:0.72rem;">點擊「列印 / PDF」可存成 PDF</span>
+  </div>
+  <div class="print-table-wrap" id="table-wrap">
+    <div class="loading-bar">🔄 從 Firebase 載入資料中…</div>
+  </div>
+</div>
+
+<!-- SheetJS for Excel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<!-- docx for Word (browser build) -->
+<script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+// ── Firebase ──
+const app = initializeApp({
+  apiKey:"AIzaSyAhAduO-twiIX8kPUcXcwJDyuRCZT_GOZI",
+  authDomain:"myproject-c52cb.firebaseapp.com",
+  projectId:"myproject-c52cb",
+  storageBucket:"myproject-c52cb.firebasestorage.app",
+  messagingSenderId:"494432013878",
+  appId:"1:494432013878:web:3c631ca98030600f915297"
+});
+const db = getFirestore(app);
+
+// ── State ──
+let allEvents = [];
+let selectedPeriod = 'sem1';
+let selectedDept = 'all';
+let customStart = '', customEnd = '';
+
+// ── Holidays ──
+const TW_HOLIDAYS = {
+  '01-01':'元旦','02-28':'和平紀念日','04-04':'兒童節',
+  '05-01':'勞動節','09-28':'教師節','10-10':'國慶日','12-25':'行憲紀念日',
+  '2025-01-28':'除夕','2025-01-29':'春節','2025-01-30':'春節','2025-01-31':'春節',
+  '2025-05-31':'端午節','2025-10-06':'中秋節',
+  '2026-02-16':'除夕','2026-02-17':'春節','2026-02-18':'春節','2026-02-19':'春節',
+  '2026-06-20':'端午節','2026-09-25':'中秋節',
+};
+function getHoliday(ds){return TW_HOLIDAYS[ds]||TW_HOLIDAYS[ds.slice(5)]||'';}
+function toDS(d){return d.toISOString().slice(0,10);}
+const DOW_CH=['日','一','二','三','四','五','六'];
+
+// ── Date range from period ──
+function getRange(){
+  const yr = parseInt(document.getElementById('school-year').value);
+  // 學年度 yr: 上學期 yr/9 ~ (yr+1)/1, 下學期 (yr+1)/2 ~ (yr+1)/6
+  // 暑假: yr/7 ~ yr/8, 寒假: (yr+1)/1 ~ (yr+1)/2
+  const adYr = yr + 1911; // ROC to AD
+  const adYrNext = adYr + 1;
+  const ranges = {
+    sem1:   [`${adYr}-09-01`,   `${adYrNext}-01-31`],
+    sem2:   [`${adYrNext}-02-01`, `${adYrNext}-06-30`],
+    summer: [`${adYr}-07-01`,   `${adYr}-08-31`],
+    winter: [`${adYrNext}-01-01`, `${adYrNext}-02-28`],
+    custom: [customStart, customEnd],
+  };
+  return ranges[selectedPeriod] || ranges.sem1;
+}
+
+function getPeriodLabel(){
+  const yr = parseInt(document.getElementById('school-year').value);
+  const labels = {
+    sem1:   `${yr}學年度第1學期`,
+    sem2:   `${yr}學年度第2學期`,
+    summer: `${yr}學年度暑假`,
+    winter: `${yr}學年度寒假`,
+    custom: `自訂期間`,
+  };
+  return labels[selectedPeriod];
+}
+
+// ── Filter events ──
+function getFilteredEvents(){
+  const [start, end] = getRange();
+  if(!start || !end) return [];
+  return allEvents.filter(ev => {
+    const evEnd = ev.end || ev.start;
+    if(evEnd < start || ev.start > end) return false;
+    if(selectedDept !== 'all' && ev.dept !== selectedDept) return false;
+    return true;
+  });
+}
+
+// ── Build date list ──
+function buildDateRows(events){
+  const [start, end] = getRange();
+  if(!start || !end) return [];
+  const rows = [];
+  const cur = new Date(start);
+  const endD = new Date(end);
+  while(cur <= endD){
+    const ds = toDS(cur);
+    const dow = cur.getDay();
+    const holiday = getHoliday(ds);
+    const dayEvs = events.filter(ev => ds >= ev.start && ds <= (ev.end||ev.start));
+    rows.push({ds, date:new Date(cur), dow, holiday, events:dayEvs});
+    cur.setDate(cur.getDate()+1);
+  }
+  return rows;
+}
+
+// ── Render table ──
+function render(){
+  const filtered = getFilteredEvents();
+  const rows = buildDateRows(filtered);
+
+  // Count only rows with events (for display)
+  const evCount = filtered.length;
+  document.getElementById('preview-count').textContent =
+    `共 ${evCount} 筆活動，${rows.filter(r=>r.events.length).length} 天有活動`;
+
+  const wrap = document.getElementById('table-wrap');
+  if(!allEvents.length){ wrap.innerHTML='<div class="loading-bar">🔄 載入中…</div>'; return; }
+  if(!rows.length){ wrap.innerHTML='<div class="loading-bar">⚠ 請選擇有效的日期範圍</div>'; return; }
+
+  const title = `高雄市新莊國小 ${getPeriodLabel()}重要行事曆`;
+
+  // Group rows by month for rowspan
+  let html = `<div class="print-title">${title}</div>`;
+  html += `<table class="cal-table">
+    <thead><tr>
+      <th class="col-month">月份</th>
+      <th class="col-date">日期</th>
+      <th class="col-dow">星期</th>
+      <th class="col-event">重 要 行 事</th>
+      <th class="col-dept">負責單位</th>
+      <th class="col-note">備註</th>
+    </tr></thead><tbody>`;
+
+  // Calculate month rowspans
+  const monthSpans = {};
+  rows.forEach(r => {
+    const mk = `${r.date.getFullYear()}-${r.date.getMonth()}`;
+    monthSpans[mk] = (monthSpans[mk]||0) + 1;
+  });
+  const monthSeen = new Set();
+
+  rows.forEach(r => {
+    const isWeekend = r.dow===0||r.dow===6;
+    const isHoliday = !!r.holiday;
+    const isEmpty = r.events.length === 0;
+    let rowClass = isEmpty ? 'row-empty' : '';
+    if(isHoliday) rowClass = 'row-holiday';
+    else if(isWeekend) rowClass = 'row-weekend';
+
+    const mk = `${r.date.getFullYear()}-${r.date.getMonth()}`;
+    const monthNum = r.date.getMonth()+1;
+    const roYear = r.date.getFullYear() - 1911;
+    let monthCell = '';
+    if(!monthSeen.has(mk)){
+      monthSeen.add(mk);
+      monthCell = `<td class="col-month month-cell" rowspan="${monthSpans[mk]}">${monthNum}<br><span style="font-size:0.68rem;color:#888;">${roYear}年</span></td>`;
+    }
+
+    const dowClass = r.dow===0?'dow-sun':r.dow===6?'dow-sat':'';
+    const dayNum = r.date.getDate();
+
+    // Events text
+    let evHtml = '';
+    let deptHtml = '';
+    if(r.events.length){
+      evHtml = r.events.map(ev => {
+        let t = `<span class="event-bullet">●</span>${ev.title}`;
+        if(ev.stime) t += `<span style="color:#666;font-size:0.75rem;"> ${ev.stime}${ev.etime&&ev.etime!=='00:00'?'–'+ev.etime:''}</span>`;
+        if(ev.location) t += `<span style="color:#888;font-size:0.72rem;"> 📍${ev.location}</span>`;
+        return `<div style="margin:1px 0;">${t}</div>`;
+      }).join('');
+      deptHtml = [...new Set(r.events.map(ev=>ev.dept))].map(d=>`<div class="dept-tag">${d}</div>`).join('');
+    }
+    if(r.holiday){
+      evHtml = `<span class="holiday-label">【${r.holiday}】</span>` + evHtml;
+    }
+
+    html += `<tr class="${rowClass}">
+      ${monthCell}
+      <td class="col-date">${dayNum}</td>
+      <td class="col-dow ${dowClass}">${DOW_CH[r.dow]}</td>
+      <td class="col-event">${evHtml||'<span style="color:#ccc;font-size:0.72rem;">—</span>'}</td>
+      <td class="col-dept">${deptHtml}</td>
+      <td class="col-note"></td>
+    </tr>`;
+  });
+
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+
+// ── Period buttons ──
+document.getElementById('period-btns').addEventListener('click', e => {
+  const btn = e.target.closest('.period-btn');
+  if(!btn) return;
+  document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedPeriod = btn.dataset.period;
+  document.getElementById('custom-dates').style.display = selectedPeriod==='custom'?'':'none';
+  render();
+});
+
+// ── Dept chips ──
+document.getElementById('dept-chips').addEventListener('click', e => {
+  const btn = e.target.closest('.dept-chip');
+  if(!btn) return;
+  document.querySelectorAll('.dept-chip').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedDept = btn.dataset.dept;
+  render();
+});
+
+// ── School year ──
+document.getElementById('school-year').addEventListener('change', render);
+
+// ── Custom dates ──
+document.getElementById('custom-start').addEventListener('change', e=>{customStart=e.target.value;render();});
+document.getElementById('custom-end').addEventListener('change', e=>{customEnd=e.target.value;render();});
+
+// ── Firebase load ──
+onSnapshot(collection(db,'calendar_events'), snap => {
+  allEvents = snap.docs.map(d => ({id:d.id,...d.data()}));
+  allEvents.sort((a,b)=>(a.start||'').localeCompare(b.start||''));
+  render();
+});
+
+// ── Print ──
+window.doPrint = () => window.print();
+
+// ── Excel export ──
+window.doExcel = () => {
+  const filtered = getFilteredEvents();
+  const rows = buildDateRows(filtered);
+  const title = `高雄市新莊國小 ${getPeriodLabel()}重要行事曆`;
+
+  const wsData = [
+    [title],
+    [],
+    ['月份','日期','星期','重要行事','負責單位','備註']
+  ];
+
+  const DOW_MAP=['日','一','二','三','四','五','六'];
+  rows.forEach(r => {
+    const month = r.date.getMonth()+1;
+    const day = r.date.getDate();
+    const dow = DOW_MAP[r.dow];
+    if(r.events.length){
+      r.events.forEach((ev,i)=>{
+        let evText = ev.title;
+        if(ev.stime) evText += ` ${ev.stime}${ev.etime&&ev.etime!=='00:00'?'–'+ev.etime:''}`;
+        if(ev.location) evText += ` 📍${ev.location}`;
+        if(r.holiday && i===0) evText = `【${r.holiday}】 ${evText}`;
+        wsData.push([i===0?month:'', i===0?day:'', i===0?dow:'', evText, ev.dept, '']);
+      });
+    } else {
+      let evText = r.holiday?`【${r.holiday}】`:'';
+      wsData.push([month, day, dow, evText, '', '']);
+    }
+  });
+
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+  // Column widths
+  ws['!cols'] = [{wch:6},{wch:6},{wch:5},{wch:50},{wch:10},{wch:10}];
+  // Merge title row
+  ws['!merges'] = [{s:{r:0,c:0},e:{r:0,c:5}}];
+
+  XLSX.utils.book_append_sheet(wb, ws, getPeriodLabel().slice(0,31));
+
+  const fname = `新莊國小行事曆_${getPeriodLabel()}.xlsx`;
+  XLSX.writeFile(wb, fname);
+};
+
+// ── Word export ──
+window.doWord = async () => {
+  const btn = document.querySelector('.btn-word');
+  btn.disabled = true; btn.textContent = '⏳ 產生中…';
+
+  try {
+    const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
+            AlignmentType, WidthType, BorderStyle, VerticalAlign, ShadingType,
+            HeadingLevel } = docx;
+
+    const filtered = getFilteredEvents();
+    const rows = buildDateRows(filtered);
+    const title = `高雄市新莊國小 ${getPeriodLabel()}重要行事曆`;
+    const DOW_MAP=['日','一','二','三','四','五','六'];
+
+    // A4 landscape: content width = 16838 - 1440*2 = 13958 DXA (narrow margins)
+    // Portrait A4: 11906 - 1440*2 = 9026
+    const PAGE_W = 11906; const MARGIN = 1000;
+    const CONTENT_W = PAGE_W - MARGIN*2; // 9906
+
+    // Column widths (DXA): 月份 700, 日期 620, 星期 520, 行事 6466, 負責 900, 備註 700
+    const COL_W = [700, 620, 520, 6466, 900, 700];
+    const totalW = COL_W.reduce((a,b)=>a+b,0); // = 9906
+
+    const border = {style:BorderStyle.SINGLE, size:6, color:'999999'};
+    const borders = {top:border,bottom:border,left:border,right:border};
+    const thickBorder = {style:BorderStyle.SINGLE, size:12, color:'333333'};
+    const thickBorders = {top:thickBorder,bottom:thickBorder,left:thickBorder,right:thickBorder};
+
+    function makeCell(text, opts={}){
+      const {width, bold=false, center=false, color='000000', bg=null,
+             rowSpan=1, fontSize=20, vAlign=VerticalAlign.CENTER} = opts;
+      const shading = bg ? {fill:bg, type:ShadingType.CLEAR} : undefined;
+      return new TableCell({
+        borders: opts.header ? thickBorders : borders,
+        width: {size:width||1000, type:WidthType.DXA},
+        rowSpan,
+        verticalAlign: vAlign,
+        shading,
+        margins: {top:60,bottom:60,left:80,right:80},
+        children: [new Paragraph({
+          alignment: center ? AlignmentType.CENTER : AlignmentType.LEFT,
+          children: [new TextRun({text:String(text||''), bold, color, size:fontSize,
+            font:'標楷體'})]
+        })]
+      });
+    }
+
+    function makeMultilineCell(lines, opts={}){
+      const {width, fontSize=20, vAlign=VerticalAlign.CENTER} = opts;
+      return new TableCell({
+        borders,
+        width: {size:width||1000, type:WidthType.DXA},
+        verticalAlign: vAlign,
+        margins: {top:60,bottom:60,left:80,right:80},
+        children: lines.map(line => new Paragraph({
+          children: [new TextRun({text:line, size:fontSize, font:'標楷體'})]
+        }))
+      });
+    }
+
+    // Header row
+    const headerRow = new TableRow({
+      tableHeader: true,
+      children: [
+        makeCell('月份', {width:COL_W[0], bold:true, center:true, color:'FFFFFF', bg:'1a202c', header:true, fontSize:20}),
+        makeCell('日期', {width:COL_W[1], bold:true, center:true, color:'FFFFFF', bg:'1a202c', header:true, fontSize:20}),
+        makeCell('星期', {width:COL_W[2], bold:true, center:true, color:'FFFFFF', bg:'1a202c', header:true, fontSize:20}),
+        makeCell('重 要 行 事', {width:COL_W[3], bold:true, center:true, color:'FFFFFF', bg:'1a202c', header:true, fontSize:20}),
+        makeCell('負責單位', {width:COL_W[4], bold:true, center:true, color:'FFFFFF', bg:'1a202c', header:true, fontSize:20}),
+        makeCell('備註', {width:COL_W[5], bold:true, center:true, color:'FFFFFF', bg:'1a202c', header:true, fontSize:20}),
+      ]
+    });
+
+    // Calculate month rowspans
+    const monthSpans = {};
+    rows.forEach(r => {
+      const mk = `${r.date.getFullYear()}-${r.date.getMonth()}`;
+      monthSpans[mk] = (monthSpans[mk]||0) + 1;
+    });
+    const monthSeen = {};
+
+    // Build data rows
+    const tableRows = [headerRow];
+
+    rows.forEach(r => {
+      const mk = `${r.date.getFullYear()}-${r.date.getMonth()}`;
+      const isWeekend = r.dow===0||r.dow===6;
+      const isHoliday = !!r.holiday;
+      const bg = isHoliday?'FFF0F0': isWeekend?'FFF8F8': null;
+      const dowColor = r.dow===0?'DC2626': r.dow===6?'2563EB':'000000';
+
+      const monthNum = r.date.getMonth()+1;
+      const roYear = r.date.getFullYear()-1911;
+      const showMonth = !monthSeen[mk];
+      if(showMonth) monthSeen[mk] = true;
+
+      // Event lines
+      const evLines = [];
+      const deptNames = new Set();
+      if(r.holiday) evLines.push(`【${r.holiday}】`);
+      r.events.forEach(ev => {
+        let line = `● ${ev.title}`;
+        if(ev.stime) line += `  ${ev.stime}${ev.etime&&ev.etime!=='00:00'?'–'+ev.etime:''}`;
+        if(ev.location) line += `  📍${ev.location}`;
+        evLines.push(line);
+        deptNames.add(ev.dept);
+      });
+
+      const cells = [];
+
+      // Month cell (with rowspan)
+      if(showMonth){
+        cells.push(new TableCell({
+          borders, rowSpan:monthSpans[mk],
+          width:{size:COL_W[0],type:WidthType.DXA},
+          verticalAlign:VerticalAlign.CENTER,
+          shading:bg?{fill:bg.replace('#',''),type:ShadingType.CLEAR}:undefined,
+          margins:{top:60,bottom:60,left:80,right:80},
+          children:[
+            new Paragraph({alignment:AlignmentType.CENTER, children:[new TextRun({text:`${monthNum}月`,bold:true,size:22,font:'標楷體'})]}),
+            new Paragraph({alignment:AlignmentType.CENTER, children:[new TextRun({text:`${roYear}年`,size:16,color:'888888',font:'標楷體'})]})
+          ]
+        }));
+      }
+
+      // Date, dow, events, dept, note
+      const shading = bg ? {fill:bg.replace('#',''), type:ShadingType.CLEAR} : undefined;
+
+      cells.push(new TableCell({borders, width:{size:COL_W[1],type:WidthType.DXA}, verticalAlign:VerticalAlign.CENTER, shading, margins:{top:60,bottom:60,left:80,right:80},
+        children:[new Paragraph({alignment:AlignmentType.CENTER, children:[new TextRun({text:String(r.date.getDate()),bold:true,size:20,font:'標楷體'})]})]
+      }));
+
+      cells.push(new TableCell({borders, width:{size:COL_W[2],type:WidthType.DXA}, verticalAlign:VerticalAlign.CENTER, shading, margins:{top:60,bottom:60,left:80,right:80},
+        children:[new Paragraph({alignment:AlignmentType.CENTER, children:[new TextRun({text:DOW_MAP[r.dow],size:20,color:dowColor,font:'標楷體'})]})]
+      }));
+
+      cells.push(new TableCell({borders, width:{size:COL_W[3],type:WidthType.DXA}, verticalAlign:VerticalAlign.CENTER, shading, margins:{top:60,bottom:60,left:80,right:80},
+        children: evLines.length ? evLines.map(line => new Paragraph({children:[new TextRun({text:line,size:19,font:'標楷體'})]}))
+          : [new Paragraph({children:[new TextRun({text:'',size:19})]})]
+      }));
+
+      cells.push(new TableCell({borders, width:{size:COL_W[4],type:WidthType.DXA}, verticalAlign:VerticalAlign.CENTER, shading, margins:{top:60,bottom:60,left:80,right:80},
+        children: deptNames.size ? [...deptNames].map(d=>new Paragraph({alignment:AlignmentType.CENTER,children:[new TextRun({text:d,size:18,font:'標楷體'})]}))
+          : [new Paragraph({children:[new TextRun({text:'',size:18})]})]
+      }));
+
+      cells.push(new TableCell({borders, width:{size:COL_W[5],type:WidthType.DXA}, verticalAlign:VerticalAlign.CENTER, shading, margins:{top:60,bottom:60,left:80,right:80},
+        children:[new Paragraph({children:[new TextRun({text:'',size:18})]})]
+      }));
+
+      tableRows.push(new TableRow({children:cells}));
+    });
+
+    const table = new Table({
+      width:{size:totalW, type:WidthType.DXA},
+      columnWidths: COL_W,
+      rows: tableRows,
+    });
+
+    const docObj = new Document({
+      sections:[{
+        properties:{
+          page:{
+            size:{width:11906, height:16838},
+            margin:{top:MARGIN, right:MARGIN, bottom:MARGIN, left:MARGIN}
+          }
+        },
+        children:[
+          new Paragraph({
+            alignment:AlignmentType.CENTER,
+            children:[new TextRun({text:title, bold:true, size:28, font:'標楷體'})]
+          }),
+          new Paragraph({text:'', spacing:{after:200}}),
+          table,
+        ]
+      }]
+    });
+
+    const blob = await Packer.toBlob(docObj);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href=url; a.download=`新莊國小行事曆_${getPeriodLabel()}.docx`; a.click();
+    URL.revokeObjectURL(url);
+  } catch(err){
+    alert('Word 匯出失敗：'+err.message);
+    console.error(err);
+  } finally {
+    btn.disabled=false; btn.textContent='📄 Word';
+  }
+};
+</script>
+</body>
+</html>
