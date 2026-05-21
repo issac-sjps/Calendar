@@ -539,6 +539,28 @@ header{
 @media(max-width:400px){
   .dept-grid{grid-template-columns:1fr;}
 }
+/* ── Page nav bar ── */
+.page-nav{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0 1.25rem;display:flex;align-items:center;gap:0;
+  height:36px;flex-shrink:0;
+}
+.page-nav a{
+  display:inline-flex;align-items:center;gap:0.3rem;
+  padding:0 0.9rem;height:100%;
+  font-size:0.76rem;font-weight:500;color:var(--text2);
+  text-decoration:none;border-bottom:2px solid transparent;
+  transition:all .14s;white-space:nowrap;
+}
+.page-nav a:hover{color:var(--text);background:var(--surface2);}
+.page-nav a.active{color:#1a202c;border-bottom-color:#1a202c;font-weight:700;}
+.page-nav a .nav-icon{font-size:0.85rem;}
+.page-nav-sep{width:1px;height:16px;background:var(--border);margin:0 0.25rem;}
+@media(max-width:640px){
+  .page-nav{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .page-nav::-webkit-scrollbar{display:none;}
+  .page-nav a{padding:0 0.65rem;font-size:0.72rem;}
+}
 </style>
 </head>
 <body>
@@ -566,6 +588,21 @@ header{
     <button class="btn-sm btn-primary" id="btn-login-open" onclick="openLoginModal()">教職員登入</button>
   </div>
 </header>
+
+<!-- Page Navigation -->
+<nav class="page-nav">
+  <a href="https://issac-sjps.github.io/Calendar/" class="active">
+    <span class="nav-icon">📅</span> 行事曆
+  </a>
+  <div class="page-nav-sep"></div>
+  <a href="https://issac-sjps.github.io/Calendar/wednesday.html">
+    <span class="nav-icon">📚</span> 週三進修
+  </a>
+  <div class="page-nav-sep"></div>
+  <a href="https://issac-sjps.github.io/Calendar/print-calendar.html">
+    <span class="nav-icon">🖨</span> 列印 / 匯出
+  </a>
+</nav>
 
 <!-- Location Filter Bar (desktop) - now hidden, filters moved to sidebar -->
 <div class="location-bar" id="location-bar" style="display:none;">
@@ -716,7 +753,7 @@ header{
           <option>4F樂活教室</option><option>5F活動中心</option>
           <option>球場南一（二.五.六年級）</option><option>球場南二（二.五.六年級）</option>
           <option>球場北一（一.三.四年級）</option><option>球場北二（一.三.四年級）</option>
-          <option>桌球教室</option><option>指定班級教室</option><option>校外</option>
+          <option>桌球教室</option><option>指定班級教室</option><option>校外</option><option>其他</option>
         </select>
       </div>
       <div class="form-group">
@@ -786,7 +823,7 @@ header{
         <div><label style="font-size:0.78rem;font-weight:500;color:var(--text2);display:block;margin-bottom:0.3rem;">預設處室</label>
         <select id="paste-dept" style="width:100%;padding:0.48rem 0.65rem;border:1.5px solid var(--border);border-radius:7px;font-family:'Noto Sans TC',sans-serif;font-size:0.86rem;outline:none;"><option value="教務處">教務處</option><option value="學務處">學務處</option><option value="輔導處">輔導處</option><option value="總務處">總務處</option></select></div>
         <div><label style="font-size:0.78rem;font-weight:500;color:var(--text2);display:block;margin-bottom:0.3rem;">預設地點</label>
-        <select id="paste-loc" style="width:100%;padding:0.48rem 0.65rem;border:1.5px solid var(--border);border-radius:7px;font-family:'Noto Sans TC',sans-serif;font-size:0.86rem;outline:none;"><option value="">（之後再填）</option><option>1F大穿堂</option><option>1F小玄關</option><option>1F靜思書軒</option><option>2F校長室旁會議室</option><option>3F視聽教室</option><option>4F圖書館</option><option>4F樂活教室</option><option>5F活動中心</option><option>球場南一（二.五.六年級）</option><option>球場南二（二.五.六年級）</option><option>球場北一（一.三.四年級）</option><option>球場北二（一.三.四年級）</option><option>桌球教室</option><option>指定班級教室</option><option>校外</option></select></div>
+        <select id="paste-loc" style="width:100%;padding:0.48rem 0.65rem;border:1.5px solid var(--border);border-radius:7px;font-family:'Noto Sans TC',sans-serif;font-size:0.86rem;outline:none;"><option value="">（之後再填）</option><option>1F大穿堂</option><option>1F小玄關</option><option>1F靜思書軒</option><option>2F校長室旁會議室</option><option>3F視聽教室</option><option>4F圖書館</option><option>4F樂活教室</option><option>5F活動中心</option><option>球場南一（二.五.六年級）</option><option>球場南二（二.五.六年級）</option><option>球場北一（一.三.四年級）</option><option>球場北二（一.三.四年級）</option><option>桌球教室</option><option>指定班級教室</option><option>校外</option><option>其他</option></select></div>
       </div>
       <label style="font-size:0.78rem;font-weight:500;color:var(--text2);display:block;margin-bottom:0.3rem;">貼上文字（每行一筆）</label>
       <textarea id="paste-text" rows="10" placeholder="3/12五年級英語歌唱比賽&#10;3/26~3/28新生報到&#10;6/12畢業典禮" style="width:100%;padding:0.55rem 0.7rem;border:1.5px solid var(--border);border-radius:8px;font-family:'Noto Sans TC',sans-serif;font-size:0.86rem;color:var(--text);outline:none;resize:vertical;line-height:1.7;"></textarea>
@@ -952,7 +989,7 @@ const SUPERADMIN = 'issac@sjps.kh.edu.tw';
 const PERM_COL = 'permissions';
 const COL = 'calendar_events';
 const DEPTS = ['教務處','學務處','輔導處','總務處'];
-const LOCATIONS = ['1F大穿堂','1F小玄關','1F靜思書軒','2F校長室旁會議室','3F視聽教室','4F圖書館','4F樂活教室','5F活動中心','球場南一（二.五.六年級）','球場南二（二.五.六年級）','球場北一（一.三.四年級）','球場北二（一.三.四年級）','桌球教室','指定班級教室','校外'];
+const LOCATIONS = ['1F大穿堂','1F小玄關','1F靜思書軒','2F校長室旁會議室','3F視聽教室','4F圖書館','4F樂活教室','5F活動中心','球場南一（二.五.六年級）','球場南二（二.五.六年級）','球場北一（一.三.四年級）','球場北二（一.三.四年級）','桌球教室','指定班級教室','校外','其他'];
 const BATCH_LOCS = ['', ...LOCATIONS];
 
 // Taiwan public holidays (fixed annual + key ones for 2025/2026)
