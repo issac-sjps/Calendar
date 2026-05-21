@@ -52,6 +52,12 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 .btn-print{background:#1a202c;color:#fff;}
 .btn-excel{background:#217346;color:#fff;}
 .btn-word{background:#2b579a;color:#fff;}
+/* ── Page nav ── */
+.page-nav{background:#fff;border-bottom:1px solid #e2e8f0;padding:0 1.25rem;display:flex;align-items:center;gap:0;height:36px;flex-shrink:0;}
+.page-nav a{display:inline-flex;align-items:center;gap:0.3rem;padding:0 0.9rem;height:100%;font-size:0.76rem;font-weight:500;color:#4a5568;text-decoration:none;border-bottom:2px solid transparent;transition:all .14s;white-space:nowrap;}
+.page-nav a:hover{color:#1a202c;background:#f8fafc;}
+.page-nav a.active{color:#1a202c;border-bottom-color:#1a202c;font-weight:700;}
+.page-nav-sep{width:1px;height:16px;background:#e2e8f0;margin:0 0.25rem;}
 
 /* ── Main ── */
 .main{max-width:860px;margin:1.5rem auto;padding:0 1.25rem;}
@@ -122,6 +128,15 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 </style>
 </head>
 <body>
+
+<!-- Page Navigation -->
+<nav class="page-nav">
+  <a href="https://issac-sjps.github.io/Calendar/">📅 行事曆</a>
+  <div class="page-nav-sep"></div>
+  <a href="https://issac-sjps.github.io/Calendar/wednesday.html" class="active">📚 週三進修</a>
+  <div class="page-nav-sep"></div>
+  <a href="https://issac-sjps.github.io/Calendar/print-calendar.html">🖨 列印 / 匯出</a>
+</nav>
 
 <!-- Toolbar -->
 <div class="toolbar">
